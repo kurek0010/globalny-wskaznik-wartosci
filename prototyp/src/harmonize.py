@@ -27,8 +27,9 @@ from .config import ALL_SERIES, CURRENCIES, END_DATE, START_DATE
 logger = logging.getLogger("harmonize")
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+# Plik znajduje się w prototyp/src/harmonize.py, więc parents[1] == prototyp/.
+PROTOTYP_ROOT = Path(__file__).resolve().parents[1]
+PROCESSED_DIR = PROTOTYP_ROOT / "data" / "processed"
 
 
 # Pary FX z FRED, w których konwencja to "USD za 1 jednostkę waluty obcej"

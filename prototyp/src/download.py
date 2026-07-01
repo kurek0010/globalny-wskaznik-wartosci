@@ -28,7 +28,9 @@ from .config import (
 )
 from .sources.ecb import ECBSource
 from .sources.fred import FredSource
+from .sources.manual import ManualSource
 from .sources.nbp import NBPSource
+from .sources.worldbank import WorldBankSource
 from .sources.yahoo import YahooSource
 
 
@@ -39,9 +41,10 @@ logging.basicConfig(
 logger = logging.getLogger("download")
 
 
-# Ścieżki — relatywne do katalogu prototyp/
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-CACHE_DIR = PROJECT_ROOT / "data" / "raw"
+# Ścieżki — relatywne do katalogu prototyp/.
+# Plik znajduje się w prototyp/src/download.py, więc parents[1] == prototyp/.
+PROTOTYP_ROOT = Path(__file__).resolve().parents[1]
+CACHE_DIR = PROTOTYP_ROOT / "data" / "raw"
 
 
 def _fetch_one(
@@ -66,6 +69,18 @@ def _fetch_one(
         raise NotImplementedError(
             f"NBP dla kategorii {spec['category']} nie jest jeszcze obsługiwane"
         )
+    if spec["source"] == "manual":
+        return source.get_series(spec["id"], START_DATE, END_DATE)  # type: ignore[attr-defined]
+    if spec["source"] == "worldbank":
+        # WB chce roczne zakresy w postaci "YYYY", nie pełnych dat
+        start_year = START_DATE[:4]
+        end_year = END_DATE[:4]
+        return source.get_indicator(  # type: ignore[attr-defined]
+            indicator=spec["id"],
+            country="WLD",
+            start=start_year,
+            end=end_year,
+        )
 
     raise ValueError(f"Nieznane źródło: {spec['source']}")
 
@@ -78,13 +93,15 @@ def download_all() -> Dict[str, pd.Series]:
     nie kończy się błędem, bo niektóre serie M2 dla mniejszych gospodarek
     bywają chwilowo niedostępne lub mają zmienione identyfikatory.
     """
-    load_dotenv(PROJECT_ROOT / ".env")
+    load_dotenv(PROTOTYP_ROOT / ".env")
 
     sources = {
         "fred": FredSource(cache_dir=CACHE_DIR),
         "nbp": NBPSource(cache_dir=CACHE_DIR),
         "ecb": ECBSource(cache_dir=CACHE_DIR),
         "yahoo": YahooSource(cache_dir=CACHE_DIR),
+        "worldbank": WorldBankSource(cache_dir=CACHE_DIR),
+        "manual": ManualSource(manual_dir=PROTOTYP_ROOT / "data" / "manual"),
     }
 
     results: Dict[str, pd.Series] = {}
