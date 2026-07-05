@@ -1,17 +1,6 @@
 # Klucze i sekrety
 .env
 
-# Dane (cache pobrań i artefakty obliczeniowe — duże, regenerowalne)
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-outputs/*
-!outputs/.gitkeep
-!outputs/figures/.gitkeep
-outputs/figures/*
-!outputs/figures/.gitkeep
-
 # Python
 __pycache__/
 *.py[cod]
@@ -19,6 +8,7 @@ __pycache__/
 venv/
 .ipynb_checkpoints/
 
-# IDE
+# IDE / system
 .idea/
 .vscode/
+.DS_Store

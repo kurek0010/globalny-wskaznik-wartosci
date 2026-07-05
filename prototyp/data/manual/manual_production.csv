@@ -1,0 +1,38 @@
+# Dane produkcji globalnej — WYPELNIONE WARTOSCIAMI PRZYBLIZONYMI (wiedza do 2025-05).
+# Zrodla referencyjne: World Steel Association (stal), USGS Mineral Commodity
+# Summaries (cement, miedz, aluminium). POZIOMY przyblizone (+-kilka %), do
+# weryfikacji przy oficjalnych raportach; dla koszyka liczy sie DYNAMIKA.
+# Ruda zelaza / nikiel / cynk zostawione puste (do uzupelnienia z USGS).
+# Jednostki: stal Mt, cement Mt, miedz kt mine, aluminium kt primary.
+# Po zmianach: python -m src.download && python -m src.harmonize && python -m src.auv_research
+year,steel_production_world,cement_production_world,copper_production_world,aluminum_production_world,iron_ore_production_world,nickel_production_world,zinc_production_world
+1996,750,1490,11000,20800,,,
+1997,799,1530,11500,21800,,,
+1998,777,1540,12200,22700,,,
+1999,789,1610,12800,23600,,,
+2000,850,1660,13200,24700,,,
+2001,852,1740,13700,24500,,,
+2002,905,1850,13600,26100,,,
+2003,970,2020,13800,28000,,,
+2004,1063,2180,14600,29900,,,
+2005,1148,2310,15000,31900,,,
+2006,1250,2550,15100,33900,,,
+2007,1348,2770,15500,38100,,,
+2008,1343,2840,15500,39700,,,
+2009,1238,3060,15900,37500,,,
+2010,1433,3310,16200,41400,,,
+2011,1538,3600,16100,44100,,,
+2012,1560,3800,16900,45200,,,
+2013,1650,4080,18300,47800,,,
+2014,1671,4180,18700,53000,,,
+2015,1621,4100,19100,57900,,,
+2016,1629,4200,20400,58800,,,
+2017,1735,4100,20100,60400,,,
+2018,1817,4100,20600,64300,,,
+2019,1875,4100,20400,63700,,,
+2020,1880,4200,20600,65300,,,
+2021,1962,4400,21000,67400,,,
+2022,1885,4100,22000,68400,,,
+2023,1892,4100,22400,70000,,,
+2024,1839,4200,23000,72000,,,
+2025,1850,4100,23000,73000,,,

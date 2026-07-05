@@ -1,0 +1,46 @@
+{
+  "commodities": [
+    "brent",
+    "wti",
+    "natgas_us",
+    "wheat",
+    "corn",
+    "copper",
+    "aluminum",
+    "iron_ore"
+  ],
+  "money_aggregates": [
+    "M2_USA",
+    "M3_EU",
+    "M3_UK",
+    "M2_JP"
+  ],
+  "t0": "2017-06-30",
+  "weights_qp": {
+    "brent": 9.54795219912116e-24,
+    "wti": 0.0,
+    "natgas_us": 0.013319986139198752,
+    "wheat": 0.10736628200187903,
+    "corn": 0.17484191546468136,
+    "copper": 0.0,
+    "aluminum": 0.3691128642122466,
+    "iron_ore": 0.33535895218199413
+  },
+  "weights_pca": {
+    "brent": 0.40184097593515555,
+    "wti": 0.4574546416514832,
+    "natgas_us": 0.021943802152668543,
+    "wheat": 0.0304430175469263,
+    "corn": 0.0533307167150059,
+    "copper": 0.003973662537473851,
+    "aluminum": 0.012632626432386981,
+    "iron_ore": 0.018380557028899708
+  },
+  "auv_residual_std_qp": 0.11604053178392011,
+  "auv_residual_std_pca": 0.2736673711883712,
+  "metadata": {
+    "n_observations": 348,
+    "period_start": "1997-01-31",
+    "period_end": "2025-12-31"
+  }
+}

@@ -10,6 +10,18 @@ Buduję systemy, które ze swej natury nie zależą od arbitralnych decyzji rad,
 
 Nazwa pochodzi z analogii do rewolucji kopernikańskiej. Zamiast modelu antropocentrycznego — w którym centrum układu jest człowiek lub instytucja decyzyjna — przyjmuję model, w którym centrum jest obiektywna rzeczywistość, mierzona niezależnie od tego, co o niej myślą jej uczestnicy.
 
+## Precyzja Terminologii
+
+Wymagam ścisłej terminologii w sprawach pieniężnych. Termin **"dodruk pieniędzy" jest dla mnie nieakceptowalny** w jakimkolwiek kontekście roboczym. Pieniądz we współczesnym systemie powstaje przede wszystkim przez:
+
+- **Kreację kredytową w bankach komercyjnych** — gdy bank udziela kredytu, tworzy nowy pieniądz depozytowy w księgach. To dominujący kanał kreacji pieniądza w nowoczesnej gospodarce.
+- **Ekspansję bilansu banku centralnego** — luzowanie ilościowe, skup aktywów, kreacja rezerw bankowych. To procesy księgowe, nie fizyczne drukowanie.
+- **Kreację długu** — pożyczki publiczne tworzą instrumenty finansowe, które w szerszym systemie finansowym pełnią funkcję pieniądza.
+
+Akceptowalne terminy: *kreacja pieniądza*, *ekspansja monetarna*, *wzrost agregatów monetarnych*, *kreacja kredytowa*, *luzowanie ilościowe*, *skup aktywów przez bank centralny*, *powiększanie bilansu banku centralnego*.
+
+Wyklucza: *dodruk*, *drukowanie pieniędzy*, *money printing*. Te są nieprecyzyjne i utrwalają błędną intuicję, że pieniądz jest papierowy. W rzeczywistości w nowoczesnym systemie >95% pieniądza istnieje wyłącznie elektronicznie.
+
 ## Praktyczne Kryteria
 
 Dane wejściowe muszą być otwarte i powszechnie dostępne. Odrzucam zależność od subskrypcyjnych źródeł typu Bloomberg, S&P Global czy IHS Markit — nie ze względu na koszt, lecz dlatego że wprowadzają gatekeepera. Preferuję FRED, ECB, IMF, BIS, publiczne API giełd oraz otwarte rejestry rządowe.

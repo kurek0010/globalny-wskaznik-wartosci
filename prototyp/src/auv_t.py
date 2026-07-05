@@ -117,8 +117,16 @@ def compute(monthly: pd.DataFrame) -> pd.DataFrame:
             raise KeyError(f"Brak kolumn dla kategorii {name}: {missing}")
         cat_idx[name] = _geom_mean(pd.concat([_index_to_base(a[c]) for c in cols], axis=1))
 
-    # Mianownik: dochód globalny na osobę, znormalizowany
-    income = _index_to_base(a[INCOME_NUM] / a[INCOME_DEN])
+    # Mianownik: dochód globalny na osobę, znormalizowany.
+    # UWAGA (poprawka 2026-07): dane roczne WB są stemplowane 31.12, więc
+    # roczna ŚREDNIA (_annual) forward-fillowanych wartości opóźnia mianownik
+    # o ~rok (wartość roku Y ląduje dopiero w grudniu). Bierzemy wartość
+    # ROCZNĄ z końca roku (.last() = grudzień = poprawna wartość roku Y),
+    # by zsynchronizować mianownik z licznikiem. Rok bez odczytu WB (2025)
+    # dziedziczy ostatnią znaną wartość (prowizorycznie).
+    ann_last = monthly.resample("YE").last()
+    ann_last.index = ann_last.index.year
+    income = _index_to_base(ann_last[INCOME_NUM] / ann_last[INCOME_DEN])
 
     # Licznik: koszyk = geometryczna średnia indeksów kategorii (równe wagi)
     basket = _geom_mean(pd.concat(cat_idx.values(), axis=1))

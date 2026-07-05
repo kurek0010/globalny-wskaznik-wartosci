@@ -1,8 +1,5 @@
-# Dane pobierane / cache
-data/
+# Cache
 cache/
-*.csv.gz
-*.parquet
 
 # Python
 __pycache__/
