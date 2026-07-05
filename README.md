@@ -57,3 +57,7 @@ Talent wyrósł z projektu **AUV (Absolute Unit of Value)** — próby zbudowani
 ## Status
 
 Prototyp badawczy. Znane prowizoria wymienione są jawnie w regule publikacyjnej (§7) i w artykule (§7 i §9). Dane płacowe GUS/ZUS dla Polski wymagają weryfikacji u źródła przed publikacją produkcyjną.
+
+## Licencja
+
+Kod i dokumentacja: [MIT](LICENSE) — używaj, kopiuj, modyfikuj bez ograniczeń. Jedna prośba (nie warunek prawny): jeśli zmieniasz formułę, nazwij wynik inaczej niż „Talent (TLN)" albo zaproponuj zmianę przez [TIP](TIP/) — żeby jedna nazwa zawsze oznaczała jedną, weryfikowalną definicję.
