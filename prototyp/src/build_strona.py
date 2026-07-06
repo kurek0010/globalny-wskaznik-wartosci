@@ -38,6 +38,10 @@ h1{font-size:1.9em;letter-spacing:.02em}
 h1 span{color:var(--ac)}
 h2{font-size:1.15em;margin:26px 0 10px;color:var(--tx)}
 .sub{color:var(--mut);margin:4px 0 24px}
+.intro{margin:0 0 14px}
+ul.docs{list-style:none}
+ul.docs li{margin:0 0 12px;padding-left:14px;border-left:2px solid #2a323c}
+ul.docs i{color:var(--mut)}
 .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
 .card{background:var(--card);border-radius:10px;padding:16px 18px}
 .card .l{color:var(--mut);font-size:.78em;text-transform:uppercase;letter-spacing:.08em}
@@ -54,6 +58,12 @@ a{color:var(--ac)}
 <body>
 <h1>Talent <span>TLN</span></h1>
 <p class="sub">Jednostka wartości minimalnego żalu (regret) &middot; √(ceny &times; płace) &middot; prototyp badawczy, Polska, baza I&nbsp;1996&nbsp;=&nbsp;100</p>
+
+<h2>Czym jest Talent?</h2>
+<p class="intro">Pieniądz źle znosi umowy wieloletnie: pożyczasz koledze 10&nbsp;000 zł, on po dziesięciu latach oddaje 10&nbsp;000 zł — tę samą liczbę, ale nie tę samą wartość. Kto pożyczył w Polsce w 1989 roku i odzyskał nominalnie w 2019, odzyskał mniej niż 1% wartości. <b>Talent to jednostka, w której „oddajesz tyle samo" znów znaczy to, co powinno.</b></p>
+<p class="intro">Wartość ma dwie równoprawne miary: <b>ceny</b> (pytanie pożyczającego: czy kupię za to tyle samo co kiedyś?) i <b>płace</b> (pytanie oddającego: czy kosztuje mnie to tyle samo pracy?). Talent to środek geometryczny obu — √(ceny&nbsp;×&nbsp;płace) — punkt, w którym największa możliwa krzywda którejkolwiek strony jest najmniejsza. W dobrych czasach obie strony dzielą się owocami wzrostu po równo, w złych po równo dzielą stratę. Przez sto lat danych USA (1929–2025) najgorszy przypadek to 6,1%, przez polską transformację (1989–2024) — 10,4%; pożyczka nominalna w tych samych próbach krzywdziła na setki, a nawet tysiące procent.</p>
+<p class="intro">Formuła jest w pełni otwarta: <b>kod jest metodologią</b>. Wartości liczone są z publicznych danych, publikowane z wyprzedzeniem i nigdy nie rewidowane wstecz — nie musisz nikomu wierzyć, możesz sprawdzić wszystko na własnym komputerze.</p>
+
 <div class="grid">
 <div class="card"><div class="l">Wartość dziś</div><div class="v" id="today">—</div><div class="d" id="todaydate"></div></div>
 <div class="card"><div class="l">Kotwica miesięczna</div><div class="v" id="anchor">—</div><div class="d" id="anchordate"></div></div>
@@ -73,7 +83,22 @@ a{color:var(--ac)}
 <div class="wrap"><canvas id="chw" height="130"></canvas></div>
 <p class="cap">Porównanie na danych USA (FRED): <b>przeciętna płaca</b> ma zdradliwy efekt składu — w kwietniu 2020 skoczyła o +4,2% w miesiąc, bo pracę stracili najpierw najsłabiej zarabiający. <b>Fundusz płac / wygładzone zatrudnienie</b> (definicja Talenta v0.2) pokazał wtedy −8,9%: prawdziwy ubytek dochodów społeczeństwa. Długookresowo obie metody dają to samo (+136% za 26 lat) — różnią się dokładnie tam, gdzie uczciwość ma znaczenie: w kryzysie.</p>
 
-<p class="foot"><b>Czym jest Talent?</b> Pożyczasz 1000 TLN — oddajesz 1000 TLN i obie strony odzyskują w przybliżeniu tę samą wartość: spłata nie rośnie względem płac szybciej, niż spadałaby względem cen. Środek geometryczny indeksu cen i indeksu płac minimalizuje maksymalny żal obu stron umowy — pasmo zweryfikowane na danych USA 1929–2025 (maks. 6,1%), Polski 1989–2024 (maks. 10,4%). Formuła jest deterministyczna i open source: <b>kod jest metodologią</b>, wartości nigdy nie są rewidowane wstecz, każdą można odtworzyć z danych publicznych. Szczegóły: REGULA_publikacyjna_Talent_v0.1.md.</p>
+<h2>Przeczytaj więcej</h2>
+<div class="wrap">
+<ul class="docs">
+<li><a href="__GH__ARTYKUL_Talent_popularnonaukowy.md"><b>Whitepaper</b></a> — pełny wywód od problemu do formuły, z dowodem zrozumiałym dla licealisty i uczciwą listą granic metody. <i>Zacznij tutaj.</i></li>
+<li><a href="__GH__REGULA_publikacyjna_Talent_v0.1.md"><b>Reguła publikacyjna</b></a> — jak dokładnie liczymy: definicje obu nóg, kalendarz publikacji, bezpieczniki kryzysowe.</li>
+<li><a href="__GH__TIP"><b>TIP — proces zmian</b></a> — każda zmiana formuły przechodzi jawną procedurę z testem na danych (wzorzec BIP z Bitcoina).</li>
+<li><a href="__GH__WYSCIG_kandydatow_minimalny_zal.md"><b>Wyścig kandydatów</b></a> — dlaczego nie złoto, nie surowce i nie sama inflacja (złoto: żal do 265%).</li>
+<li><a href="__GH__WYNIKI_test_stulecia_USA.md"><b>Test stulecia USA</b></a> — 1929–2025: Wielki Kryzys, wojna, stagflacja; najgorszy przypadek 6,1%.</li>
+<li><a href="__GH__WYNIKI_kruche_gospodarki.md"><b>Kruche gospodarki</b></a> — polska transformacja, Niemcy 1923, Argentyna: gdzie formuła działa, a gdzie uczciwie mówi „nie działam".</li>
+<li><a href="__GH__WYNIKI_talent_dwustronny.md"><b>Talent dwustronny</b></a> — jednostka umów międzynarodowych: ryzyko kursu i rozjazdu gospodarek dzielone po połowie.</li>
+<li><a href="__GH__archiwum"><b>Archiwum — droga do Talenta</b></a> — próby i błędy, które doprowadziły do formuły. Nie ukrywamy ich: błędy są częścią dowodu.</li>
+<li><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci"><b>Repozytorium</b></a> — kod, dane i pełna historia zmian (licencja MIT).</li>
+</ul>
+</div>
+
+<p class="foot">Prototyp badawczy — wartości robocze, nie do rozliczeń. Wszystkie liczby na tej stronie można odtworzyć z publicznych danych kodem z repozytorium.</p>
 
 <script>
 const A=__DATA__;
@@ -119,8 +144,10 @@ new Chart(document.getElementById('chw'),{type:'line',
 </body>
 </html>"""
 
+GH = "https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/"
 html = (HTML.replace("__DATA__", data_js).replace("__FX__", fx_js)
-            .replace("__WAGE__", wage_js).replace("__CURCARDS__", cur_cards))
+            .replace("__WAGE__", wage_js).replace("__CURCARDS__", cur_cards)
+            .replace("__GH__", GH))
 OUT_HTML.write_text(html)
 OUT_INDEX.write_text(html)
 print("zapisano", OUT_HTML, len(html)//1024, "KB")
