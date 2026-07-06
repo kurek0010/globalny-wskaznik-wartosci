@@ -6,6 +6,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_HTML = ROOT.parent / "talent_strona.html"
+OUT_INDEX = ROOT.parent / "index.html"
 
 anchors = json.load(open(ROOT / "data/processed/talent_anchors.json"))
 fx = pd.read_csv(ROOT / "data/processed/talent_w_walutach.csv", index_col=0, parse_dates=True)
@@ -121,4 +122,5 @@ new Chart(document.getElementById('chw'),{type:'line',
 html = (HTML.replace("__DATA__", data_js).replace("__FX__", fx_js)
             .replace("__WAGE__", wage_js).replace("__CURCARDS__", cur_cards))
 OUT_HTML.write_text(html)
+OUT_INDEX.write_text(html)
 print("zapisano", OUT_HTML, len(html)//1024, "KB")
