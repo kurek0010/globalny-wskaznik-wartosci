@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talent (TLN) — kruche gospodarki</title>
+<style>
+:root{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto}
+h1{font-size:1.7em}h1 span{color:var(--ac)}
+h2{font-size:1.2em;margin:30px 0 10px;color:var(--ac)}
+h3{font-size:1.02em;margin:18px 0 6px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px}
+code,pre{font:.88em/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px}
+code{padding:1px 6px}
+pre{padding:14px 16px;overflow-x:auto;margin:0 0 14px;border-left:3px solid var(--ac)}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 14px;font-size:.92em;display:block;overflow-x:auto}
+th,td{border:1px solid #2a323c;padding:6px 10px;text-align:left}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+.mut{color:var(--mut)}
+.top{margin-bottom:22px}
+hr{border:none;border-top:1px solid #2a323c;margin:20px 0}
+em{color:var(--mut)}
+</style>
+</head>
+<body>
+<p class="top"><a href="index.html">&larr; strona g&#322;&oacute;wna Talenta</a></p>
+<h1>Talent w kruchych gospodarkach — Polska (ilościowo), Niemcy i Argentyna (epizody)</h1>
+<p><strong>Data:</strong> 2026-07-04
+<strong>Kod:</strong> <code>prototyp/src/regret_poland.py</code>. Nazewnictwo przyjęte: jednostka <strong>Talent (TLN)</strong> = √(CPI × płaca); wariant dla finansów bezodsetkowych: <strong>Qist</strong>. Metryka: <strong>żal / regret</strong> (dwustronny, jak w <code>WYNIKI_test_stulecia_USA.md</code>).</p>
+<hr />
+<h2>1. Polska 1989–2024 (transformacja, dezinflacja, deflacja 2015, szok 2022)</h2>
+<p>Dane: CPI — FRED/OECD (POLCPIALLMINMEI, od 1989); płace — przeciętne wynagrodzenie GUS/ZUS (tablice wpisane z wiedzy, <strong>do weryfikacji u źródła</strong>; przełom netto→brutto 1999 połączony łańcuchowo wzrostem ~+11,1% na bazie porównywalnej — wpływ na wyniki &lt;1 p.p.).</p>
+<table>
+<thead>
+<tr>
+<th>Kandydat</th>
+<th>% okien zero-żalu</th>
+<th>Mediana</th>
+<th>p95</th>
+<th>Najgorszy przypadek</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Talent</strong></td>
+<td><strong>98%</strong></td>
+<td><strong>0,0%</strong></td>
+<td><strong>0,0%</strong></td>
+<td><strong>10,4%</strong> (wierzyciel, 1989→1994)</td>
+</tr>
+<tr>
+<td>CPI</td>
+<td>98%</td>
+<td>0,0%</td>
+<td>0,0%</td>
+<td>21,9% (dłużnik, 1989→1994)</td>
+</tr>
+<tr>
+<td>płaca</td>
+<td>98%</td>
+<td>0,0%</td>
+<td>0,0%</td>
+<td>21,9% (wierzyciel, 1989→1994)</td>
+</tr>
+<tr>
+<td>nominal</td>
+<td>4%</td>
+<td>32,6%</td>
+<td>1 589%</td>
+<td><strong>10 813%</strong> (wierzyciel, 1989→2019)</td>
+</tr>
+</tbody>
+</table>
+<p>Odczyt:</p>
+<ul>
+<li><strong>Talent przeszedł transformację ustrojową z maksymalnym żalem 10,4%</strong> — połowa 18-procentowego realnego spadku płac 1989–1994. Indeksacja samym CPI zdusiłaby dłużnika o 22% względem pensji; sama płaca — okradła wierzyciela o 22% siły nabywczej. Talent rozłożył szok po połowie.</li>
+<li><strong>Nominal w Polsce to nie strata, to unicestwienie:</strong> pożyczka z 1989 oddana w 2019 nominalnie = żal 10 813% (wierzyciel odzyskał &lt;1% wartości). Nawet pożyczka 2019→2024: wierzyciel −40% względem płac, −30% względem cen. Każda kasa koleżeńska w Polsce działająca nominalnie przez ostatnie 35 lat systematycznie transferowała majątek od pożyczających do pożyczkobiorców.</li>
+<li>Epizod 2022 (pożyczka 2019→2024): Talent ×1,55 → dłużnik −7% względem płac, wierzyciel +8% względem cen. <strong>Obie strony wygrały jednocześnie</strong> (płace nominalnie wyprzedziły inflację w pełnym oknie).</li>
+</ul>
+<p><strong>Lekcja operacyjna z 1990 r. (poza tabelą):</strong> inflacja m/m w styczniu 1990 wyniosła ~79,6%. Jednostka publikowana z miesięcznym opóźnieniem traci w takim miesiącu do ~44% realnie. Wniosek projektowy w §3.</p>
+<h2>2. Niemcy 1913–1923 — granica stosowalności (epizod, liczby z literatury)</h2>
+<p>Indeks cen hurtowych (1913=1): styczeń 1920 ≈ 12,6; styczeń 1923 ≈ 2 785; listopad 1923 ≈ 725 miliardów. Inflacja października 1923: ~29 500% <strong>miesięcznie</strong> (~20–25% dziennie).</p>
+<ul>
+<li><strong>Matematycznie Talent przeżywa</strong> (obie nogi eksplodują razem, iloraz i średnia geometryczna pozostają skończone; płace w 1923 renegocjowano co tydzień, potem codziennie — realnie ~50–70% poziomu 1913 dla wykwalifikowanych).</li>
+<li><strong>Operacyjnie umiera każdy indeks:</strong> przy 20% dziennie publikacja opóźniona o jeden dzień oddaje wierzycielowi o 1/6 mniej. Niemcy rozwiązali to dopiero kotwicą realną (Roggenmark — marka żytnia, potem Rentenmark), nie lepszym indeksem.</li>
+<li>To wyznacza <strong>uczciwą granicę produktu</strong>: Talent jest jednostką dla inflacji do rzędu kilkudziesięciu % rocznie. Powyżej progu Cagana (50% m/m) żadna jednostka indeksowa nie działa — działa tylko natychmiastowa wymiana na dobra/waluty obce.</li>
+</ul>
+<h2>3. Argentyna — trzy lekcje, każda projektowa (epizod, liczby przybliżone)</h2>
+<p><strong>(a) 2002 — korytarz rozdarty w jeden rok.</strong> CPI +41%, płace nominalne +7% → realny spadek płac ~24% w 12 miesięcy. Talent = √(1,41×1,07) → +22,8%: dłużnik +14,8% względem płac, wierzyciel −12,9% względem cen. Bolesne, ale symetryczne — i wciąż o połowę lepsze dla każdej strony niż czysta indeksacja drugą nogą.</p>
+<p><strong>(b) 2007–2015 — INDEC, czyli zmanipulowane źródło.</strong> Rząd Kirchnerów fałszował oficjalny CPI: ~10%/rok oficjalnie vs ~25%/rok według niezależnych pomiarów (PriceStats/MIT Billion Prices, indeksy prowincji, „CPI Kongresu"). Po 9 latach: oficjalnie ×2,2, realnie ×~7. <strong>Talent liczony z jednego oficjalnego źródła okradłby wierzycieli z ~70% wartości.</strong> To jest rozstrzygający argument za regułą, którą przyjęliśmy w warstwie zaufania: <strong>każda noga = mediana ≥3 niezależnych źródeł + tripwire</strong> (rozjazd źródeł powyżej progu → automatyczne wykluczenie odstającego, zapisane z góry w kodzie). Manipulacja INDEC była wykrywalna natychmiast — PriceStats pokazywał rozjazd od pierwszego roku.</p>
+<p><strong>(c) 2016–2021 — UVA, czyli naturalny eksperyment jednonożnej indeksacji.</strong> Argentyńskie kredyty hipoteczne UVA (indeksowane samym CPI, model chilijski) po skoku inflacji 2018–19 (CPI ~×2,3 w dwa lata przy płacach ~×1,8) podniosły obciążenie kredytobiorców o ~25% względem pensji → protesty → rząd <strong>zamroził raty dekretem</strong> (2019–2021). Talent z nogą płacową dałby w tym samym epizodzie wzrost obciążenia o ~11% zamiast ~25% — być może poniżej progu wybuchu politycznego. Lekcja podwójna: (1) noga płacowa to nie ozdoba, to polityczny bezpiecznik produktu; (2) umowa musi z góry zawierać regułę kryzysową (odroczenie/wydłużenie zamiast zamrożenia dekretem), bo inaczej państwo napisze ją za nas.</p>
+<h2>4. Wnioski projektowe — trzy reguły do wpisania w kod jednostki</h2>
+<ol>
+<li><strong>Reguła częstotliwości (z Polski 1990 i Niemiec 1923):</strong> publikacja dzienna interpolowana (jak UF); gdy 3-miesięczna średnia inflacji m/m przekroczy próg (np. 15%), automatyczne skrócenie okna wygładzania i interpolacja kursowa; powyżej progu Cagana (50% m/m) — jednostka przechodzi w tryb awaryjny na z góry zadeklarowany twardy koszyk (mediana 3 stabilnych walut), aż inflacja wróci poniżej progu przez 6 miesięcy. Wszystko deterministyczne, ogłoszone z góry.</li>
+<li><strong>Reguła mediany źródeł (z Argentyny b):</strong> minimum 3 niezależne źródła na nogę; mediana; tripwire rozjazdu. Bez tego jednostka jest zakładnikiem najsłabszego urzędu statystycznego.</li>
+<li><strong>Reguła kryzysowa w umowie (z Argentyny c):</strong> kontrakt w Talentach zawiera z góry mechanizm ulgi (wydłużenie zamiast redukcji, cap rocznego wzrostu raty z kapitalizacją reszty), żeby polityka nie musiała łamać jednostki dekretem.</li>
+</ol>
+<h2>5. Stan wiedzy po trzech testach</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Najgorszy żal Talenta</th>
+<th>Warunki</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USA 1929–2025</td>
+<td>19,7% (CPI×PKB/os.; Wielki Kryzys) / <strong>6,1%</strong> (CPI×płaca, od 1939)</td>
+<td>kraj stabilny instytucjonalnie</td>
+</tr>
+<tr>
+<td>Polska 1989–2024</td>
+<td><strong>10,4%</strong> (transformacja ustrojowa)</td>
+<td>zmiana ustroju, inflacja 586%/rok</td>
+</tr>
+<tr>
+<td>Niemcy 1923</td>
+<td>jednostka indeksowa nie działa</td>
+<td>hiperinflacja &gt; próg Cagana</td>
+</tr>
+<tr>
+<td>Argentyna</td>
+<td>~13–15%/rok szoku (2002); manipulacja źródła = do −70% bez mediany źródeł</td>
+<td>kryzys walutowy; wrogie państwo</td>
+</tr>
+</tbody>
+</table>
+<p>Pasmo „w przybliżeniu ta sama wartość po latach" jest więc policzalne i zaskakująco wąskie wszędzie tam, gdzie istnieje wiarygodny pomiar cen i płac — a tam, gdzie nie istnieje, żadna formuła go nie zastąpi i trzeba to wpisać w granice produktu.</p>
+<p><strong>Do weryfikacji u źródeł:</strong> tablica płac GUS/ZUS 1989–2024; liczby niemieckie (Bresciani-Turroni/Cagan); argentyńskie (INDEC vs PriceStats, dynamika RIPTE 2018–19, dekrety UVA). Rzędy wielkości pewne, dokładne wartości do audytu przed publikacją.</p>
+</body>
+</html>

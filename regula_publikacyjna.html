@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talent (TLN) — reguła publikacyjna</title>
+<style>
+:root{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto}
+h1{font-size:1.7em}h1 span{color:var(--ac)}
+h2{font-size:1.2em;margin:30px 0 10px;color:var(--ac)}
+h3{font-size:1.02em;margin:18px 0 6px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px}
+code,pre{font:.88em/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px}
+code{padding:1px 6px}
+pre{padding:14px 16px;overflow-x:auto;margin:0 0 14px;border-left:3px solid var(--ac)}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 14px;font-size:.92em;display:block;overflow-x:auto}
+th,td{border:1px solid #2a323c;padding:6px 10px;text-align:left}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+.mut{color:var(--mut)}
+.top{margin-bottom:22px}
+hr{border:none;border-top:1px solid #2a323c;margin:20px 0}
+em{color:var(--mut)}
+</style>
+</head>
+<body>
+<p class="top"><a href="index.html">&larr; strona g&#322;&oacute;wna Talenta</a></p>
+<h1>Reguła publikacyjna Talenta (TLN) — v0.1</h1>
+<p><strong>Data:</strong> 2026-07-04 · <strong>Status:</strong> projekt do dyskusji · <strong>Kod referencyjny:</strong> <code>prototyp/src/talent_daily.py</code>
+Zasada nadrzędna: <strong>kod jest metodologią</strong>. Ten dokument opisuje regułę słowami; w razie rozbieżności wiąże wersjonowany kod z podpisanym tagiem. Operacyjne szczegóły zasilania danymi (konkretne komunikaty, dni publikacji, kaskady awaryjne, rewizje, zmiany bazy): <code>POLITYKA_danych_v0.1.md</code>.</p>
+<h2>1. Definicja jednostki</h2>
+<p>Talent to jednostka wartości będąca środkiem geometrycznym kosztów życia i płac:</p>
+<pre><code>A(m) = 100 × √( I_c(m)/I_c(m₀) × I_w(m)/I_w(m₀) )
+</code></pre>
+<ul>
+<li><strong>I_c — noga cen:</strong> indeks cen konsumpcyjnych, łańcuch miesięczny. Docelowo <strong>mediana ≥3 niezależnych źródeł</strong> (GUS CPI, HICP Eurostat, niezależny indeks cen online); do czasu trzeciego źródła: średnia geometryczna GUS i HICP z tripwire (§5.3).</li>
+<li><strong>I_w — noga płac (definicja v0.2):</strong> indeks <strong>funduszu płac na wygładzone zatrudnienie</strong>: <code>W(m) = FunduszPłac(m) / MA12(Zatrudnienie)(m)</code> (średnia krocząca 12-mies., przyczynowa), następnie wygładzenie 12-mies. całego indeksu (sezonowość premii). Oba składniki pochodzą z tych samych sprawozdań firm do GUS. Uzasadnienie: przeciętna płaca (fundusz/bieżące zatrudnienie) ma procykliczny artefakt składu — w kryzysie zwalniani są najpierw nisko opłacani i średnia <em>rośnie</em>, gdy dochody spadają (USA, IV 2020: przeciętna +4,2% m/m, fundusz/MA12 −8,9%; dryf długookresowy obu wariantów identyczny: +135,7% vs +136,2% za 2000–2026). Weryfikacja: <code>src/wage_leg_v2 — data/processed/wage_leg_v2_monthly.csv</code>. Źródła: sektor przedsiębiorstw (GUS, miesięczny) łańcuchowany gospodarką narodową (GUS, kwartalny); docelowo mediana wzrostu płac tych samych osób z danych ZUS jako drugie źródło.</li>
+<li><strong>m₀ — baza:</strong> pierwszy miesiąc publikacji = 100. Baza jest stała na zawsze; nigdy nie jest przesuwana.</li>
+</ul>
+<p>Uzasadnienie empiryczne wag 50/50 i wyboru nóg: <code>WYSCIG_kandydatow_minimalny_zal.md</code>, <code>WYNIKI_test_stulecia_USA.md</code>, <code>WYNIKI_kruche_gospodarki.md</code> (minimalizacja dwustronnego regretu/żalu).</p>
+<h2>2. Kalendarz i wartość dzienna (model UF — pełny pre-commitment)</h2>
+<ol>
+<li>GUS publikuje CPI za miesiąc <em>m</em> ok. 15. dnia <em>m+1</em>; płace przedsiębiorstw ok. 21. dnia <em>m+1</em>.</li>
+<li><strong>Dzień kotwicy: 25. dzień miesiąca <em>m+1</em>.</strong> Liczymy A(m) z danych opublikowanych do tego dnia i <strong>jednocześnie publikujemy pełną ścieżkę dzienną</strong> na okno od 26. dnia <em>m+1</em> do 25. dnia <em>m+2</em>:</li>
+</ol>
+<pre><code>T(d) = A(m) × g^(k/K),   g = A(m)/A(m−1),   k = 1…K (dni okna)
+</code></pre>
+<ol>
+<li>Każda wartość dzienna jest więc znana <strong>co najmniej dzień naprzód, a maksymalnie miesiąc naprzód</strong> — strony umowy nigdy nie rozliczają się po wartości, której nie mogły znać wcześniej (wzór: chilijska UF).</li>
+</ol>
+<h2>3. Zakaz rewizji wstecz</h2>
+<p>Raz opublikowana wartość (kotwica lub dzienna) <strong>nigdy nie jest zmieniana</strong>. Rewizje danych źródłowych (GUS/Eurostat) wpływają wyłącznie na przyszłe łańcuchy m/m. Publikacja każdego odczytu zawiera <strong>hash danych wejściowych</strong> i wersję kodu (tag git), więc każdy może odtworzyć wynik co do grosza.</p>
+<h2>4. Rewizje składu i źródeł (chain-linking)</h2>
+<p>Zmiana źródła/składnika wyłącznie wg procedury z <code>archiwum/AUV_niezmienniczosc_i_rewizja.md</code> Część II: kryteria kwalifikacji zapisane z góry, ogłoszenie ≥3 miesiące naprzód, łączenie łańcuchowe (bez skoku), test nakładania, nigdy wstecz. Konsensus społeczności (model open source) decyduje <strong>czy kryteria zastosowano poprawnie</strong> — nigdy o pożądanym wyniku.</p>
+<h2>5. Bezpieczniki (deterministyczne, ogłoszone z góry)</h2>
+<ol>
+<li><strong>Próg podwyższonej inflacji:</strong> jeśli 3-miesięczna średnia |wzrostu kotwicy m/m| &gt; 5%, okno interpolacji skraca się (publikacja dekadowa: 5., 15., 25.) — redukcja strat lagu (lekcja: Polska I 1990, −44% przy lagu miesięcznym).</li>
+<li><strong>Próg Cagana (tryb awaryjny):</strong> inflacja &gt; 50% m/m przez 2 kolejne miesiące → jednostka przechodzi na z góry zadeklarowany twardy koszyk (mediana kursów 3 stabilnych walut), aż inflacja &lt; 15% m/m przez 6 miesięcy; powrót przez chain-linking (lekcja: Niemcy 1923 — powyżej tego progu żaden indeks nie działa i nie wolno udawać, że jest inaczej).</li>
+<li><strong>Tripwire źródeł:</strong> rozjazd rocznych dynamik źródeł jednej nogi &gt; 3 p.p. → automatyczne przejście na medianę pozostałych + publiczny alert (lekcja: INDEC 2007–15).</li>
+<li><strong>Cap kontraktowy (zalecenie do umów, nie do indeksu):</strong> wzrost zobowiązania m/m ponad X% podlega odroczeniu z kapitalizacją, nie umorzeniu (lekcja: zamrożenie UVA dekretem).</li>
+</ol>
+<h2>6. Publikacja i licencja</h2>
+<ul>
+<li>Kanały: repozytorium git (dane + kod + podpisane tagi), plik JSON/CSV z kotwicami i ścieżką dzienną, strona statyczna (<code>talent_strona.html</code> — działa z GitHub Pages, bez serwera).</li>
+<li>Licencja: kod i dane wynikowe otwarte (np. MIT + CC-BY); warunek użycia nazwy „Talent/TLN": niemodyfikowana formuła (ochrona przed podszywaniem).</li>
+<li>Częstotliwość: kotwica miesięcznie, ścieżka dzienna z wyprzedzeniem, alerty bezpieczników natychmiast.</li>
+</ul>
+<h2>7. Znane prowizoria v0.1 (jawna lista)</h2>
+<ol>
+<li>Noga płac w prototypie: dane roczne GUS/ZUS interpolowane — do zastąpienia adapterem GUS BDL (płaca miesięczna sektora przedsiębiorstw).</li>
+<li>Noga cen: jedno źródło (CPI PL) — do rozszerzenia o HICP i indeks online.</li>
+<li>Baza prototypu: 1996-01 = 100 (dla ciągłości badań); baza produkcyjna zostanie ustalona w dniu pierwszej publikacji.</li>
+<li>Wariant Qist (finanse bezodsetkowe): identyczna formuła, odrębna dokumentacja zgodności (mithl/riba) — do opracowania z ekspertem fiqh.</li>
+</ol>
+</body>
+</html>
