@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Talent (TLN) — jednostka wartości</title>
+<meta name="description" content="Talent (TLN): niezależna jednostka rozliczeniowa licząca sprawiedliwą wartość umów i pożyczek na podstawie cen i płac — środek geometryczny √(ceny × płace).">
+<meta property="og:title" content="Talent (TLN) — sprawiedliwa miara wartości w zmiennym świecie">
+<meta property="og:description" content="Codzienne odczyty jednostki, która chroni obie strony umowy przed inflacją i utratą siły nabywczej pracy.">
+<meta property="og:type" content="website">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017}
@@ -26,23 +30,36 @@ ul.docs i{color:var(--mut)}
 .cap{color:var(--mut);font-size:.8em;margin:0 4px 20px}
 .foot{color:var(--mut);font-size:.85em;border-top:1px solid #2a323c;padding-top:14px;margin-top:16px}
 .foot b{color:var(--tx)}
+.warn{background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.35);border-radius:10px;padding:14px 16px;margin:0 0 24px;font-size:.9em;color:var(--tx)}
+.warn b{color:var(--ac)}
+ul.docs li.featured{border-left-color:var(--ac);background:rgba(212,160,23,.06);padding:10px 14px;border-radius:0 8px 8px 0}
 a{color:var(--ac)}
 @media(max-width:600px){.grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <h1>Talent <span>TLN</span></h1>
-<p class="sub">Jednostka wartości minimalnego żalu (regret) &middot; √(ceny &times; płace) &middot; prototyp badawczy, Polska, baza I&nbsp;1996&nbsp;=&nbsp;100</p>
-
-<h2>Czym jest Talent?</h2>
-<p class="intro">Pieniądz źle znosi umowy wieloletnie: pożyczasz koledze 10&nbsp;000 zł, on po dziesięciu latach oddaje 10&nbsp;000 zł — tę samą liczbę, ale nie tę samą wartość. Kto pożyczył w Polsce w 1989 roku i odzyskał nominalnie w 2019, odzyskał mniej niż 1% wartości. <b>Talent to jednostka, w której „oddajesz tyle samo" znów znaczy to, co powinno.</b></p>
-<p class="intro">Wartość ma dwie równoprawne miary: <b>ceny</b> (pytanie pożyczającego: czy kupię za to tyle samo co kiedyś?) i <b>płace</b> (pytanie oddającego: czy kosztuje mnie to tyle samo pracy?). Talent to środek geometryczny obu — √(ceny&nbsp;×&nbsp;płace) — punkt, w którym największa możliwa krzywda którejkolwiek strony jest najmniejsza. W dobrych czasach obie strony dzielą się owocami wzrostu po równo, w złych po równo dzielą stratę. Przez sto lat danych USA (1929–2025) najgorszy przypadek to 6,1%, przez polską transformację (1989–2024) — 10,4%; pożyczka nominalna w tych samych próbach krzywdziła na setki, a nawet tysiące procent.</p>
-<p class="intro">Formuła jest w pełni otwarta: <b>kod jest metodologią</b>. Wartości liczone są z publicznych danych, publikowane z wyprzedzeniem i nigdy nie rewidowane wstecz — nie musisz nikomu wierzyć, możesz sprawdzić wszystko na własnym komputerze.</p>
+<p class="sub">Sprawiedliwa miara wartości w zmiennym świecie &middot; √(ceny &times; płace) &middot; prototyp badawczy, Polska, baza I&nbsp;1996&nbsp;=&nbsp;100</p>
 
 <div class="grid">
 <div class="card"><div class="l">Wartość dziś</div><div class="v" id="today">—</div><div class="d" id="todaydate"></div></div>
 <div class="card"><div class="l">Kotwica miesięczna</div><div class="v" id="anchor">—</div><div class="d" id="anchordate"></div></div>
 <div class="card"><div class="l">Zmiana 12 mies.</div><div class="v" id="yoy">—</div><div class="d">ścieżka znana z wyprzedzeniem</div></div>
+</div>
+
+<div class="warn"><b>Uwaga:</b> to wartości robocze prototypu badawczego — nie są to oficjalne kursy rozliczeniowe.</div>
+
+<h2>Dlaczego czas niszczy tradycyjne umowy?</h2>
+<p class="intro">Pieniądz jest fundamentem gospodarki, ale ma jedną wadę: z czasem traci realną wartość. „Oddajesz dokładnie 10&nbsp;000 zł" brzmi uczciwie, dopóki nie zauważysz, że liczba na papierze się nie zmienia, a jej siła nabywcza nieustannie płynie. Kto pożyczył w Polsce w 1989 roku i odzyskał nominalnie 30 lat później, odzyskał realnie mniej niż 1% wartości. Kontrakt z 2019 rozliczony w 2024 to strata ok. 30% względem cen i aż 40% względem zarobków.</p>
+<p class="intro">Powiązanie umowy z samą inflacją (CPI) chroni tylko jedną stronę — nie odpowiada na pytanie dłużnika: „czy ta płatność kosztuje mnie tyle samo mojej pracy, co wcześniej?". W Argentynie 2002 ceny skoczyły o 41%, płace o 7% — umowy indeksowane samą inflacją doprowadziły do masowych bankructw. <b>Wartość ma dwie równoprawne miary: ceny i płace.</b> Talent to ich środek geometryczny — √(ceny&nbsp;×&nbsp;płace) — punkt, w którym w dobrych czasach obie strony dzielą owoce wzrostu po równo, a w złych po równo dzielą stratę.</p>
+<p class="intro">Formuła jest w pełni otwarta: kod jest metodologią, dane publiczne, a wyniki nigdy nie są rewidowane wstecz. <a href="ARTYKUL_wprowadzenie_i_zastosowania.md"><b>Czytaj pełne wprowadzenie i zastosowania →</b></a></p>
+
+<h2>Dwa główne zastosowania</h2>
+<div class="wrap">
+<ul class="docs">
+<li><b>Uczciwe pożyczki prywatne i koleżeńskie (P2P)</b> — pomoc finansowa rodzinie czy znajomym bez lichwiarskich odsetek, ale też bez ryzyka, że inflacja „zje" realną wartość pożyczonego kapitału.</li>
+<li><b>Długoterminowe kontrakty handlowe i zakupowe</b> — cena sprzętu czy towaru z odroczoną płatnością wyrażona w Talentach chroni sprzedawcę przed wzrostem kosztów, a kupującego przed ceną przerastającą jego możliwości.</li>
+</ul>
 </div>
 
 <h2>Indeks Talenta</h2>
@@ -61,7 +78,7 @@ a{color:var(--ac)}
 <h2>Przeczytaj więcej</h2>
 <div class="wrap">
 <ul class="docs">
-<li><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/ARTYKUL_Talent_popularnonaukowy.md"><b>Whitepaper</b></a> — pełny wywód od problemu do formuły, z dowodem zrozumiałym dla licealisty i uczciwą listą granic metody. <i>Zacznij tutaj.</i></li>
+<li class="featured"><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/ARTYKUL_Talent_popularnonaukowy.md"><b>Whitepaper — zacznij tutaj</b></a> — pełny wywód od problemu do formuły, z dowodem zrozumiałym dla licealisty i uczciwą listą granic metody.</li>
 <li><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/REGULA_publikacyjna_Talent_v0.1.md"><b>Reguła publikacyjna</b></a> — jak dokładnie liczymy: definicje obu nóg, kalendarz publikacji, bezpieczniki kryzysowe.</li>
 <li><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/TIP"><b>TIP — proces zmian</b></a> — każda zmiana formuły przechodzi jawną procedurę z testem na danych (wzorzec BIP z Bitcoina).</li>
 <li><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/WYSCIG_kandydatow_minimalny_zal.md"><b>Wyścig kandydatów</b></a> — dlaczego nie złoto, nie surowce i nie sama inflacja (złoto: żal do 265%).</li>
