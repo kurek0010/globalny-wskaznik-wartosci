@@ -27,7 +27,7 @@ a{color:var(--ac)}
 <body>
 <p class="top"><a href="index.html">← strona główna Talenta</a></p>
 <h1>Specyfikacja obliczeń <span>Talenta</span></h1>
-<p class="mut">Dokument dla wnikliwych: wszystkie wzory i kroki potrzebne, by napisać własną, niezależną implementację i uzyskać te same liczby. Wersja reguły: v0.1 z nogą płacową v0.2. Implementacja referencyjna: <a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/tree/main/prototyp/src">prototyp/src</a>.</p>
+<p class="mut">Dokument dla wnikliwych: wszystkie wzory i kroki potrzebne, by napisać własną, niezależną implementację i uzyskać te same liczby. Wersja reguły: v0.1 z nogą płacową v0.2. Implementacja referencyjna: <a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/tree/main/prototyp/src">prototyp/src</a>. Szczegółowa polityka zasilania danymi (konkretne komunikaty urzędów, dni publikacji, kaskady awaryjne, obsługa rewizji i zmian bazy): <a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/POLITYKA_danych_v0.1.md">POLITYKA_danych_v0.1.md</a>.</p>
 
 <h2>0. Oznaczenia</h2>
 <p><code>m</code> — miesiąc kalendarzowy; <code>m₀</code> — miesiąc bazowy (pierwszy w szeregu); <code>I_c(m)</code> — indeks cen; <code>I_w(m)</code> — indeks płac; <code>A(m)</code> — kotwica miesięczna Talenta; <code>T(d)</code> — wartość dzienna; <code>MA12(x)(m)</code> — średnia arytmetyczna z 12 ostatnich dostępnych wartości x do miesiąca m włącznie (krocząca, wyłącznie wstecz — „przyczynowa").</p>
@@ -57,6 +57,7 @@ a{color:var(--ac)}
 <li>Korekta efektu składu (<a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/TIP/TIP-0001-noga-placowa-v02.md">TIP-0001</a>): <code>W(m) = F(m) / MA12(zatrudnienie)(m)</code>. Dzięki temu w kryzysie miara spada (fundusz maleje od razu, mianownik „pamięta" pełne zatrudnienie), zamiast sztucznie rosnąć jak przeciętna płaca.</li>
 <li>Usuń sezonowość premii: <code>I_w(m) = MA12(W)(m)</code>, następnie normalizacja do <code>m₀ = 100</code>.</li>
 <li>Kontrola poprawności na danych USA (FRED AHETPI×PAYEMS): kwiecień 2020 — przeciętna płaca <b>+4,2% m/m</b>, W po korekcie <b>−8,9% m/m</b>; dryf 2000-01→2026-06: +135,7% vs +136,2% (metody zbieżne w długim okresie).</li>
+<li><b>Świadomy kompromis — średnia zamiast mediany.</b> Przeciętne wynagrodzenie zawyża górny ogon rozkładu, więc rośnie szybciej niż płaca typowego pracownika — noga na średniej lekko sprzyja wierzycielowi. To decyzja wymuszona historyczną dostępnością danych, nie błąd założenia. Kierunek docelowy: mediana z rejestrów ZUS+MF (GUS publikuje ją miesięcznie od 2010) — szczegóły i kryteria przejścia w <a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/TIP/TIP-0002-mediana-wynagrodzen.md">TIP-0002</a>.</li>
 </ol>
 
 <h2>4. Kotwica miesięczna</h2>

@@ -1,7 +1,7 @@
 # Reguła publikacyjna Talenta (TLN) — v0.1
 
 **Data:** 2026-07-04 · **Status:** projekt do dyskusji · **Kod referencyjny:** `prototyp/src/talent_daily.py`
-Zasada nadrzędna: **kod jest metodologią**. Ten dokument opisuje regułę słowami; w razie rozbieżności wiąże wersjonowany kod z podpisanym tagiem.
+Zasada nadrzędna: **kod jest metodologią**. Ten dokument opisuje regułę słowami; w razie rozbieżności wiąże wersjonowany kod z podpisanym tagiem. Operacyjne szczegóły zasilania danymi (konkretne komunikaty, dni publikacji, kaskady awaryjne, rewizje, zmiany bazy): `POLITYKA_danych_v0.1.md`.
 
 ## 1. Definicja jednostki
 

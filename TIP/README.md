@@ -24,3 +24,4 @@ Nagłówek (numer, tytuł, autor, data, status) · Problem · Proponowana zmiana
 | Nr | Tytuł | Status |
 |---|---|---|
 | [TIP-0001](TIP-0001-noga-placowa-v02.md) | Noga płacowa v0.2: fundusz płac / wygładzone zatrudnienie | Wdrożony |
+| [TIP-0002](TIP-0002-mediana-wynagrodzen.md) | Noga płacowa: mediana wynagrodzeń z rejestrów ZUS+MF | Szkic |
