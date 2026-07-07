@@ -57,3 +57,5 @@ Publikacyjnie: jedna tabela dzienna K kotwic + macierz kursów krzyżowych; kosz
 4. Weryfikacja pozycji ✻ przed każdym wdrożeniem (jedna sesja na kraj).
 
 Świadomie poza zakresem: CNY/INR do czasu rozwiązania problemu źródeł; kraje strefy euro osobno (mają EUR); kryptowaluty (nie mają własnych cen i płac — Talent mierzy gospodarki, nie tokeny).
+
+**Rozwinięcie per waluta:** karty w katalogu [waluty/](waluty/) — PLN, USD, GBP, JPY, EUR, CHF oraz CNY (z zastrzeżeniem dużej aproksymacji).
