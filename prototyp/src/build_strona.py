@@ -41,7 +41,9 @@ def build_index() -> None:
             .replace("__FX__", json.dumps({"labels": list(fx.index), "series": fxd},
                                           separators=(",", ":")))
             .replace("__WAGE__", json.dumps(wage, separators=(",", ":")))
-            .replace("__CURCARDS__", cur_cards))
+            .replace("__CURCARDS__", cur_cards)
+            .replace("__ANCHORFOR__", list(anchors)[-1])
+            .replace("__UPDATED__", __import__("datetime").date.today().isoformat()))
     (ROOT / "index.html").write_text(html)
     (ROOT / "talent_strona.html").write_text(html)
     print(f"index.html + talent_strona.html: {len(html)//1024} KB")

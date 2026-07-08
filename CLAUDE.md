@@ -29,3 +29,7 @@ W szablonie markery `__DATA__`, `__FX__`, `__WAGE__`, `__CURCARDS__` wypełnia b
 ## Podział ról (umowa projektu)
 
 Utrzymanie strony i kodu: Claude Code (to repo). Treści, metodologia, decyzje: praca z autorem w Cowork. Wspólny styk to builder i pliki `.md` — dlatego zasada „wszystko przez builder" jest nienegocjowalna.
+
+## Aktualizacja miesięczna
+
+Kotwica: 25. dnia miesiąca wg `INSTRUKCJA_aktualizacji.md` (odcięcie danych 24., first-printy GUS do `talent_update.py`, potem builder). Zakaz rewizji pilnowany przez `talent_published.json`.
