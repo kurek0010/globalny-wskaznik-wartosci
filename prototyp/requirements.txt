@@ -12,3 +12,4 @@ plotly>=5.17
 jupyter>=1.0
 pyarrow>=14.0
 python-dotenv>=1.0
+markdown

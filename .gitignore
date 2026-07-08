@@ -31,3 +31,6 @@ output/tmp/
 *.pkl
 *.joblib
 *.h5
+
+# Claude Code (ustawienia lokalne)
+.claude/
