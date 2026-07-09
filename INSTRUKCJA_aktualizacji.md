@@ -27,9 +27,36 @@ Zasada żelazna: raz opublikowana wartość nigdy nie jest zmieniana (`talent_pu
 - Noga cen = jedno źródło (GUS m/m). HICP-PL: Eurostat przeszedł na COICOP-2018 (zbiór `prc_hicp_minr`), stary `prc_hicp_midx` zamknięty na XII 2025 — adapter do nowego zbioru przed włączeniem drugiego źródła.
 - FRED/OECD (`POLCPIALLMINMEI`) opóźniony o ~15 miesięcy — NIE nadaje się do aktualizacji bieżących (tylko do historii).
 
-## Automatyzacja (zadanie dla Claude Code)
+## Automatyzacja
 
-Docelowo: GitHub Action (cron `0 10 25 * *`), która pobiera first-printy (adapter GUS: komunikaty lub API DBW), dopisuje do słowników lub czyta z pliku danych, uruchamia oba skrypty, commituje z raportem i alertami. Do czasu automatu — procedura ręczna powyżej (~10 minut).
+**Działa od 2026-07-09.** GitHub Action `.github/workflows/publikacja_kotwicy.yml`,
+cron `0 9 25 * *` (25. dnia miesiąca, 09:00 UTC — po odcięciu danych 24. 12:00 CET):
+
+1. `prototyp/src/fetch_gus.py` — pobiera first-printy CPI m/m z tabeli GUS
+   „Miesięczne wskaźniki cen… od 1982 roku" (CSV, jedyne sprawdzone źródło
+   maszynowe — API DBW i BDL nie dają miesięcznego CPI m/m dla Polski),
+   append-only do `prototyp/data/first_prints_pln.json`. Płace roczne (komunikat
+   Prezesa GUS) — próba automatyczna tylko w lutym, inaczej zgłasza potrzebę
+   ręcznego wpisu.
+2. `prototyp/src/talent_update.py` — czyta z `first_prints_pln.json`, liczy nowe
+   kotwice (zakaz rewizji wstecz przez `talent_published.json` bez zmian).
+   Kaskada awaryjna: 1 brakujący miesiąc CPI = carry-forward ostatniej dynamiki
+   + alert; 2 kolejne braki = przerwanie **bez** publikacji (Issue w repo).
+3. `prototyp/src/build_strona.py` — przebudowuje stronę.
+4. Commit (`github-actions[bot]`) i push — **tylko gdy są nowe kotwice**;
+   komunikat: `Kotwica TLN-PLN za YYYY-MM: <wartość>` + alerty.
+
+**Ręczne uruchomienie:** zakładka Actions → „Publikacja kotwicy TLN-PLN" →
+Run workflow (opcjonalnie zaznacz `dry_run`, żeby zobaczyć podgląd zmian bez
+commita/pusha).
+
+**Wyłączenie:** zakładka Actions → „Publikacja kotwicy TLN-PLN" → „…" →
+Disable workflow. Albo usuń/zakomentuj blok `schedule:` w pliku workflow
+(zostanie tylko ręczne uruchamianie przez `workflow_dispatch`).
+
+**Błąd/alert automatu** → automat tworzy Issue w repozytorium z logiem i
+instrukcją, co ma zrobić człowiek (zwykle: ręczny wpis do
+`first_prints_pln.json`, potem ponowne ręczne uruchomienie).
 
 ## Inne waluty (gdy powstaną TLN-USD, TLN-EUR…)
 

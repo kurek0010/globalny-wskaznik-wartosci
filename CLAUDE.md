@@ -33,3 +33,4 @@ Utrzymanie strony i kodu: Claude Code (to repo). Treści, metodologia, decyzje: 
 ## Aktualizacja miesięczna
 
 Kotwica: 25. dnia miesiąca wg `INSTRUKCJA_aktualizacji.md` (odcięcie danych 24., first-printy GUS do `talent_update.py`, potem builder). Zakaz rewizji pilnowany przez `talent_published.json`.
+Od 2026-07-09 dzieje się automatycznie: GitHub Action `.github/workflows/publikacja_kotwicy.yml` (fetch_gus.py → talent_update.py → build_strona.py → commit) — ręczne uruchomienie/wyłączenie opisane w `INSTRUKCJA_aktualizacji.md` → „Automatyzacja".

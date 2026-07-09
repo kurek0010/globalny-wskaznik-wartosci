@@ -4,12 +4,15 @@ name: Publikacja kotwicy TLN-PLN
 # odciecie danych 24. dnia 12:00 CET, kotwica 25. dnia. Cron 09:00 UTC = zawsze
 # po poludniu CET/CEST 24. dnia poprzedniego dnia -> bezpieczny margines.
 #
-# CRON CELOWO WYLACZONY DO CZASU TESTOW (Etap 4 promptu automatyzacji):
-# odkomentuj ponizsze dwie linie dopiero po lokalnym tescie lancucha i po
-# udanym recznym uruchomieniu przez workflow_dispatch (dry-run).
-# schedule:
-#   - cron: "0 9 25 * *"
+# Cron wlaczony 2026-07-09 po: (1) lokalnym tescie pelnego lancucha
+# (fetch_gus.py -> talent_update.py -> build_strona.py, opublikowana kotwica
+# 2026-05) i (2) udanym recznym uruchomieniu przez workflow_dispatch
+# (dry-run, run 29032072543 - poprawnie wykryl brak nowych miesiecy i nie
+# commitowal). Jak wylaczyc/uruchomic recznie: patrz INSTRUKCJA_aktualizacji.md
+# ("Automatyzacja").
 on:
+  schedule:
+    - cron: "0 9 25 * *"
   workflow_dispatch:
     inputs:
       dry_run:
