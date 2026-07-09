@@ -4,92 +4,147 @@ PIERWSZA PUBLIKACJA: 2026-07-08. Wartosci sprzed tej daty byly robocze
 (prototyp; ogon 2025 zawieral artefakt ffill) i zostaly jednorazowo
 przeliczone z danych first-print GUS. OD TEJ PUBLIKACJI obowiazuje zakaz
 rewizji wstecz: kolejne uruchomienia moga TYLKO dopisywac nowe miesiace
-(skrypt odmowi nadpisania istniejacych wartosci).
+(skrypt odmowi nadpisania istniejacych wartosci) - to pilnuje
+talent_published.json.
 
-Zrodla first-print (do rozszerzania przy kazdej aktualizacji):
-- CPI m/m: GUS, tabela "Miesieczne wskazniki cen towarow i uslug
-  konsumpcyjnych od 1982 roku" (odczyt 2026-07-08)
-- place roczne (gospodarka narodowa): komunikaty Prezesa GUS
-  (2025: 8903,56 zl, komunikat z 2026-02-09, M.P. 2026 poz. 192)
-- ALERT: punkt plac 2026 = proxy (8903,56 x 1,058 wg dynamiki r/r sektora
-  przedsiebiorstw, V 2026, GUS) - zastapic komunikatem GN za 2026 w II 2027.
+Od automatyzacji (fetch_gus.py): CPI_MM i WAGE_ANNUAL nie sa juz wpisywane
+recznie w tym pliku - skrypt czyta je z prototyp/data/first_prints_pln.json
+(ktory dopisuje fetch_gus.py, append-only). Logika obliczen (srodek
+geometryczny, interpolacja log-liniowa nogi placowej, format
+talent_anchors.csv/json, mechanizm talent_published.json) jest DOKLADNIE
+taka sama jak przed refaktoryzacja - zmienilo sie tylko zrodlo slownikow.
+
+Kaskada awaryjna (POLITYKA_danych_v0.1.md §4.1-2): miesiac, dla ktorego wg
+kalendarza (REGULA §2 / POLITYKA §2: kotwica 25. dnia m+1 dla miesiaca m)
+powinna juz istniec kotwica, ale fetcher nie dostarczyl CPI - dostaje
+dynamike z ostatniej dostepnej publikacji (carry-forward) + alert. Jesli
+brakuje danych dla >=2 kolejnych oczekiwanych miesiecy, skrypt PRZERYWA bez
+zadnej publikacji w tym uruchomieniu (transakcyjnie) - eskalacja do
+czlowieka, zgodnie z POLITYKA §4.2.
 """
 from __future__ import annotations
 
 import json
 import math
+from datetime import date
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "processed"
+FIRST_PRINTS = ROOT / "data" / "first_prints_pln.json"
 
-# --- dane first-print (GUS) ------------------------------------------------
-CPI_MM = {  # dynamika m/m, poprzedni miesiac = 100
-    "2025-04": 100.4, "2025-05": 99.8, "2025-06": 100.1, "2025-07": 100.3,
-    "2025-08": 100.0, "2025-09": 100.0, "2025-10": 100.1, "2025-11": 100.1,
-    "2025-12": 100.0,
-    "2026-01": 100.7, "2026-02": 100.3, "2026-03": 101.1, "2026-04": 100.6,
-}
-WAGE_ANNUAL = {  # przecietne wynagrodzenie GN, zl/mies. (punkt = lipiec roku)
-    2024: 8181.72,           # komunikat GUS II 2025
-    2025: 8903.56,           # komunikat GUS 2026-02-09 (first print)
-    2026: 8903.56 * 1.058,   # PROXY (alert) - dynamika sektora przeds. V 2026
-}
 FIRST_PUBLICATION = "2025-04"  # od tego miesiaca ta sciezka jest kanoniczna
 
 
+def load_first_prints() -> tuple[dict[str, float], dict[int, float], set[int]]:
+    raw = json.loads(FIRST_PRINTS.read_text(encoding="utf-8"))
+    cpi_mm = {m: float(v["value"]) for m, v in raw.get("cpi_mm", {}).items()}
+    wage_raw = raw.get("wage_annual", {})
+    wage_annual = {int(y): float(v["value"]) for y, v in wage_raw.items()}
+    proxy_years = {int(y) for y, v in wage_raw.items() if v.get("proxy")}
+    return cpi_mm, wage_annual, proxy_years
+
+
+def expected_anchor_month(today: date | None = None) -> pd.Period:
+    """Miesiac m, dla ktorego kotwica A(m) powinna juz byc obliczona wg
+    kadencji REGULA §2 / POLITYKA §2: 25. dnia miesiaca m+1 publikujemy A(m).
+    Uzywane WYLACZNIE do wykrywania brakow (kaskada) - samo przetwarzanie
+    idzie po danych faktycznie dostepnych w first_prints_pln.json."""
+    today = today or date.today()
+    cur = pd.Period(f"{today.year}-{today.month:02d}", "M")
+    return cur - 1 if today.day >= 25 else cur - 2
+
+
 def main() -> None:
+    cpi_mm, wage_annual, proxy_years = load_first_prints()
+
     a = pd.read_csv(OUT / "talent_anchors.csv", index_col=0)
     a.index = pd.PeriodIndex(a.index, freq="M")
 
-    # znajdz poczatek przeliczenia: FIRST_PUBLICATION
     start = pd.Period(FIRST_PUBLICATION, "M")
-    if str(start) not in CPI_MM:
-        raise SystemExit("Brak danych CPI dla miesiaca startowego")
+    if str(start) not in cpi_mm:
+        raise SystemExit("Brak danych CPI dla miesiaca startowego w first_prints_pln.json")
 
-    # zakaz rewizji: jesli kotwica za miesiac z CPI_MM juz opublikowana
-    # w poprzednim uruchomieniu (plik talent_published.json), nie ruszaj
     pub_file = OUT / "talent_published.json"
     published = set(json.load(open(pub_file))) if pub_file.exists() else set()
-    do_months = [m for m in CPI_MM if m not in published]
-    if not do_months:
-        print("Brak nowych miesiecy do publikacji.")
+
+    last_published = max((pd.Period(m, "M") for m in published), default=start - 1)
+    target = expected_anchor_month()
+
+    if target <= last_published:
+        print(f"Brak nowych miesiecy do publikacji (ostatnia kotwica: {last_published}, "
+              f"oczekiwana wg kalendarza: {target}).")
         return
 
     # noga plac: interpolacja log-liniowa punktow lipcowych, baza = I_w(2024-07)
     base_p = pd.Period("2024-07", "M")
     base_iw = float(a.loc[base_p, "I_w"])
-    pts = {pd.Period(f"{y}-07", "M"): math.log(v) for y, v in WAGE_ANNUAL.items()}
+    pts = {pd.Period(f"{y}-07", "M"): math.log(v) for y, v in wage_annual.items()}
     rng = pd.period_range(min(pts), max(pts), freq="M")
     wage = pd.Series(pts).reindex(rng).interpolate().apply(math.exp)
     wage = wage / wage[base_p]  # wzgledem bazy
 
-    last = start - 1
-    ic, iw = float(a.loc[last, "I_c"]), float(a.loc[last, "I_w"])
-    rows = []
-    for m in sorted(pd.Period(x, "M") for x in do_months):
-        ic *= CPI_MM[str(m)] / 100.0
+    ic, iw = float(a.loc[last_published, "I_c"]), float(a.loc[last_published, "I_w"])
+    last_A = float(a.loc[last_published, "A"])
+    last_dynamic = cpi_mm.get(str(last_published), 100.0) / 100.0  # fallback: brak zmiany
+
+    rows: list[tuple] = []
+    alerts: list[str] = []
+    consecutive_missing = 0
+    m = last_published + 1
+    while m <= target:
+        key = str(m)
+        if key in cpi_mm:
+            dyn = cpi_mm[key] / 100.0
+            consecutive_missing = 0
+            last_dynamic = dyn
+        else:
+            consecutive_missing += 1
+            if consecutive_missing >= 2:
+                raise SystemExit(
+                    f"BLAD: brak danych CPI za {consecutive_missing} kolejne "
+                    f"oczekiwane miesiace (do {m} wlacznie) - kaskada awaryjna "
+                    "wyczerpana (POLITYKA_danych_v0.1.md §4.2). Przerywam BEZ "
+                    "publikacji zadnego miesiaca w tym uruchomieniu - eskalacja "
+                    "do czlowieka."
+                )
+            dyn = last_dynamic
+            alerts.append(
+                f"ALERT: brak CPI za {m} w first_prints_pln.json - zastosowano "
+                f"carry-forward ostatniej znanej dynamiki ({100*dyn:.2f} = "
+                "poprzedni miesiac, POLITYKA §4.1)."
+            )
+
+        ic *= dyn
         iw = base_iw * float(wage[m]) if m in wage.index else iw  # carry-fwd
         A = math.sqrt(ic * iw)
-        g = A / (rows[-1][3] if rows else float(a.loc[m - 1, "A"]))
+        g = A / (rows[-1][3] if rows else last_A)
         rows.append((m, ic, iw, A, g))
         a.loc[m] = {"I_c": round(ic, 3), "I_w": round(iw, 3),
                     "A": round(A, 3), "g": round(g, 5),
                     "tryb_awaryjny": abs(g - 1) > 0.15}
+        m += 1
 
     a = a.sort_index()
     a.to_csv(OUT / "talent_anchors.csv")
     json.dump({str(p): round(v, 3) for p, v in a["A"].items()},
               open(OUT / "talent_anchors.json", "w"))
-    json.dump(sorted(published | set(CPI_MM)), open(pub_file, "w"), indent=1)
+    json.dump(sorted(published | {str(r[0]) for r in rows}), open(pub_file, "w"), indent=1)
 
     lastm, _, _, lastA, lastg = rows[-1]
     print(f"Opublikowano {len(rows)} kotwic: {rows[0][0]} .. {lastm}")
-    print(f"Kotwica {lastm}: A = {lastA:.3f} (m/m {100*(lastg-1):+.2f}%)")
-    print("ALERT: punkt plac 2026 = proxy z dynamiki sektora przeds. "
-          "(+5,8% r/r) - do zastapienia komunikatem GN w II 2027.")
+    print(f"Kotwica przed: {last_published} = {last_A:.3f}")
+    print(f"Kotwica po:    {lastm} = {lastA:.3f} (m/m {100*(lastg-1):+.2f}%)")
+    for al in alerts:
+        print(al)
+    if abs(lastg - 1) > 0.02:
+        print(f"SANITY: |m/m| = {100*abs(lastg-1):.2f}% > 2% przy obecnej inflacji - sprawdz recznie sensownosc.")
+    processed_years = {r[0].year for r in rows}
+    for y in sorted(proxy_years & processed_years):
+        print(f"ALERT: placa roczna {y} w first_prints_pln.json to PROXY - "
+              "do zastapienia komunikatem GN, gdy sie ukaze.")
     print("Nastepnie uruchom: python src/build_strona.py")
 
 
