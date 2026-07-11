@@ -131,7 +131,7 @@ jobs:
             index.html talent_strona.html whitepaper.html wprowadzenie.html \
             regula_publikacyjna.html wyscig_kandydatow.html \
             wyniki_test_stulecia_usa.html wyniki_kruche_gospodarki.html \
-            wyniki_talent_dwustronny.html
+            wyniki_talent_dwustronny.html tip.html
 
           if [ -n "$ALERTS" ]; then
             git commit -m "Kotwica TLN-PLN za ${MONTH_VAL}" -m "$ALERTS"
