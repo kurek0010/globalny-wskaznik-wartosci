@@ -18,30 +18,39 @@ SRC = Path(__file__).resolve().parent
 ROOT = SRC.parents[1]          # korzen repo
 DATA = SRC.parent / "data" / "processed"
 
+RZYMSKIE = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
+
 # ---------------------------------------------------------------- strona glowna
 
 def build_index() -> None:
     tpl = (SRC / "strona_szablon.html").read_text()
 
     anchors = json.load(open(DATA / "talent_anchors.json"))
+
+    a = pd.read_csv(DATA / "talent_anchors.csv", index_col=0)
+    a.index = pd.PeriodIndex(a.index, freq="M")
+    avg_ic_2020 = a.loc[a.index.year == 2020, "I_c"].mean()
+    hook_pct = round(avg_ic_2020 / a["I_c"].iloc[-1] * 100)
+
     fx = pd.read_csv(DATA / "talent_w_walutach.csv", index_col=0, parse_dates=True)
+    fx_last_date = fx.index[-1]
     fx.index = fx.index.to_period("M").astype(str)
-    wage = json.load(open(DATA / "wage_leg_v2.json"))
 
     fxd = {c.replace("TLN_", ""): [round(v, 3) for v in fx[c]] for c in fx.columns}
     last = fx.iloc[-1]
+    fx_date = f"{RZYMSKIE[fx_last_date.month - 1]} {fx_last_date.year}"
     cur_cards = "".join(
-        f'<div class="card"><div class="l">1 TLN w {c}</div>'
+        f'<div class="card mtile" data-series="{c}"><div class="l">1 TLN w {c}</div>'
         f'<div class="v">{last["TLN_"+c]:.2f}</div>'
-        f'<div class="d">{c}, XII 2025</div></div>'
+        f'<div class="d">{c}, {fx_date}</div></div>'
         for c in ["PLN", "USD", "EUR", "CHF", "GBP", "JPY"])
 
     html = (tpl
             .replace("__DATA__", json.dumps(anchors, separators=(",", ":")))
             .replace("__FX__", json.dumps({"labels": list(fx.index), "series": fxd},
                                           separators=(",", ":")))
-            .replace("__WAGE__", json.dumps(wage, separators=(",", ":")))
             .replace("__CURCARDS__", cur_cards)
+            .replace("__HOOK_PCT__", str(hook_pct))
             .replace("__ANCHORFOR__", list(anchors)[-1])
             .replace("__UPDATED__", __import__("datetime").date.today().isoformat()))
     (ROOT / "index.html").write_text(html)
@@ -58,6 +67,18 @@ DOCS = {  # plik md w korzeniu -> strona html
     "WYNIKI_test_stulecia_USA.md": "wyniki_test_stulecia_usa.html",
     "WYNIKI_kruche_gospodarki.md": "wyniki_kruche_gospodarki.html",
     "WYNIKI_talent_dwustronny.md": "wyniki_talent_dwustronny.html",
+    "TIP/README.md": "tip.html",
+}
+
+# Podmiana wzglednych linkow markdown na linki do GitHub - potrzebne tylko dla
+# plikow spoza korzenia repo (np. TIP/README.md linkuje do TIP-0001-...md w
+# tym samym katalogu, ktory nie ma wlasnej strony HTML).
+GITHUB_BLOB = "https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main"
+LINK_REWRITES = {
+    "TIP/README.md": [
+        ("(TIP-0001-noga-placowa-v02.md)", f"({GITHUB_BLOB}/TIP/TIP-0001-noga-placowa-v02.md)"),
+        ("(TIP-0002-mediana-wynagrodzen.md)", f"({GITHUB_BLOB}/TIP/TIP-0002-mediana-wynagrodzen.md)"),
+    ],
 }
 
 SHELL = """<!DOCTYPE html>
@@ -108,6 +129,8 @@ def build_docs() -> None:
             print(f"POMINIETO (brak pliku): {src_name}")
             continue
         text = src_path.read_text()
+        for old, new in LINK_REWRITES.get(src_name, []):
+            text = text.replace(old, new)
         title = next((l.lstrip("# ").strip() for l in text.splitlines()
                       if l.startswith("# ")), out_name)
         body = md.reset().convert(text)

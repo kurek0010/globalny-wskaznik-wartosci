@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TIP — Talent Improvement Proposals — Talent (TLN)</title>
+<style>
+:root{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto}
+h1{font-size:1.6em;margin:0 0 14px}
+h2{font-size:1.2em;margin:28px 0 10px;color:var(--ac)}
+h3{font-size:1.05em;margin:18px 0 8px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px;margin:0 0 12px}
+code{font:.88em ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px;padding:1px 6px}
+pre{background:var(--card);border-radius:8px;border-left:3px solid var(--ac);padding:14px 16px;overflow-x:auto;margin:0 0 14px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 16px;font-size:.92em}
+th,td{border:1px solid #2a323c;padding:6px 10px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+hr{border:0;border-top:1px solid #2a323c;margin:22px 0}
+em{color:var(--mut)}
+blockquote{border-left:3px solid #2a323c;padding-left:14px;color:var(--mut);margin:0 0 12px}
+.top{margin-bottom:22px;font-size:.9em}
+.gen{color:var(--mut);font-size:.78em;border-top:1px solid #2a323c;margin-top:30px;padding-top:12px}
+</style>
+</head>
+<body>
+<p class="top"><a href="index.html">← strona główna Talenta</a></p>
+<h1>TIP — Talent Improvement Proposals</h1>
+<p>Każda zmiana formuły, źródeł danych lub reguły publikacyjnej Talenta przechodzi przez TIP: ponumerowany dokument z uzasadnieniem, testem na danych i decyzją. Wzorzec: BIP (Bitcoin) / EIP (Ethereum).</p>
+<h2>Proces (cztery kroki, zawsze w tej kolejności)</h2>
+<ol>
+<li><strong>Nazwij problem publicznie</strong> — TIP powstaje jako szkic z opisem problemu i mechanizmu.</li>
+<li><strong>Zaproponuj poprawkę</strong> — konkretna zmiana definicji/kodu, bez nowych zależności, jeśli to możliwe.</li>
+<li><strong>Przetestuj na danych, zanim cokolwiek zmienisz</strong> — wyniki i kod testu są częścią TIP-a.</li>
+<li><strong>Zmień regułę z pełnym uzasadnieniem, nigdy wstecz</strong> — po akceptacji definicja wchodzi do reguły publikacyjnej z odnośnikiem do TIP-a; opublikowane wartości indeksu nie są nigdy przeliczane.</li>
+</ol>
+<h2>Statusy</h2>
+<p><code>Szkic</code> → <code>Testowany</code> → <code>Zaakceptowany</code> / <code>Odrzucony</code> → <code>Wdrożony</code></p>
+<p>Konsensus społeczności dotyczy wyłącznie tego, <strong>czy kryteria i test zostały poprawnie zastosowane</strong> — nigdy tego, jaki ma być wynik indeksu.</p>
+<h2>Szablon</h2>
+<p>Nagłówek (numer, tytuł, autor, data, status) · Problem · Proponowana zmiana · Test na danych (kod + liczby) · Skutki uboczne i czego zmiana NIE psuje · Decyzja i data wdrożenia.</p>
+<h2>Rejestr</h2>
+<table>
+<thead>
+<tr>
+<th>Nr</th>
+<th>Tytuł</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/TIP/TIP-0001-noga-placowa-v02.md">TIP-0001</a></td>
+<td>Noga płacowa v0.2: fundusz płac / wygładzone zatrudnienie</td>
+<td>Wdrożony</td>
+</tr>
+<tr>
+<td><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/TIP/TIP-0002-mediana-wynagrodzen.md">TIP-0002</a></td>
+<td>Noga płacowa: mediana wynagrodzeń z rejestrów ZUS+MF</td>
+<td>Szkic</td>
+</tr>
+</tbody>
+</table>
+<p class="gen">Strona wygenerowana automatycznie z pliku <code>TIP/README.md</code> w
+<a href="https://github.com/kurek0010/globalny-wskaznik-wartosci">repozytorium</a> —
+wersja markdown jest kanoniczna.</p>
+</body>
+</html>

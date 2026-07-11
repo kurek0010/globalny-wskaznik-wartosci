@@ -4,19 +4,19 @@
 
 Wszystkie pliki HTML w korzeniu generuje **builder**: `prototyp/src/build_strona.py`.
 
-**NIGDY nie edytuj bezpośrednio:** `index.html`, `talent_strona.html`, `whitepaper.html`, `wprowadzenie.html`, `regula_publikacyjna.html`, `wyscig_kandydatow.html`, `wyniki_*.html` — builder nadpisze te zmiany bez ostrzeżenia.
+**NIGDY nie edytuj bezpośrednio:** `index.html`, `talent_strona.html`, `whitepaper.html`, `wprowadzenie.html`, `regula_publikacyjna.html`, `wyscig_kandydatow.html`, `wyniki_*.html`, `tip.html` — builder nadpisze te zmiany bez ostrzeżenia.
 
 Zamiast tego edytuj źródła i uruchom builder:
 
 | Chcesz zmienić | Edytuj | Potem |
 |---|---|---|
-| układ/treść strony głównej | `prototyp/src/strona_szablon.html` | `cd prototyp && python src/build_strona.py` |
-| treść dokumentów (whitepaper itd.) | odpowiedni plik `.md` w korzeniu (markdown jest kanoniczny) | j.w. |
-| listę dokumentów konwertowanych na HTML | słownik `DOCS` w `build_strona.py` | j.w. |
+| układ/treść strony głównej (w tym sekcję rynkową z kaflami i wykresem) | `prototyp/src/strona_szablon.html` | `cd prototyp && python src/build_strona.py` |
+| treść dokumentów (whitepaper itd.) | odpowiedni plik `.md` w korzeniu lub w `TIP/` (markdown jest kanoniczny) | j.w. |
+| listę dokumentów konwertowanych na HTML lub podmiany linków wewnątrz nich | słowniki `DOCS` / `LINK_REWRITES` w `build_strona.py` | j.w. |
 | wykresy/dane na stronie | skrypty w `prototyp/src/` (aktualizują `data/processed/`) | j.w. |
 
 Ręcznie utrzymywane strony HTML (wolno edytować): `specyfikacja.html`, `dla_agenta.html`.
-W szablonie markery `__DATA__`, `__FX__`, `__WAGE__`, `__CURCARDS__` wypełnia builder — nie usuwaj ich.
+W szablonie markery `__DATA__`, `__FX__`, `__CURCARDS__`, `__HOOK_PCT__`, `__ANCHORFOR__`, `__UPDATED__` wypełnia builder — nie usuwaj ich.
 
 ## Zasady merytoryczne projektu (obowiązują też agentów)
 

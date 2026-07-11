@@ -10,13 +10,15 @@
 <meta property="og:type" content="website">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017}
+:root{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--pos:#4c9f70;--neg:#c0504d}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--tx);font:16px/1.6 Georgia,serif;padding:24px;max-width:900px;margin:0 auto}
+body{background:var(--bg);color:var(--tx);font:16px/1.6 Georgia,serif;padding:24px;max-width:1000px;margin:0 auto}
 h1{font-size:1.9em;letter-spacing:.02em}
 h1 span{color:var(--ac)}
 h2{font-size:1.15em;margin:26px 0 10px;color:var(--tx)}
 .sub{color:var(--mut);margin:4px 0 24px}
+.hook{font-size:1.25em;line-height:1.5;margin:0 0 24px;color:var(--tx)}
+.hook a{color:var(--ac)}
 .intro{margin:0 0 14px}
 ul.docs{list-style:none}
 ul.docs li{margin:0 0 12px;padding-left:14px;border-left:2px solid #2a323c}
@@ -35,18 +37,72 @@ ul.docs i{color:var(--mut)}
 ul.docs li.featured{border-left-color:var(--ac);background:rgba(212,160,23,.06);padding:10px 14px;border-radius:0 8px 8px 0}
 a{color:var(--ac)}
 @media(max-width:600px){.grid{grid-template-columns:1fr 1fr}}
+
+/* --- sekcja rynkowa --- */
+.market{display:grid;grid-template-columns:38% 62%;gap:16px;margin-bottom:8px}
+.tiles-col{display:flex;flex-direction:column;gap:10px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mtile{cursor:pointer;border:1px solid transparent;transition:border-color .15s}
+.mtile:hover{border-color:#3a4550}
+.mtile.active{border-color:var(--ac)}
+.panel{background:var(--card);border-radius:10px;padding:18px;min-width:0}
+.panel-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.panel-head .mname{font-size:1.05em;color:var(--tx)}
+.panel-head .mvalue{font-size:1.4em;color:var(--ac);font-variant-numeric:tabular-nums}
+.chg{font-size:.9em;font-variant-numeric:tabular-nums}
+.chg.pos{color:var(--pos)}
+.chg.neg{color:var(--neg)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tab{background:#232b34;color:var(--mut);border:none;border-radius:6px;padding:5px 10px;font:.8em/1.2 Georgia,serif;cursor:pointer}
+.tab:hover:not(.disabled){color:var(--tx)}
+.tab.active{background:var(--ac);color:#1a1400}
+.tab.disabled{opacity:.4;cursor:default}
+.periods{display:flex;gap:6px;margin-bottom:12px}
+.period{background:none;border:1px solid #2a323c;color:var(--mut);border-radius:6px;padding:4px 12px;font:.85em/1.2 Georgia,serif;cursor:pointer}
+.period:hover{color:var(--tx)}
+.period.active{border-color:var(--ac);color:var(--ac)}
+.market .cap{margin:12px 4px 0}
+@media(max-width:820px){.market{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <h1>Talent <span>TLN</span></h1>
 <p class="sub">Sprawiedliwa miara wartości w zmiennym świecie &middot; √(ceny &times; płace) &middot; prototyp badawczy, Polska, baza I&nbsp;1996&nbsp;=&nbsp;100</p>
 
-<div class="grid">
-<div class="card"><div class="l">Wartość dziś</div><div class="v" id="today">—</div><div class="d" id="todaydate"></div></div>
-<div class="card"><div class="l">Kotwica miesięczna</div><div class="v" id="anchor">—</div><div class="d" id="anchordate"></div></div>
-<div class="card"><div class="l">Zmiana 12 mies.</div><div class="v" id="yoy">—</div><div class="d">ścieżka znana z wyprzedzeniem</div></div>
+<p class="hook">Pożyczyłeś komuś 1000 zł w 2020 roku? Oddane dziś, kupują już tylko __HOOK_PCT__% tego, co wtedy. W <a href="wprowadzenie.html">Talentach</a> oddaje się dokładnie tyle wartości, ile się pożyczyło.</p>
+
+<div class="market">
+<div class="tiles-col">
+<div class="card mtile active" data-series="idx"><div class="l">Wartość dziś (TLN-PLN)</div><div class="v" id="today">—</div><div class="d" id="todaydate"></div></div>
+<div class="tiles">__CURCARDS__</div>
 </div>
+<div class="panel">
+<div class="panel-head">
+<span class="mname" id="mname">—</span>
+<span class="mvalue" id="mvalue">—</span>
+<span class="chg" id="mchange">—</span>
+</div>
+<div class="tabs">
+<button class="tab" data-series="idx">Indeks TLN-PLN</button>
+<button class="tab" data-series="PLN">w PLN</button>
+<button class="tab" data-series="USD">w USD</button>
+<button class="tab" data-series="EUR">w EUR</button>
+<button class="tab" data-series="CHF">w CHF</button>
+<button class="tab" data-series="GBP">w GBP</button>
+<button class="tab" data-series="JPY">w JPY</button>
+<button class="tab disabled" disabled>TLN-USD — wkrótce</button>
+<button class="tab disabled" disabled>TLN-EUR — wkrótce</button>
+</div>
+<div class="periods">
+<button class="period" data-period="1R">1R</button>
+<button class="period" data-period="5L">5L</button>
+<button class="period" data-period="10L">10L</button>
+<button class="period active" data-period="Max">Max</button>
+</div>
+<canvas id="mchart" height="140"></canvas>
 <p class="cap"><b>Harmonogram publikacji:</b> kotwica miesięczna — 25. dnia każdego miesiąca (z danych GUS za miesiąc poprzedni); wartości dzienne ogłaszane z góry na całe kolejne okno i nigdy nie rewidowane. Ostatnia kotwica: za __ANCHORFOR__, opublikowana __UPDATED__. Zasady: <a href="regula_publikacyjna.html">reguła publikacyjna</a>.</p>
+</div>
+</div>
 
 <div class="warn"><b>Uwaga:</b> to wartości robocze prototypu badawczego — nie są to oficjalne kursy rozliczeniowe.</div>
 
@@ -63,30 +119,13 @@ a{color:var(--ac)}
 </ul>
 </div>
 
-<h2>Indeks Talenta</h2>
-<div class="wrap"><canvas id="ch" height="110"></canvas></div>
-<p class="cap">Kotwice miesięczne 1996–2025. Środek geometryczny indeksu cen (CPI) i indeksu płac (średnia 12-mies.).</p>
-
-<h2>Ile waluty kosztuje 1 Talent?</h2>
-<div class="grid">__CURCARDS__</div>
-<div class="wrap"><canvas id="chfx" height="130"></canvas></div>
-<p class="cap">1 TLN = 1 PLN w bazie (I 1996); wycena w walutach po kursach rynkowych (NBP/FRED). JPY podzielone przez 100. Im szybciej rośnie linia, tym szybciej dana waluta traci wartość względem Talenta: 2002–2025 CHF ×1,5 &middot; EUR ×2,4 &middot; PLN ×2,9 &middot; USD ×3,3 &middot; JPY ×3,9.</p>
-
-<h2>Noga płacowa: dwie metody pomiaru (USA, 2000–2026)</h2>
-<div class="wrap"><canvas id="chw" height="130"></canvas></div>
-<p class="cap">Porównanie na danych USA (FRED): <b>przeciętna płaca</b> ma zdradliwy efekt składu — w kwietniu 2020 skoczyła o +4,2% w miesiąc, bo pracę stracili najpierw najsłabiej zarabiający. <b>Fundusz płac / wygładzone zatrudnienie</b> (definicja Talenta v0.2) pokazał wtedy −8,9%: prawdziwy ubytek dochodów społeczeństwa. Długookresowo obie metody dają to samo (+136% za 26 lat) — różnią się dokładnie tam, gdzie uczciwość ma znaczenie: w kryzysie.</p>
-
 <h2>Przeczytaj więcej</h2>
 <div class="wrap">
 <ul class="docs">
-<li class="featured"><a href="whitepaper.html"><b>Whitepaper — zacznij tutaj</b></a> — pełny wywód od problemu do formuły, z dowodem zrozumiałym dla licealisty i uczciwą listą granic metody.</li>
+<li class="featured"><a href="wprowadzenie.html"><b>Wprowadzenie</b></a> — zacznij tutaj: czym jest Talent i do czego służy.</li>
+<li><a href="whitepaper.html"><b>Whitepaper</b></a> — pełny wywód od problemu do formuły, z dowodem zrozumiałym dla licealisty i uczciwą listą granic metody.</li>
 <li><a href="regula_publikacyjna.html"><b>Reguła publikacyjna</b></a> — jak dokładnie liczymy: definicje obu nóg, kalendarz publikacji, bezpieczniki kryzysowe.</li>
-<li><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/TIP"><b>TIP — proces zmian</b></a> — każda zmiana formuły przechodzi jawną procedurę z testem na danych (wzorzec BIP z Bitcoina).</li>
-<li><a href="wyscig_kandydatow.html"><b>Wyścig kandydatów</b></a> — dlaczego nie złoto, nie surowce i nie sama inflacja (złoto: żal do 265%).</li>
-<li><a href="wyniki_test_stulecia_usa.html"><b>Test stulecia USA</b></a> — 1929–2025: Wielki Kryzys, wojna, stagflacja; najgorszy przypadek 6,1%.</li>
-<li><a href="wyniki_kruche_gospodarki.html"><b>Kruche gospodarki</b></a> — polska transformacja, Niemcy 1923, Argentyna: gdzie formuła działa, a gdzie uczciwie mówi „nie działam".</li>
-<li><a href="wyniki_talent_dwustronny.html"><b>Talent dwustronny</b></a> — jednostka umów międzynarodowych: ryzyko kursu i rozjazdu gospodarek dzielone po połowie.</li>
-<li><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci/blob/main/archiwum"><b>Archiwum — droga do Talenta</b></a> — próby i błędy, które doprowadziły do formuły. Nie ukrywamy ich: błędy są częścią dowodu.</li>
+<li><a href="tip.html"><b>TIP — proces zmian</b></a> — każda zmiana formuły przechodzi jawną procedurę z testem na danych (wzorzec BIP z Bitcoina).</li>
 <li><a href="https://github.com/kurek0010/globalny-wskaznik-wartosci"><b>Repozytorium</b></a> — kod, dane i pełna historia zmian (licencja MIT).</li>
 </ul>
 </div>
@@ -110,37 +149,74 @@ const win=new Date(base.getFullYear(),base.getMonth()+1,1);
 const K=new Date(win.getFullYear(),win.getMonth()+1,0).getDate();
 const k=Math.min(Math.max(now>=win?now.getDate():K,1),K);
 const today=last*Math.pow(g,k/K);
-const yoy=(last/val[n-13]-1)*100;
 document.getElementById('today').textContent=today.toFixed(2);
 document.getElementById('todaydate').textContent=now.toISOString().slice(0,10)+" (pre-commitment)";
-document.getElementById('anchor').textContent=last.toFixed(2);
-document.getElementById('anchordate').textContent="za "+per[n-1];
-document.getElementById('yoy').textContent=(yoy>=0?"+":"")+yoy.toFixed(1)+"%";
 
 const axis={ticks:{color:'#8b949e'},grid:{color:'#232b34'}};
-new Chart(document.getElementById('ch'),{type:'line',
- data:{labels:per,datasets:[{data:val,borderColor:'#d4a017',backgroundColor:'rgba(212,160,23,.08)',fill:true,pointRadius:0,borderWidth:2,tension:.25}]},
- options:{plugins:{legend:{display:false}},interaction:{intersect:false,mode:'index'},
- scales:{x:{...axis,ticks:{...axis.ticks,maxTicksLimit:10,callback:(v,i)=>per[i].endsWith('-01')&&+per[i].slice(0,4)%5===1?per[i].slice(0,4):null}},y:axis}}});
 
 const FX=__FX__;
-const cols={PLN:'#d4a017',USD:'#4c9f70',EUR:'#5b8dbe',CHF:'#c0504d',GBP:'#8064a2',CNY:'#e08e45',JPY:'#9aa2ab'};
-const ds=Object.entries(FX.series).map(([c,v])=>({label:c==='JPY'?'JPY (÷100)':c,
- data:c==='JPY'?v.map(x=>x/100):v,borderColor:cols[c],pointRadius:0,borderWidth:1.8,tension:.25}));
-new Chart(document.getElementById('chfx'),{type:'line',
- data:{labels:FX.labels,datasets:ds},
- options:{plugins:{legend:{labels:{color:'#e8e6e3',boxWidth:18,font:{size:11}}}},
- interaction:{intersect:false,mode:'index'},
- scales:{x:{...axis,ticks:{...axis.ticks,maxTicksLimit:12,callback:(v,i)=>FX.labels[i].endsWith('-01')&&+FX.labels[i].slice(0,4)%4===2?FX.labels[i].slice(0,4):null}},y:axis}}});
+const cols={PLN:'#d4a017',USD:'#4c9f70',EUR:'#5b8dbe',CHF:'#c0504d',GBP:'#8064a2',JPY:'#9aa2ab'};
+const SERIES={
+ idx:{name:'Indeks TLN-PLN',labels:per,values:val,color:cols.PLN},
+ PLN:{name:'TLN w PLN',labels:FX.labels,values:FX.series.PLN,color:cols.PLN},
+ USD:{name:'TLN w USD',labels:FX.labels,values:FX.series.USD,color:cols.USD},
+ EUR:{name:'TLN w EUR',labels:FX.labels,values:FX.series.EUR,color:cols.EUR},
+ CHF:{name:'TLN w CHF',labels:FX.labels,values:FX.series.CHF,color:cols.CHF},
+ GBP:{name:'TLN w GBP',labels:FX.labels,values:FX.series.GBP,color:cols.GBP},
+ JPY:{name:'TLN w JPY',labels:FX.labels,values:FX.series.JPY,color:cols.JPY},
+};
 
-const WG=__WAGE__;
-new Chart(document.getElementById('chw'),{type:'line',
- data:{labels:WG.labels,datasets:[
-  {label:'przeciętna płaca (klasyczna)',data:WG.W1,borderColor:'#c0504d',pointRadius:0,borderWidth:1.8,tension:.2},
-  {label:'fundusz płac / wygładzone zatrudnienie (Talent v0.2)',data:WG.W2,borderColor:'#4c9f70',pointRadius:0,borderWidth:1.8,tension:.2}]},
- options:{plugins:{legend:{labels:{color:'#e8e6e3',boxWidth:18,font:{size:11}}}},
- interaction:{intersect:false,mode:'index'},
- scales:{x:{...axis,ticks:{...axis.ticks,maxTicksLimit:14,callback:(v,i)=>WG.labels[i].endsWith('-01')&&+WG.labels[i].slice(0,4)%4===0?WG.labels[i].slice(0,4):null}},y:axis}}});
+let curSeries='idx', curPeriod='Max';
+
+function sliceWindow(key,period){
+ const s=SERIES[key], n=s.labels.length;
+ let start=0;
+ if(period==='1R') start=Math.max(0,n-12);
+ else if(period==='5L') start=Math.max(0,n-60);
+ else if(period==='10L') start=Math.max(0,n-120);
+ return {labels:s.labels.slice(start),values:s.values.slice(start)};
+}
+
+const mChart=new Chart(document.getElementById('mchart'),{type:'line',
+ data:{labels:[],datasets:[{data:[],borderColor:cols.PLN,backgroundColor:'rgba(212,160,23,.1)',fill:true,pointRadius:0,borderWidth:2,tension:.25}]},
+ options:{plugins:{legend:{display:false}},interaction:{intersect:false,mode:'index'},
+ scales:{x:{...axis,ticks:{...axis.ticks,maxTicksLimit:10}},y:axis}}});
+
+function hexToRgba(hex,a){
+ const v=hex.replace('#','');
+ const r=parseInt(v.substring(0,2),16),g2=parseInt(v.substring(2,4),16),b=parseInt(v.substring(4,6),16);
+ return `rgba(${r},${g2},${b},${a})`;
+}
+
+function renderMarket(){
+ const s=SERIES[curSeries];
+ const {labels,values}=sliceWindow(curSeries,curPeriod);
+ mChart.data.labels=labels;
+ mChart.data.datasets[0].data=values;
+ mChart.data.datasets[0].borderColor=s.color;
+ mChart.data.datasets[0].backgroundColor=hexToRgba(s.color,.12);
+ mChart.update();
+
+ const lastV=values[values.length-1], firstV=values[0];
+ const chg=(lastV/firstV-1)*100;
+ document.getElementById('mname').textContent=s.name;
+ document.getElementById('mvalue').textContent=lastV.toFixed(2);
+ const chgEl=document.getElementById('mchange');
+ chgEl.textContent=(chg>=0?'+':'')+chg.toFixed(1)+'% ('+curPeriod+')';
+ chgEl.className='chg '+(chg>=0?'pos':'neg');
+
+ document.querySelectorAll('.mtile').forEach(el=>el.classList.toggle('active',el.dataset.series===curSeries));
+ document.querySelectorAll('.tab[data-series]').forEach(el=>el.classList.toggle('active',el.dataset.series===curSeries));
+ document.querySelectorAll('.period').forEach(el=>el.classList.toggle('active',el.dataset.period===curPeriod));
+}
+
+document.querySelectorAll('.mtile, .tab[data-series]').forEach(el=>{
+ el.addEventListener('click',()=>{curSeries=el.dataset.series;renderMarket();});
+});
+document.querySelectorAll('.period').forEach(el=>{
+ el.addEventListener('click',()=>{curPeriod=el.dataset.period;renderMarket();});
+});
+renderMarket();
 </script>
 </body>
 </html>
