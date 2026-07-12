@@ -58,6 +58,20 @@ Disable workflow. Albo usuń/zakomentuj blok `schedule:` w pliku workflow
 instrukcją, co ma zrobić człowiek (zwykle: ręczny wpis do
 `first_prints_pln.json`, potem ponowne ręczne uruchomienie).
 
+**Drugi automat — przebudowa strony po zmianie treści.** GitHub Action
+`.github/workflows/przebudowa_strony.yml` (działa od 2026-07-12): trigger to
+push na `main`, który zmienia jeden z plików `.md` kompilowanych na stronę
+(dokładnie klucze słownika `DOCS` w `build_strona.py`) albo
+`prototyp/src/strona_szablon.html`/`prototyp/src/build_strona.py`. Uruchamia
+wyłącznie `build_strona.py` i commituje wygenerowane HTML (autor
+`github-actions[bot]`, komunikat `Przebudowa strony po zmianie treści`) —
+tylko jeśli builder faktycznie coś zmienił. Dokumenty robocze (`SZKIC_`,
+`PROMPT_`, `OCENA_`, `TALENTY_`, `waluty/`, `archiwum/` itd.) nie są na liście
+`paths` i push do nich nie uruchamia builda. **Dodajesz plik do `DOCS`** →
+dopisz go też do `paths` w tym workflow, inaczej treść się zmieni, ale strona
+nie. Wyłączenie: zakładka Actions → „Przebudowa strony po zmianie treści" →
+„…" → Disable workflow.
+
 ## Inne waluty (gdy powstaną TLN-USD, TLN-EUR…)
 
 Ta sama kadencja per kraj wg kalendarza z karty walutowej (`waluty/TALENT-XXX.md`): kotwica 25. dnia z danych opublikowanych do 24., osobny plik `talent_published_XXX.json`, osobny alert-log. Kursy krzyżowe (TLN-PLN-USD itd.) liczą się automatycznie z kotwic i kursów NBP — bez dodatkowych publikacji.

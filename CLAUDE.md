@@ -12,7 +12,7 @@ Zamiast tego edytuj źródła i uruchom builder:
 |---|---|---|
 | układ/treść strony głównej (w tym sekcję rynkową z kaflami i wykresem) | `prototyp/src/strona_szablon.html` | `cd prototyp && python src/build_strona.py` |
 | treść dokumentów (whitepaper itd.) | odpowiedni plik `.md` w korzeniu lub w `TIP/` (markdown jest kanoniczny) | j.w. |
-| listę dokumentów konwertowanych na HTML lub podmiany linków wewnątrz nich | słowniki `DOCS` / `LINK_REWRITES` w `build_strona.py` | j.w. |
+| listę dokumentów konwertowanych na HTML lub podmiany linków wewnątrz nich | słowniki `DOCS` / `LINK_REWRITES` w `build_strona.py` | j.w. **+ dodaj plik też do `paths` w `.github/workflows/przebudowa_strony.yml`**, inaczej push nie przebuduje strony automatycznie |
 | wykresy/dane na stronie | skrypty w `prototyp/src/` (aktualizują `data/processed/`) | j.w. |
 
 Ręcznie utrzymywane strony HTML (wolno edytować): `specyfikacja.html`, `dla_agenta.html`.
@@ -34,3 +34,4 @@ Utrzymanie strony i kodu: Claude Code (to repo). Treści, metodologia, decyzje: 
 
 Kotwica: 25. dnia miesiąca wg `INSTRUKCJA_aktualizacji.md` (odcięcie danych 24., first-printy GUS do `talent_update.py`, potem builder). Zakaz rewizji pilnowany przez `talent_published.json`.
 Od 2026-07-09 dzieje się automatycznie: GitHub Action `.github/workflows/publikacja_kotwicy.yml` (fetch_gus.py → talent_update.py → build_strona.py → commit) — ręczne uruchomienie/wyłączenie opisane w `INSTRUKCJA_aktualizacji.md` → „Automatyzacja".
+Osobny GitHub Action, `.github/workflows/przebudowa_strony.yml`, przebudowuje stronę automatycznie po każdym pushu do `main`, który zmienia plik z `DOCS`, szablon albo builder — patrz `INSTRUKCJA_aktualizacji.md` → „Automatyzacja".

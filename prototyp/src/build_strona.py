@@ -81,12 +81,25 @@ LINK_REWRITES = {
     ],
 }
 
+# KaTeX auto-render (cdnjs). Delimitery: $$ dla wzorow blokowych; celowo BEZ
+# pojedynczego $ (kolizja z kwotami typu "147 $" w tresciach finansowych) -
+# wzory w linii pisz jako \( ... \). auto-render domyslnie ignoruje <pre>/<code>
+# (zweryfikowane w cdnjs katex 0.16.47/contrib/auto-render.min.js), wiec bloki
+# kodu z formulami (np. regula_publikacyjna.html) zostaja nietkniete.
+KATEX_RENDER_JS = (
+    "renderMathInElement(document.body, {"
+    "delimiters: [{left: '$$', right: '$$', display: true}, "
+    "{left: '\\\\(', right: '\\\\)', display: false}], "
+    "throwOnError: false});"
+)
+
 SHELL = """<!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} — Talent (TLN)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.css">
 <style>
 :root{{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017}}
 *{{box-sizing:border-box;margin:0;padding:0}}
@@ -116,6 +129,8 @@ blockquote{{border-left:3px solid #2a323c;padding-left:14px;color:var(--mut);mar
 <p class="gen">Strona wygenerowana automatycznie z pliku <code>{src}</code> w
 <a href="https://github.com/kurek0010/globalny-wskaznik-wartosci">repozytorium</a> —
 wersja markdown jest kanoniczna.</p>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/contrib/auto-render.min.js" onload="{katex_js}"></script>
 </body>
 </html>
 """
@@ -135,7 +150,7 @@ def build_docs() -> None:
                       if l.startswith("# ")), out_name)
         body = md.reset().convert(text)
         (ROOT / out_name).write_text(
-            SHELL.format(title=title, body=body, src=src_name))
+            SHELL.format(title=title, body=body, src=src_name, katex_js=KATEX_RENDER_JS))
         print(f"{out_name} <- {src_name}")
 
 
