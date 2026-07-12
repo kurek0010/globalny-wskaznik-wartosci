@@ -93,17 +93,50 @@ KATEX_RENDER_JS = (
     "throwOnError: false});"
 )
 
+# Ten sam mechanizm motywu (Ciemny/Sepia/Jasny) co na stronie glownej
+# (strona_szablon.html), zeby wybor przenosil sie miedzy stronami przez
+# wspolny klucz localStorage "tln-theme". Inline skrypt w <head> ustawia
+# atrybut przed renderowaniem (bez blysku zlego motywu).
+THEME_HEAD_SCRIPT = """<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>"""
+
+THEME_SWITCH_HTML = """<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>"""
+
+THEME_JS = """function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');"""
+
 SHELL = """<!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{theme_head}
 <title>{title} — Talent (TLN)</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.css">
 <style>
-:root{{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017}}
+:root[data-theme="dark"]{{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--border:#2a323c}}
+:root[data-theme="sepia"]{{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--border:#ded0b0}}
+:root[data-theme="light"]{{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--border:#e2ded4}}
 *{{box-sizing:border-box;margin:0;padding:0}}
-body{{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto}}
+body{{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto;transition:background-color .2s,color .2s}}
 h1{{font-size:1.6em;margin:0 0 14px}}
 h2{{font-size:1.2em;margin:28px 0 10px;color:var(--ac)}}
 h3{{font-size:1.05em;margin:18px 0 8px}}
@@ -113,24 +146,33 @@ code{{font:.88em ui-monospace,Menlo,Consolas,monospace;background:var(--card);bo
 pre{{background:var(--card);border-radius:8px;border-left:3px solid var(--ac);padding:14px 16px;overflow-x:auto;margin:0 0 14px}}
 pre code{{background:none;padding:0}}
 table{{border-collapse:collapse;width:100%;margin:0 0 16px;font-size:.92em}}
-th,td{{border:1px solid #2a323c;padding:6px 10px;text-align:left;vertical-align:top}}
+th,td{{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top}}
 th{{color:var(--mut);font-weight:normal}}
 a{{color:var(--ac)}}
-hr{{border:0;border-top:1px solid #2a323c;margin:22px 0}}
+hr{{border:0;border-top:1px solid var(--border);margin:22px 0}}
 em{{color:var(--mut)}}
-blockquote{{border-left:3px solid #2a323c;padding-left:14px;color:var(--mut);margin:0 0 12px}}
-.top{{margin-bottom:22px;font-size:.9em}}
-.gen{{color:var(--mut);font-size:.78em;border-top:1px solid #2a323c;margin-top:30px;padding-top:12px}}
+blockquote{{border-left:3px solid var(--border);padding-left:14px;color:var(--mut);margin:0 0 12px}}
+.topbar{{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}}
+.top{{font-size:.9em;margin:0}}
+.theme-switch{{display:flex;gap:6px;flex-shrink:0}}
+.theme-btn{{background:var(--border);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}}
+.theme-btn:hover{{color:var(--tx)}}
+.theme-btn.active{{border-color:var(--ac);color:var(--ac)}}
+.gen{{color:var(--mut);font-size:.78em;border-top:1px solid var(--border);margin-top:30px;padding-top:12px}}
 </style>
 </head>
 <body>
+<div class="topbar">
 <p class="top"><a href="index.html">← strona główna Talenta</a></p>
+{theme_switch}
+</div>
 {body}
 <p class="gen">Strona wygenerowana automatycznie z pliku <code>{src}</code> w
 <a href="https://github.com/kurek0010/globalny-wskaznik-wartosci">repozytorium</a> —
 wersja markdown jest kanoniczna.</p>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/contrib/auto-render.min.js" onload="{katex_js}"></script>
+<script>{theme_js}</script>
 </body>
 </html>
 """
@@ -150,7 +192,9 @@ def build_docs() -> None:
                       if l.startswith("# ")), out_name)
         body = md.reset().convert(text)
         (ROOT / out_name).write_text(
-            SHELL.format(title=title, body=body, src=src_name, katex_js=KATEX_RENDER_JS))
+            SHELL.format(title=title, body=body, src=src_name, katex_js=KATEX_RENDER_JS,
+                         theme_head=THEME_HEAD_SCRIPT, theme_switch=THEME_SWITCH_HTML,
+                         theme_js=THEME_JS))
         print(f"{out_name} <- {src_name}")
 
 
