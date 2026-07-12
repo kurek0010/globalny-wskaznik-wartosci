@@ -31,3 +31,5 @@ Kredyt 300 000 zł, 20 lat, raty roczne, rocznik 2006. Trzy warianty: WIBOR 12M 
 ## Dane
 
 Skrypt sesyjny (do sformalizowania jako `prototyp/src/kredyt_porownanie.py` przy pisaniu artykułu); kotwice z `talent_anchors.csv`, płace GN z `first_prints_pln.json`.
+
+<!-- test: zmiana w pliku spoza DOCS, nie powinna wyzwolic przebudowy strony -->
