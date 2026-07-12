@@ -1,6 +1,6 @@
 # Talent: sprawiedliwa miara wartości w zmiennym świecie
 
-Pieniądz jest fundamentem gospodarki, ale ma jedną poważną wadę: z upływem czasu traci swoją realną wartość. Kiedy zapisujemy w umowach stałe kwoty nominalne — czy to pożyczając pieniądze bliskim, czy podpisując długoterminowy kontrakt na zakup towaru lub sprzętu — nieświadomie wystawiamy się na ryzyko straty.
+Pieniądz jest fundamentem gospodarki, ale ma jedną poważną wadę: z upływem czasu traci swoją realną wartość. Kiedy zapisujemy w umowach stałe kwoty nominalne — czy to pożyczając pieniądze bliskim, czy podpisując długoterminowy kontrakt na zakup towaru lub sprzętu — nieświadomie wystawiamy się na ryzyko realnej straty.
 
 Ten portal powstał, aby dostarczać codzienne odczyty Talenta — nowoczesnej, niezależnej jednostki rozliczeniowej, która przywraca uczciwość tam, gdzie liczy się czas.
 
