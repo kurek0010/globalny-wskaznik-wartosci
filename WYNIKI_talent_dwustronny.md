@@ -6,10 +6,9 @@
 
 Talent dwustronny (TLN-2) dla umowy polsko-amerykańskiej: **środek geometryczny obu Talentów krajowych z kursem rozłożonym po połowie**:
 
-```
-V_PLN(t) = √( TLN-PL(t) × TLN-US(t) × S(t)/S(0) )      S = kurs PLN/USD
-V_USD(t) = V_PLN(t) / (S(t)/S(0))                       (symetrycznie po stronie USD)
-```
+$$V_{PLN}(t) = \sqrt{TLN_{PL}(t) \cdot TLN_{US}(t) \cdot \frac{S(t)}{S(0)}} \qquad V_{USD}(t) = \frac{V_{PLN}(t)}{S(t)/S(0)}$$
+
+gdzie S to kurs PLN/USD; po stronie USD wzór jest symetryczny.
 
 Żal liczony w obu krajach naraz: jednostka oceniana w PLN względem korytarza [CPI-PL, płaca-PL] i w USD względem [CPI-US, płaca-US]; żal okna = największe przekroczenie któregokolwiek z 4 brzegów (każda strona może być dłużnikiem lub wierzycielem). Horyzonty 3–20 lat, wszystkie okna.
 

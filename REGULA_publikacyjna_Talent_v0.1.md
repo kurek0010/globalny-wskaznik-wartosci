@@ -7,9 +7,7 @@ Zasada nadrzędna: **kod jest metodologią**. Ten dokument opisuje regułę sło
 
 Talent to jednostka wartości będąca środkiem geometrycznym kosztów życia i płac:
 
-```
-A(m) = 100 × √( I_c(m)/I_c(m₀) × I_w(m)/I_w(m₀) )
-```
+$$A(m) = 100 \cdot \sqrt{\frac{I_c(m)}{I_c(m_0)} \cdot \frac{I_w(m)}{I_w(m_0)}}$$
 
 - **I_c — noga cen:** indeks cen konsumpcyjnych, łańcuch miesięczny. Docelowo **mediana ≥3 niezależnych źródeł** (GUS CPI, HICP Eurostat, niezależny indeks cen online); do czasu trzeciego źródła: średnia geometryczna GUS i HICP z tripwire (§5.3).
 - **I_w — noga płac (definicja v0.2):** indeks **funduszu płac na wygładzone zatrudnienie**: `W(m) = FunduszPłac(m) / MA12(Zatrudnienie)(m)` (średnia krocząca 12-mies., przyczynowa), następnie wygładzenie 12-mies. całego indeksu (sezonowość premii). Oba składniki pochodzą z tych samych sprawozdań firm do GUS. Uzasadnienie: przeciętna płaca (fundusz/bieżące zatrudnienie) ma procykliczny artefakt składu — w kryzysie zwalniani są najpierw nisko opłacani i średnia *rośnie*, gdy dochody spadają (USA, IV 2020: przeciętna +4,2% m/m, fundusz/MA12 −8,9%; dryf długookresowy obu wariantów identyczny: +135,7% vs +136,2% za 2000–2026). Weryfikacja: `src/wage_leg_v2 — data/processed/wage_leg_v2_monthly.csv`. Źródła: sektor przedsiębiorstw (GUS, miesięczny) łańcuchowany gospodarką narodową (GUS, kwartalny); docelowo mediana wzrostu płac tych samych osób z danych ZUS jako drugie źródło.
@@ -22,9 +20,9 @@ Uzasadnienie empiryczne wag 50/50 i wyboru nóg: `WYSCIG_kandydatow_minimalny_za
 1. GUS publikuje CPI za miesiąc *m* ok. 15. dnia *m+1*; płace przedsiębiorstw ok. 21. dnia *m+1*.
 2. **Dzień kotwicy: 25. dzień miesiąca *m+1*.** Liczymy A(m) z danych opublikowanych do tego dnia i **jednocześnie publikujemy pełną ścieżkę dzienną** na okno od 26. dnia *m+1* do 25. dnia *m+2*:
 
-```
-T(d) = A(m) × g^(k/K),   g = A(m)/A(m−1),   k = 1…K (dni okna)
-```
+$$T(d_k) = A(m) \cdot g^{k/K} \qquad g = \frac{A(m)}{A(m-1)} \qquad k = 1, \dots, K$$
+
+(K to liczba dni okna publikacyjnego.)
 
 3. Każda wartość dzienna jest więc znana **co najmniej dzień naprzód, a maksymalnie miesiąc naprzód** — strony umowy nigdy nie rozliczają się po wartości, której nie mogły znać wcześniej (wzór: chilijska UF).
 

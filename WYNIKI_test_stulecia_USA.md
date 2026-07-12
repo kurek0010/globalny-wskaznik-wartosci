@@ -9,7 +9,9 @@
 
 ## Bieg 1: 1929–2025 (w próbie Wielki Kryzys, WWII, stagflacja, 2022)
 
-Benchmark dochodowy: PKB nominalny/os. Jednostka testowana: **JW(t) = √(CPI(t) × Dochód(t))**.
+Benchmark dochodowy: PKB nominalny/os. Jednostka testowana:
+
+$$JW(t) = \sqrt{CPI(t) \cdot \text{Dochód}(t)}$$
 
 | Kandydat | % okien zero-regret | Mediana | p95 | Najgorszy przypadek |
 |---|---|---|---|---|

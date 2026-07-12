@@ -34,9 +34,7 @@ Talent nie powstał dla spekulacji rynkowych. Jego najważniejszym, fundamentaln
 
 Talent to jednostka rozliczeniowa, która eliminuje konflikt interesów. Jej wartość jest wyliczana jako środek geometryczny z niezależnych wskaźników wzrostu cen oraz wzrostu płac:
 
-```
-T(t) = 100 · √( C(t)·W(t) / (C(0)·W(0)) )
-```
+$$T(t) = 100 \cdot \sqrt{\frac{C(t) \cdot W(t)}{C(0) \cdot W(0)}}$$
 
 gdzie `C` to wskaźnik cen, a `W` to wskaźnik płac. Zastosowanie pierwiastka z iloczynu sprawia, że Talent symetrycznie minimalizuje ryzyko strat:
 

@@ -35,8 +35,7 @@ blockquote{border-left:3px solid #2a323c;padding-left:14px;color:var(--mut);marg
 Zasada nadrzędna: <strong>kod jest metodologią</strong>. Ten dokument opisuje regułę słowami; w razie rozbieżności wiąże wersjonowany kod z podpisanym tagiem. Operacyjne szczegóły zasilania danymi (konkretne komunikaty, dni publikacji, kaskady awaryjne, rewizje, zmiany bazy): <code>POLITYKA_danych_v0.1.md</code>.</p>
 <h2>1. Definicja jednostki</h2>
 <p>Talent to jednostka wartości będąca środkiem geometrycznym kosztów życia i płac:</p>
-<pre><code>A(m) = 100 × √( I_c(m)/I_c(m₀) × I_w(m)/I_w(m₀) )
-</code></pre>
+<p>$$A(m) = 100 \cdot \sqrt{\frac{I_c(m)}{I_c(m_0)} \cdot \frac{I_w(m)}{I_w(m_0)}}$$</p>
 <ul>
 <li><strong>I_c — noga cen:</strong> indeks cen konsumpcyjnych, łańcuch miesięczny. Docelowo <strong>mediana ≥3 niezależnych źródeł</strong> (GUS CPI, HICP Eurostat, niezależny indeks cen online); do czasu trzeciego źródła: średnia geometryczna GUS i HICP z tripwire (§5.3).</li>
 <li><strong>I_w — noga płac (definicja v0.2):</strong> indeks <strong>funduszu płac na wygładzone zatrudnienie</strong>: <code>W(m) = FunduszPłac(m) / MA12(Zatrudnienie)(m)</code> (średnia krocząca 12-mies., przyczynowa), następnie wygładzenie 12-mies. całego indeksu (sezonowość premii). Oba składniki pochodzą z tych samych sprawozdań firm do GUS. Uzasadnienie: przeciętna płaca (fundusz/bieżące zatrudnienie) ma procykliczny artefakt składu — w kryzysie zwalniani są najpierw nisko opłacani i średnia <em>rośnie</em>, gdy dochody spadają (USA, IV 2020: przeciętna +4,2% m/m, fundusz/MA12 −8,9%; dryf długookresowy obu wariantów identyczny: +135,7% vs +136,2% za 2000–2026). Weryfikacja: <code>src/wage_leg_v2 — data/processed/wage_leg_v2_monthly.csv</code>. Źródła: sektor przedsiębiorstw (GUS, miesięczny) łańcuchowany gospodarką narodową (GUS, kwartalny); docelowo mediana wzrostu płac tych samych osób z danych ZUS jako drugie źródło.</li>
@@ -48,8 +47,8 @@ Zasada nadrzędna: <strong>kod jest metodologią</strong>. Ten dokument opisuje 
 <li>GUS publikuje CPI za miesiąc <em>m</em> ok. 15. dnia <em>m+1</em>; płace przedsiębiorstw ok. 21. dnia <em>m+1</em>.</li>
 <li><strong>Dzień kotwicy: 25. dzień miesiąca <em>m+1</em>.</strong> Liczymy A(m) z danych opublikowanych do tego dnia i <strong>jednocześnie publikujemy pełną ścieżkę dzienną</strong> na okno od 26. dnia <em>m+1</em> do 25. dnia <em>m+2</em>:</li>
 </ol>
-<pre><code>T(d) = A(m) × g^(k/K),   g = A(m)/A(m−1),   k = 1…K (dni okna)
-</code></pre>
+<p>$$T(d_k) = A(m) \cdot g^{k/K} \qquad g = \frac{A(m)}{A(m-1)} \qquad k = 1, \dots, K$$</p>
+<p>(K to liczba dni okna publikacyjnego.)</p>
 <ol>
 <li>Każda wartość dzienna jest więc znana <strong>co najmniej dzień naprzód, a maksymalnie miesiąc naprzód</strong> — strony umowy nigdy nie rozliczają się po wartości, której nie mogły znać wcześniej (wzór: chilijska UF).</li>
 </ol>

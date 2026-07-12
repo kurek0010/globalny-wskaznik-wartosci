@@ -57,23 +57,18 @@ blockquote{border-left:3px solid #2a323c;padding-left:14px;color:var(--mut);marg
 <p>Zadanie brzmi więc konkretnie i matematycznie: <strong>znajdź jednostkę, która minimalizuje największy możliwy żal którejkolwiek strony.</strong></p>
 <h2>4. Rozwiązanie: środek geometryczny</h2>
 <p>Odpowiedź okazuje się zaskakująco krótka. Niech C(t) będzie indeksem cen (dziś = 100, rośnie z inflacją), a W(t) indeksem płac. Talent definiujemy jako:</p>
-<p><strong>T(t) = 100 · √( C(t) × W(t) / C(0) / W(0) )</strong></p>
+<p>$$T(t) = 100 \cdot \sqrt{\frac{C(t) \cdot W(t)}{C(0) \cdot W(0)}}$$</p>
 <p>czyli pierwiastek z iloczynu — <strong>środek geometryczny</strong> cen i płac.</p>
 <p>Dlaczego geometryczny, a nie zwykła średnia? Bo wzrosty wartości się <em>mnożą</em>, nie dodają. Jeśli ceny wzrosły ×2, a płace ×8, to uczciwy środek leży tam, gdzie obie strony odchylają się <strong>o ten sam czynnik</strong>: √(2×8) = 4. Wtedy jednostka urosła ×4, czyli dokładnie 2 razy szybciej niż ceny i dokładnie 2 razy wolniej niż płace — proporcjonalne odchylenie jest identyczne po obu stronach. Zwykła średnia arytmetyczna (×5) faworyzowałaby stronę płacową. W języku logarytmów: log T leży dokładnie w połowie drogi między log C a log W, a żal mierzony procentowo jest symetryczny właśnie w logarytmach.</p>
 <p>Średnia geometryczna ma przy tym dwie własności praktyczne, których zwykła średnia nie ma. Jest <strong>łańcuchowa</strong>: wynik nie zależy od tego, jaki dzień przyjmiemy za bazowy, ani od tego, czy zmianę policzymy w jednym kroku, czy przez punkty pośrednie — dla jednostki, w której ktoś podpisuje umowę na dwadzieścia lat, to warunek konieczny (średnia arytmetyczna go łamie: jej wynik przesuwa się z każdą zmianą daty bazowej). I jest bezpieczniejsza dla dłużnika: klasyczna nierówność między średnimi (AM ≥ GM) mówi, że średnia arytmetyczna zawsze wskazałaby spłatę wyższą — czyli systematycznie sprzyjałaby wierzycielowi.</p>
 <p>Zapiszmy to tak, żeby dało się sprawdzić na kartce. Dla jednej pożyczki, od dnia startu do dnia spłaty, oznaczmy trzy liczby:</p>
-<pre><code>R = spłata / pożyczka          (ile razy urosła kwota w złotych)
-C = ceny w dniu spłaty / ceny w dniu startu
-P = płace w dniu spłaty / płace w dniu startu
-</code></pre>
+<p>$$R = \frac{\text{spłata}}{\text{pożyczka}} \qquad C = \frac{\text{ceny w dniu spłaty}}{\text{ceny w dniu startu}} \qquad P = \frac{\text{płace w dniu spłaty}}{\text{płace w dniu startu}}$$</p>
+<p>(R mówi, ile razy urosła kwota w złotych.)</p>
 <p>Wtedy definicje żalu z poprzedniej sekcji przyjmują postać:</p>
-<pre><code>żal dłużnika     = max( 0 ,  R/P − 1 )     spłata urosła bardziej niż płace
-żal wierzyciela  = max( 0 ,  C/R − 1 )     ceny urosły bardziej niż spłata
-żal umowy        = większy z obu
-</code></pre>
+<p>$$\text{żal dłużnika} = \max\left(0, \frac{R}{P} - 1\right) \qquad \text{żal wierzyciela} = \max\left(0, \frac{C}{R} - 1\right)$$</p>
+<p>Pierwszy mierzy, o ile spłata urosła bardziej niż płace; drugi — o ile ceny urosły bardziej niż spłata. Żal umowy to większy z obu.</p>
 <p>A teraz najładniejszy krok całego wywodu. Pomnóżmy oba stosunki:</p>
-<pre><code>(R/P) × (C/R) = C/P
-</code></pre>
+<p>$$\frac{R}{P} \cdot \frac{C}{R} = \frac{C}{P}$$</p>
 <p>Spłata R skróciła się i zniknęła. To znaczy, że <strong>iloczyn odchyleń obu stron w ogóle nie zależy od wyboru jednostki</strong> — jest z góry zadany przez świat, przez to, jak bardzo ceny rozjechały się z płacami. Wybierając jednostkę, nie zmniejszasz łącznego bólu; możesz go tylko przesuwać między stronami. A skoro iloczyn dwóch czynników jest stały, to większy z nich jest najmniejszy dokładnie wtedy, gdy oba są równe — tak jak wśród prostokątów o stałym polu najkrótszy dłuższy bok ma kwadrat. Równość zachodzi dla <strong>R = √(C·P)</strong>. To cała tajemnica Talenta: przy tym R obie strony mają identyczny żal, równy √(C/P) − 1, gdy ceny wyprzedzą płace — a gdy płace rosną szybciej niż ceny, obie mają zero.</p>
 <p>Przykład liczbowy: ceny wzrosły o 50% (C = 1,50), płace o 20% (P = 1,20). Talent każe oddać R = √(1,50 × 1,20) = √1,80 ≈ 1,34 razy więcej. Żal obu stron: √(1,50/1,20) − 1 ≈ 11,8% — po równo. Indeksacja samą inflacją (R = 1,50) dałaby dłużnikowi żal 25% przy zerowym żalu wierzyciela; pożyczka nominalna (R = 1) — wierzycielowi 50%. Matematycy nazywają rozwiązanie Talenta <em>minimaksowym</em>; my możemy nazwać je po prostu jednostką minimalnego żalu.</p>
 <p>Jedno doprecyzowanie, które uczciwość każe wypowiedzieć na głos. Dowód z iloczynem rozstrzyga sprawę w złych czasach — gdy ceny wyprzedzają płace i ktoś musi stracić. W dobrych czasach, gdy płace rosną szybciej niż ceny, żalu nie ma w całym korytarzu między C a P: każda jednostka z tego przedziału nikogo nie krzywdzi i matematyka sama z siebie żadnej nie wskazuje. Wybór środka także wtedy jest decyzją — decyzją, że owocami wzrostu strony dzielą się po równo, tak samo jak stratami. Stoją za nią dwa argumenty. Po pierwsze, umowę podpisuje się z góry, nie wiedząc, które czasy nadejdą — a √(C·P) to jedyna reguła traktująca strony symetrycznie w każdym możliwym świecie. Po drugie, każdy inny punkt korytarza trzeba by wynegocjować; środek jest naturalnym punktem zgody, którego negocjować nie trzeba.</p>
