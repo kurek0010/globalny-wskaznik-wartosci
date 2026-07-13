@@ -1,0 +1,14 @@
+# Klucze i sekrety
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# IDE / system
+.idea/
+.vscode/
+.DS_Store

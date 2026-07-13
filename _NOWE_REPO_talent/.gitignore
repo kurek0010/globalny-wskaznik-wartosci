@@ -1,0 +1,36 @@
+# Cache
+cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Pliki środowiska i sekretów
+.env
+.env.local
+*.key
+secrets.yaml
+
+# Edytory i system
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Wyniki tymczasowe
+output/tmp/
+*.log
+
+# Modele i artefakty ML
+*.pkl
+*.joblib
+*.h5
+
+# Claude Code (ustawienia lokalne)
+.claude/

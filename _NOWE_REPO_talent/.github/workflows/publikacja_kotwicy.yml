@@ -1,0 +1,141 @@
+name: Publikacja kotwicy TLN-PLN
+
+# Kadencja z REGULA_publikacyjna_Talent_v0.1.md §2 / POLITYKA_danych_v0.1.md §2:
+# odciecie danych 24. dnia 12:00 CET, kotwica 25. dnia. Cron 09:00 UTC = zawsze
+# po poludniu CET/CEST 24. dnia poprzedniego dnia -> bezpieczny margines.
+#
+# Cron wlaczony 2026-07-09 po: (1) lokalnym tescie pelnego lancucha
+# (fetch_gus.py -> talent_update.py -> build_strona.py, opublikowana kotwica
+# 2026-05) i (2) udanym recznym uruchomieniu przez workflow_dispatch
+# (dry-run, run 29032072543 - poprawnie wykryl brak nowych miesiecy i nie
+# commitowal). Jak wylaczyc/uruchomic recznie: patrz INSTRUKCJA_aktualizacji.md
+# ("Automatyzacja").
+on:
+  schedule:
+    - cron: "0 9 25 * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry-run: policz i pokaz zmiany, ale nie commituj/pushuj"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: publikacja-kotwicy-tln-pln
+  cancel-in-progress: false
+
+jobs:
+  publikuj:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Python 3.11
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Zależności
+        run: pip install -r prototyp/requirements.txt
+
+      - name: Fetch first-printy GUS
+        working-directory: prototyp
+        run: python src/fetch_gus.py
+
+      - name: Aktualizacja kotwic (talent_update.py)
+        id: update
+        working-directory: prototyp
+        run: |
+          set +e
+          python src/talent_update.py > /tmp/update_log.txt 2>&1
+          code=$?
+          cat /tmp/update_log.txt
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Utwórz Issue przy błędzie kaskady/skryptu
+        if: steps.update.outputs.exit_code != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "Automat publikacji kotwicy TLN-PLN zakończył się błędem i **nie opublikował"
+            echo "żadnych nowych wartości** (zakaz publikacji częściowej — POLITYKA_danych_v0.1.md §4.2)."
+            echo
+            echo "## Log \`talent_update.py\`"
+            echo '```'
+            cat /tmp/update_log.txt
+            echo '```'
+            echo
+            echo "## Co ma zrobić człowiek"
+            echo "1. Sprawdź, czy GUS opublikował brakujące dane (CPI m/m lub płace roczne)."
+            echo "2. Jeśli dane są dostępne, ale fetcher ich nie znalazł — uzupełnij ręcznie"
+            echo "   \`prototyp/data/first_prints_pln.json\` (klucz \`cpi_mm\` lub \`wage_annual\`),"
+            echo "   z polami \`value\`, \`source\`, \`fetched\` — patrz przykłady w pliku."
+            echo "3. Uruchom workflow ponownie ręcznie: Actions → Publikacja kotwicy TLN-PLN →"
+            echo "   Run workflow (bez dry-run)."
+            echo
+            echo "Procedura ręczna, jeśli wolisz nie czekać na automat: \`INSTRUKCJA_aktualizacji.md\`."
+          } > /tmp/issue_body.txt
+          gh issue create \
+            --title "Automat kotwicy TLN-PLN: błąd publikacji ($(date -u +%Y-%m-%d))" \
+            --body-file /tmp/issue_body.txt
+
+      - name: Przerwij przy błędzie
+        if: steps.update.outputs.exit_code != '0'
+        run: exit 1
+
+      - name: Czy są nowe kotwice?
+        id: check
+        run: |
+          if git diff --quiet -- prototyp/data/processed/talent_published.json; then
+            echo "nowe=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "nowe=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Builder strony (build_strona.py)
+        if: steps.check.outputs.nowe == 'true'
+        working-directory: prototyp
+        run: python src/build_strona.py
+
+      - name: Podgląd zmian (dry-run, bez commita)
+        if: github.event.inputs.dry_run == 'true'
+        run: |
+          echo "=== DRY RUN — poniższe zmiany NIE zostaną zacommitowane ani wypchnięte ==="
+          git status --porcelain
+          echo
+          git diff --stat
+
+      - name: Commit i push
+        if: steps.check.outputs.nowe == 'true' && github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          ANCHOR_LINE=$(grep '^Kotwica po:' /tmp/update_log.txt | tail -1)
+          MONTH_VAL=$(echo "$ANCHOR_LINE" | sed -E 's/Kotwica po:[[:space:]]*([0-9-]+) = ([0-9.]+).*/\1: \2/')
+          ALERTS=$(grep '^ALERT' /tmp/update_log.txt || true)
+
+          git add \
+            prototyp/data/first_prints_pln.json \
+            prototyp/data/processed/talent_anchors.csv \
+            prototyp/data/processed/talent_anchors.json \
+            prototyp/data/processed/talent_published.json \
+            index.html talent_strona.html whitepaper.html wprowadzenie.html \
+            regula_publikacyjna.html wyscig_kandydatow.html \
+            wyniki_test_stulecia_usa.html wyniki_kruche_gospodarki.html \
+            wyniki_talent_dwustronny.html tip.html
+
+          if [ -n "$ALERTS" ]; then
+            git commit -m "Kotwica TLN-PLN za ${MONTH_VAL}" -m "$ALERTS"
+          else
+            git commit -m "Kotwica TLN-PLN za ${MONTH_VAL}"
+          fi
+          git push

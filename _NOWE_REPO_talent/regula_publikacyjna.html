@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>
+<title>Reguła publikacyjna Talenta (TLN) — v0.1 — Talent (TLN)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.css">
+<style>
+:root[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--border:#2a323c}
+:root[data-theme="sepia"]{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--border:#ded0b0}
+:root[data-theme="light"]{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--border:#e2ded4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto;transition:background-color .2s,color .2s}
+h1{font-size:1.6em;margin:0 0 14px}
+h2{font-size:1.2em;margin:28px 0 10px;color:var(--ac)}
+h3{font-size:1.05em;margin:18px 0 8px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px;margin:0 0 12px}
+code{font:.88em ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px;padding:1px 6px}
+pre{background:var(--card);border-radius:8px;border-left:3px solid var(--ac);padding:14px 16px;overflow-x:auto;margin:0 0 14px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 16px;font-size:.92em}
+th,td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+em{color:var(--mut)}
+blockquote{border-left:3px solid var(--border);padding-left:14px;color:var(--mut);margin:0 0 12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top{font-size:.9em;margin:0}
+.theme-switch{display:flex;gap:6px;flex-shrink:0}
+.theme-btn{background:var(--border);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{color:var(--tx)}
+.theme-btn.active{border-color:var(--ac);color:var(--ac)}
+.gen{color:var(--mut);font-size:.78em;border-top:1px solid var(--border);margin-top:30px;padding-top:12px}
+</style>
+</head>
+<body>
+<div class="topbar">
+<p class="top"><a href="index.html">← strona główna Talenta</a></p>
+<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>
+</div>
+<h1>Reguła publikacyjna Talenta (TLN) — v0.1</h1>
+<p><strong>Data:</strong> 2026-07-04 · <strong>Status:</strong> projekt do dyskusji · <strong>Kod referencyjny:</strong> <code>prototyp/src/talent_daily.py</code>
+Zasada nadrzędna: <strong>kod jest metodologią</strong>. Ten dokument opisuje regułę słowami; w razie rozbieżności wiąże wersjonowany kod z podpisanym tagiem. Operacyjne szczegóły zasilania danymi (konkretne komunikaty, dni publikacji, kaskady awaryjne, rewizje, zmiany bazy): <code>POLITYKA_danych_v0.1.md</code>.</p>
+<h2>1. Definicja jednostki</h2>
+<p>Talent to jednostka wartości będąca środkiem geometrycznym kosztów życia i płac:</p>
+<p>$$A(m) = 100 \cdot \sqrt{\frac{I_c(m)}{I_c(m_0)} \cdot \frac{I_w(m)}{I_w(m_0)}}$$</p>
+<ul>
+<li><strong>I_c — noga cen:</strong> indeks cen konsumpcyjnych, łańcuch miesięczny. Docelowo <strong>mediana ≥3 niezależnych źródeł</strong> (GUS CPI, HICP Eurostat, niezależny indeks cen online); do czasu trzeciego źródła: średnia geometryczna GUS i HICP z tripwire (§5.3).</li>
+<li><strong>I_w — noga płac (definicja v0.2):</strong> indeks <strong>funduszu płac na wygładzone zatrudnienie</strong>: <code>W(m) = FunduszPłac(m) / MA12(Zatrudnienie)(m)</code> (średnia krocząca 12-mies., przyczynowa), następnie wygładzenie 12-mies. całego indeksu (sezonowość premii). Oba składniki pochodzą z tych samych sprawozdań firm do GUS. Uzasadnienie: przeciętna płaca (fundusz/bieżące zatrudnienie) ma procykliczny artefakt składu — w kryzysie zwalniani są najpierw nisko opłacani i średnia <em>rośnie</em>, gdy dochody spadają (USA, IV 2020: przeciętna +4,2% m/m, fundusz/MA12 −8,9%; dryf długookresowy obu wariantów identyczny: +135,7% vs +136,2% za 2000–2026). Weryfikacja: <code>src/wage_leg_v2 — data/processed/wage_leg_v2_monthly.csv</code>. Źródła: sektor przedsiębiorstw (GUS, miesięczny) łańcuchowany gospodarką narodową (GUS, kwartalny); docelowo mediana wzrostu płac tych samych osób z danych ZUS jako drugie źródło.</li>
+<li><strong>m₀ — baza:</strong> pierwszy miesiąc publikacji = 100. Baza jest stała na zawsze; nigdy nie jest przesuwana.</li>
+</ul>
+<p>Uzasadnienie empiryczne wag 50/50 i wyboru nóg: <code>WYSCIG_kandydatow_minimalny_zal.md</code>, <code>WYNIKI_test_stulecia_USA.md</code>, <code>WYNIKI_kruche_gospodarki.md</code> (minimalizacja dwustronnego regretu/żalu).</p>
+<h2>2. Kalendarz i wartość dzienna (model UF — pełny pre-commitment)</h2>
+<ol>
+<li>GUS publikuje CPI za miesiąc <em>m</em> ok. 15. dnia <em>m+1</em>; płace przedsiębiorstw ok. 21. dnia <em>m+1</em>.</li>
+<li><strong>Dzień kotwicy: 25. dzień miesiąca <em>m+1</em>.</strong> Liczymy A(m) z danych opublikowanych do tego dnia i <strong>jednocześnie publikujemy pełną ścieżkę dzienną</strong> na okno od 26. dnia <em>m+1</em> do 25. dnia <em>m+2</em>:</li>
+</ol>
+<p>$$T(d_k) = A(m) \cdot g^{k/K} \qquad g = \frac{A(m)}{A(m-1)} \qquad k = 1, \dots, K$$</p>
+<p>(K to liczba dni okna publikacyjnego.)</p>
+<ol>
+<li>Każda wartość dzienna jest więc znana <strong>co najmniej dzień naprzód, a maksymalnie miesiąc naprzód</strong> — strony umowy nigdy nie rozliczają się po wartości, której nie mogły znać wcześniej (wzór: chilijska UF).</li>
+</ol>
+<h2>3. Zakaz rewizji wstecz</h2>
+<p>Raz opublikowana wartość (kotwica lub dzienna) <strong>nigdy nie jest zmieniana</strong>. Rewizje danych źródłowych (GUS/Eurostat) wpływają wyłącznie na przyszłe łańcuchy m/m. Publikacja każdego odczytu zawiera <strong>hash danych wejściowych</strong> i wersję kodu (tag git), więc każdy może odtworzyć wynik co do grosza.</p>
+<h2>4. Rewizje składu i źródeł (chain-linking)</h2>
+<p>Zmiana źródła/składnika wyłącznie wg procedury niezmienniczości (chain-linking): kryteria kwalifikacji zapisane z góry, ogłoszenie ≥3 miesiące naprzód, łączenie łańcuchowe (bez skoku), test nakładania, nigdy wstecz. Konsensus społeczności (model open source) decyduje <strong>czy kryteria zastosowano poprawnie</strong> — nigdy o pożądanym wyniku.</p>
+<h2>5. Bezpieczniki (deterministyczne, ogłoszone z góry)</h2>
+<ol>
+<li><strong>Próg podwyższonej inflacji:</strong> jeśli 3-miesięczna średnia |wzrostu kotwicy m/m| &gt; 5%, okno interpolacji skraca się (publikacja dekadowa: 5., 15., 25.) — redukcja strat lagu (lekcja: Polska I 1990, −44% przy lagu miesięcznym).</li>
+<li><strong>Próg Cagana (tryb awaryjny):</strong> inflacja &gt; 50% m/m przez 2 kolejne miesiące → jednostka przechodzi na z góry zadeklarowany twardy koszyk (mediana kursów 3 stabilnych walut), aż inflacja &lt; 15% m/m przez 6 miesięcy; powrót przez chain-linking (lekcja: Niemcy 1923 — powyżej tego progu żaden indeks nie działa i nie wolno udawać, że jest inaczej).</li>
+<li><strong>Tripwire źródeł:</strong> rozjazd rocznych dynamik źródeł jednej nogi &gt; 3 p.p. → automatyczne przejście na medianę pozostałych + publiczny alert (lekcja: INDEC 2007–15).</li>
+<li><strong>Cap kontraktowy (zalecenie do umów, nie do indeksu):</strong> wzrost zobowiązania m/m ponad X% podlega odroczeniu z kapitalizacją, nie umorzeniu (lekcja: zamrożenie UVA dekretem).</li>
+</ol>
+<h2>6. Publikacja i licencja</h2>
+<ul>
+<li>Kanały: repozytorium git (dane + kod + podpisane tagi), plik JSON/CSV z kotwicami i ścieżką dzienną, strona statyczna (<code>talent_strona.html</code> — działa z GitHub Pages, bez serwera).</li>
+<li>Licencja: kod i dane wynikowe otwarte (np. MIT + CC-BY); warunek użycia nazwy „Talent/TLN": niemodyfikowana formuła (ochrona przed podszywaniem).</li>
+<li>Częstotliwość: kotwica miesięcznie, ścieżka dzienna z wyprzedzeniem, alerty bezpieczników natychmiast.</li>
+</ul>
+<h2>7. Znane prowizoria v0.1 (jawna lista)</h2>
+<ol>
+<li>Noga płac w prototypie: dane roczne GUS/ZUS interpolowane — do zastąpienia adapterem GUS BDL (płaca miesięczna sektora przedsiębiorstw).</li>
+<li>Noga cen: jedno źródło (CPI PL) — do rozszerzenia o HICP i indeks online.</li>
+<li>Baza prototypu: 1996-01 = 100 (dla ciągłości badań); baza produkcyjna zostanie ustalona w dniu pierwszej publikacji.</li>
+<li>Wariant Qist (finanse bezodsetkowe): identyczna formuła, odrębna dokumentacja zgodności (mithl/riba) — do opracowania z ekspertem fiqh.</li>
+</ol>
+<p class="gen">Strona wygenerowana automatycznie z pliku <code>REGULA_publikacyjna_Talent_v0.1.md</code> w
+<a href="https://github.com/kurek0010/talent">repozytorium</a> —
+wersja markdown jest kanoniczna.</p>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+<script>function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');</script>
+</body>
+</html>

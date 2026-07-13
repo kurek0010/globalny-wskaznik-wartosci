@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>
+<title>Talent umowy międzynarodowej — wyniki PL-US (2002–2024) — Talent (TLN)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.css">
+<style>
+:root[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--border:#2a323c}
+:root[data-theme="sepia"]{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--border:#ded0b0}
+:root[data-theme="light"]{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--border:#e2ded4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto;transition:background-color .2s,color .2s}
+h1{font-size:1.6em;margin:0 0 14px}
+h2{font-size:1.2em;margin:28px 0 10px;color:var(--ac)}
+h3{font-size:1.05em;margin:18px 0 8px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px;margin:0 0 12px}
+code{font:.88em ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px;padding:1px 6px}
+pre{background:var(--card);border-radius:8px;border-left:3px solid var(--ac);padding:14px 16px;overflow-x:auto;margin:0 0 14px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 16px;font-size:.92em}
+th,td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+em{color:var(--mut)}
+blockquote{border-left:3px solid var(--border);padding-left:14px;color:var(--mut);margin:0 0 12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top{font-size:.9em;margin:0}
+.theme-switch{display:flex;gap:6px;flex-shrink:0}
+.theme-btn{background:var(--border);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{color:var(--tx)}
+.theme-btn.active{border-color:var(--ac);color:var(--ac)}
+.gen{color:var(--mut);font-size:.78em;border-top:1px solid var(--border);margin-top:30px;padding-top:12px}
+</style>
+</head>
+<body>
+<div class="topbar">
+<p class="top"><a href="index.html">← strona główna Talenta</a></p>
+<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>
+</div>
+<h1>Talent umowy międzynarodowej — wyniki PL-US (2002–2024)</h1>
+<p><strong>Data:</strong> 2026-07-04 · <strong>Kod:</strong> <code>prototyp/src/regret_bilateral.py</code></p>
+<h2>Konstrukcja</h2>
+<p>Talent dwustronny (TLN-2) dla umowy polsko-amerykańskiej: <strong>środek geometryczny obu Talentów krajowych z kursem rozłożonym po połowie</strong>:</p>
+<p>$$V_{PLN}(t) = \sqrt{TLN_{PL}(t) \cdot TLN_{US}(t) \cdot \frac{S(t)}{S(0)}} \qquad V_{USD}(t) = \frac{V_{PLN}(t)}{S(t)/S(0)}$$</p>
+<p>gdzie S to kurs PLN/USD; po stronie USD wzór jest symetryczny.</p>
+<p>Żal liczony w obu krajach naraz: jednostka oceniana w PLN względem korytarza [CPI-PL, płaca-PL] i w USD względem [CPI-US, płaca-US]; żal okna = największe przekroczenie któregokolwiek z 4 brzegów (każda strona może być dłużnikiem lub wierzycielem). Horyzonty 3–20 lat, wszystkie okna.</p>
+<h2>Wyniki</h2>
+<table>
+<thead>
+<tr>
+<th>Jednostka umowy</th>
+<th>% okien zero-żalu</th>
+<th>Mediana</th>
+<th>p95</th>
+<th>Najgorszy przypadek</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TLN-2 dwustronny</strong></td>
+<td>20%</td>
+<td>5,7%</td>
+<td><strong>23,0%</strong></td>
+<td><strong>34,3%</strong> (dłużnik US, 2003→2008)</td>
+</tr>
+<tr>
+<td>TLN-US</td>
+<td>43%</td>
+<td>3,4%</td>
+<td>33,6%</td>
+<td>60,7% (wierzyciel PL, 2003→2008)</td>
+</tr>
+<tr>
+<td>TLN-PL</td>
+<td>13%</td>
+<td>13,4%</td>
+<td>48,9%</td>
+<td>77,2% (dłużnik US, 2003→2008)</td>
+</tr>
+<tr>
+<td>USD nominal</td>
+<td>0%</td>
+<td>19,1%</td>
+<td>77,0%</td>
+<td>84,6%</td>
+</tr>
+<tr>
+<td>50/50 PLN+USD nominal</td>
+<td>0%</td>
+<td>23,4%</td>
+<td>70,1%</td>
+<td>85,0%</td>
+</tr>
+<tr>
+<td>PLN nominal</td>
+<td>0%</td>
+<td>30,6%</td>
+<td>77,9%</td>
+<td><strong>93,0%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Kontekst próby: płace PL ×3,84 vs płace US ×1,82 (konwergencja), CPI PL ×2,01 vs US ×1,74, kurs bez zmian (×0,98) — realny rozjazd gospodarek ~2×.</p>
+<h2>Odczyt</h2>
+<ol>
+<li><strong>TLN-2 tnie najgorszy przypadek o połowę względem najlepszej jednostki jednostronnej</strong> (34% vs 61–77%) i niemal trzykrotnie względem walut nominalnych (85–93%). Minimaksowa własność środka geometrycznego przenosi się na przypadek międzynarodowy.</li>
+<li><strong>Uczciwa granica:</strong> w umowie międzynarodowej istnieje ryzyko, którego żadna formuła nie usunie — realny rozjazd dwóch gospodarek (tu: konwergencja płacowa Polski, ×2 w 22 lata). To ryzyko musi gdzieś wylądować; jednostki jednostronne i waluty zrzucają je w całości na jedną stronę, TLN-2 dzieli po połowie w logarytmach. 34% na 20 lat to cena uczestniczenia w parze z gospodarką doganiającą — nie wada formuły.</li>
+<li>Para PL-US jest blisko najtrudniejszego przypadku (transatlantycki + konwergencja). Dla par o zbieżnych trajektoriach (US-EU, US-UK) korytarze niemal się pokrywają i TLN-2 powinien mieć pasmo jednocyfrowe — do policzenia, gdy dodamy płace strefy euro.</li>
+<li>Uogólnienie na N stron: średnia geometryczna Talentów uczestników (równe wagi lub wagi udziałów w kontrakcie) — kandydat na jednostkę rozliczeń konsorcjów i handlu wielostronnego.</li>
+</ol>
+<h2>Zastrzeżenia</h2>
+<p>Dane roczne; płace PL z tablic GUS/ZUS (do weryfikacji, jak w <code>WYNIKI_kruche_gospodarki.md</code>); płace US = produkcyjni w przemyśle; kurs = średnia roczna NBP. Wyniki wrażliwe na dobór próby 2002–2024 (jedna wielka konwergencja) — wskazany test na dłuższej parze (np. US-UK od 1939).</p>
+<p class="gen">Strona wygenerowana automatycznie z pliku <code>WYNIKI_talent_dwustronny.md</code> w
+<a href="https://github.com/kurek0010/talent">repozytorium</a> —
+wersja markdown jest kanoniczna.</p>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+<script>function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');</script>
+</body>
+</html>

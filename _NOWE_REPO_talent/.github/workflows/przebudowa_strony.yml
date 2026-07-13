@@ -1,0 +1,81 @@
+name: Przebudowa strony po zmianie treści
+
+# Wyzwala builder (prototyp/src/build_strona.py) na push do main, ale WYLACZNIE
+# gdy zmienil sie plik faktycznie kompilowany na strone: dokladnie klucze
+# slownika DOCS w build_strona.py + szablon/builder same w sobie. Dokumenty
+# robocze (SZKIC_, TALENTY_, waluty/, PODSUMOWANIE_ itd.) NIE sa
+# na tej liscie i nie uruchamiaja builda.
+#
+# SYNCHRONIZACJA NA PRZYSZLOSC: dodajesz plik do DOCS w build_strona.py ->
+# dodaj go tez do `paths` ponizej, inaczej zmiana tresci nie przebuduje strony
+# automatycznie.
+#
+# Brak petli: ten workflow commituje wylacznie wygenerowane pliki .html, ktore
+# NIE wystepuja w ponizszym `paths` - wlasny commit nigdy nie retriggeruje
+# tego samego workflow.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ARTYKUL_Talent_popularnonaukowy.md"
+      - "ARTYKUL_wprowadzenie_i_zastosowania.md"
+      - "REGULA_publikacyjna_Talent_v0.1.md"
+      - "WYSCIG_kandydatow_minimalny_zal.md"
+      - "WYNIKI_test_stulecia_USA.md"
+      - "WYNIKI_kruche_gospodarki.md"
+      - "WYNIKI_talent_dwustronny.md"
+      - "TIP/README.md"
+      - "prototyp/src/strona_szablon.html"
+      - "prototyp/src/build_strona.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: przebudowa-strony
+  cancel-in-progress: false
+
+jobs:
+  przebuduj:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Python 3.11
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Zależności
+        run: pip install -r prototyp/requirements.txt
+
+      - name: Builder strony (build_strona.py)
+        working-directory: prototyp
+        run: python src/build_strona.py
+
+      - name: Czy są zmiany w wygenerowanych plikach?
+        id: check
+        run: |
+          if git diff --quiet -- \
+            index.html talent_strona.html whitepaper.html wprowadzenie.html \
+            regula_publikacyjna.html wyscig_kandydatow.html \
+            wyniki_test_stulecia_usa.html wyniki_kruche_gospodarki.html \
+            wyniki_talent_dwustronny.html tip.html; then
+            echo "zmiany=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "zmiany=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit i push
+        if: steps.check.outputs.zmiany == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            index.html talent_strona.html whitepaper.html wprowadzenie.html \
+            regula_publikacyjna.html wyscig_kandydatow.html \
+            wyniki_test_stulecia_usa.html wyniki_kruche_gospodarki.html \
+            wyniki_talent_dwustronny.html tip.html
+          git commit -m "Przebudowa strony po zmianie treści"
+          git push

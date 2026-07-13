@@ -1,0 +1,11 @@
+kandydat,pct_okien_zero,mediana_pct,p95_pct,najgorszy_pct,najgorszy_kto,bieg
+nominal,2,33.0,283.1,383.6,wierzyciel 1965->1995,1929_gdp
+CPI,95,0.0,2.9,43.3,dluznik 1929->1932,1929_gdp
+dochod (PKB/os.),95,0.0,2.9,43.3,wierzyciel 1929->1932,1929_gdp
+JW = sqrt(CPI*dochod),97,0.0,1.4,19.7,wierzyciel 1929->1932,1929_gdp
+nominal,1,32.5,301.7,383.6,wierzyciel 1965->1995,1939_wage
+CPI,79,0.0,7.1,12.5,dluznik 1978->2008,1939_wage
+placa,79,0.0,7.1,12.5,wierzyciel 1978->2008,1939_wage
+PKB/os.,20,8.8,50.7,63.2,dluznik 1977->2007,1939_wage
+"JW(CPI,PKB/os.)",49,2.2,23.7,34.0,dluznik 1977->2007,1939_wage
+"JW(CPI,placa)",88,0.0,3.5,6.1,dluznik 1978->2008,1939_wage

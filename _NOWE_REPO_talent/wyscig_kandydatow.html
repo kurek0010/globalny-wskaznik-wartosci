@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>
+<title>Wyścig kandydatów na jednostkę minimalnego żalu — wyniki — Talent (TLN)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.css">
+<style>
+:root[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--border:#2a323c}
+:root[data-theme="sepia"]{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--border:#ded0b0}
+:root[data-theme="light"]{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--border:#e2ded4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto;transition:background-color .2s,color .2s}
+h1{font-size:1.6em;margin:0 0 14px}
+h2{font-size:1.2em;margin:28px 0 10px;color:var(--ac)}
+h3{font-size:1.05em;margin:18px 0 8px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px;margin:0 0 12px}
+code{font:.88em ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px;padding:1px 6px}
+pre{background:var(--card);border-radius:8px;border-left:3px solid var(--ac);padding:14px 16px;overflow-x:auto;margin:0 0 14px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 16px;font-size:.92em}
+th,td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+em{color:var(--mut)}
+blockquote{border-left:3px solid var(--border);padding-left:14px;color:var(--mut);margin:0 0 12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top{font-size:.9em;margin:0}
+.theme-switch{display:flex;gap:6px;flex-shrink:0}
+.theme-btn{background:var(--border);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{color:var(--tx)}
+.theme-btn.active{border-color:var(--ac);color:var(--ac)}
+.gen{color:var(--mut);font-size:.78em;border-top:1px solid var(--border);margin-top:30px;padding-top:12px}
+</style>
+</head>
+<body>
+<div class="topbar">
+<p class="top"><a href="index.html">← strona główna Talenta</a></p>
+<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>
+</div>
+<h1>Wyścig kandydatów na jednostkę minimalnego żalu — wyniki</h1>
+<p><strong>Data:</strong> 2026-07-04
+<strong>Dane:</strong> 1996–2025, pliki projektu (<code>auv_contract.csv</code>, <code>auv_t.csv</code>); złoto: średnie roczne LBMA z wiedzy (1996–2024 pewne, 2025 ≈3250 USD/oz przybliżone). Wyniki także w <code>prototyp/data/processed/regret_race.csv</code>.</p>
+<h2>Metoda</h2>
+<p>Pożyczka „oddajesz tyle samo jednostek": dla każdego okna czasowego (horyzonty 3–20 lat, wszystkie lata startu) liczymy, ile nominalnie oddaje dłużnik przy indeksacji kandydatem, i mierzymy <strong>żal obu stron</strong>:</p>
+<ul>
+<li>żal dłużnika = o ile spłata urosła względem dochodów (benchmark: dochód/os.),</li>
+<li>żal wierzyciela = o ile spłata straciła siłę nabywczą (benchmark: CPI).</li>
+</ul>
+<p>Żal okna = większy z dwóch. „Zero żalu" = odchylenie &lt; 2%. To operacjonalizacja wymogu: <em>obie strony po latach uznają, że oddano w przybliżeniu tę samą wartość</em>.</p>
+<h2>Wyniki (wszystkie okna łącznie)</h2>
+<table>
+<thead>
+<tr>
+<th>Kandydat</th>
+<th>% okien zero-żalu</th>
+<th>Mediana żalu</th>
+<th>p95</th>
+<th>Najgorszy przypadek</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MIX A: 50% dochód + 50% CPI (geom.)</strong></td>
+<td><strong>82%</strong></td>
+<td><strong>0,0%</strong></td>
+<td><strong>4,5%</strong></td>
+<td><strong>7,2%</strong></td>
+</tr>
+<tr>
+<td>MIX D: 45/45/10 (dochód/CPI/AUV-kon)</td>
+<td>69%</td>
+<td>0,0%</td>
+<td>7,5%</td>
+<td>9,7%</td>
+</tr>
+<tr>
+<td>CPI USA</td>
+<td>75%</td>
+<td>0,0%</td>
+<td>9,3%</td>
+<td>14,9%</td>
+</tr>
+<tr>
+<td>dochód/os. (świat)</td>
+<td>75%</td>
+<td>0,0%</td>
+<td>9,3%</td>
+<td>14,9%</td>
+</tr>
+<tr>
+<td>dochód wygładzony 3l</td>
+<td>43%</td>
+<td>3,1%</td>
+<td>11,6%</td>
+<td>14,9%</td>
+</tr>
+<tr>
+<td>MIX B: 60% dochód + 40% AUV-kontrakt</td>
+<td>57%</td>
+<td>1,3%</td>
+<td>23,1%</td>
+<td>25,9%</td>
+</tr>
+<tr>
+<td>MIX C: 1/3 CPI + 1/3 dochód + 1/3 złoto</td>
+<td>12%</td>
+<td>11,8%</td>
+<td>28,4%</td>
+<td>44,3%</td>
+</tr>
+<tr>
+<td><strong>nominal (dzisiejsza praktyka KKOP)</strong></td>
+<td>0%</td>
+<td>17,7%</td>
+<td>54,0%</td>
+<td>66,1%</td>
+</tr>
+<tr>
+<td>AUV kontraktowy (wygładzony 5l)</td>
+<td>19%</td>
+<td>15,1%</td>
+<td>58,2%</td>
+<td>68,8%</td>
+</tr>
+<tr>
+<td>koszyk surowcowy (nominalny)</td>
+<td>13%</td>
+<td>20,0%</td>
+<td>64,8%</td>
+<td>87,6%</td>
+</tr>
+<tr>
+<td>AUV surowy</td>
+<td>18%</td>
+<td>20,0%</td>
+<td>78,8%</td>
+<td>93,9%</td>
+</tr>
+<tr>
+<td>złoto</td>
+<td>2%</td>
+<td>47,7%</td>
+<td>189,0%</td>
+<td><strong>264,9%</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>Odczyt</h2>
+<p><strong>1. Zwycięzca jest analityczny, nie przypadkowy.</strong> Żal dłużnika mierzony jest dochodem, żal wierzyciela — kosztami życia. Między tymi dwiema trajektoriami rozciąga się „korytarz zero-żalu": indeks, który w nim siedzi, nie krzywdzi nikogo. Geometryczna średnia 50/50 obu benchmarków <strong>z konstrukcji</strong> siedzi w środku korytarza — jej najgorszy żal to zawsze połowa maksymalnej rozbieżności dochody↔ceny. Empiryczna treść wyniku: w latach 1996–2025 ta rozbieżność nie przekroczyła ~14%, więc najgorszy żal MIX A = 7,2% na dwie dekady. To jest pasmo, o które pytałeś.</p>
+<p><strong>2. To rozwiązanie ma 40 lat praktyki, tylko nikt go nie używa do pożyczek.</strong> Szwajcarski <em>Mischindex</em> waloryzuje emerytury dokładnie formułą 50% płace / 50% ceny od lat 80. Polska waloryzacja emerytur: inflacja + ≥20% realnego wzrostu płac — ten sam duch, inne wagi. Fińskie indeksy emerytalne — analogicznie. Czyli: formuła minimalnego żalu między „siłą nabywczą" a „udziałem w dochodzie" została niezależnie odkryta przez systemy emerytalne, które mają identyczny problem (zobowiązanie wieloletnie, dwie strony, spór o miarę). Nowość Twojego projektu to zastosowanie jej jako <strong>jednostki pożyczkowej open source</strong>, nie wynalezienie wag.</p>
+<p><strong>3. Dzisiejsza praktyka KKOP (nominalnie, bez indeksacji) jest gorsza od wszystkiego poza złotem i surowym AUV:</strong> mediana żalu 17,7%, najgorzej 66% (wierzyciel, 2004→2024). To jest liczbowy argument założycielski projektu: kasy wzajemne <em>systematycznie</em> karzą pożyczających kolegom.</p>
+<p><strong>4. Złoto i surowce nie nadają się wprost.</strong> Złoto: pożyczka z 2005 oddana w 2025 kosztuje dłużnika 265% więcej względem dochodów. AUV/koszyk: cykl surowcowy generuje żal 60–94%. Domieszka AUV do miksu (MIX D, 10%) tylko pogarsza wynik względem czystego MIX A — surowce nie wnoszą tu informacji, wnoszą wariancję. <strong>Rola AUV w projekcie powinna być diagnostyczna</strong> (miara napięcia zasobowego, demaskowanie iluzji monetarnej), nie kontraktowa.</p>
+<h2>Zastrzeżenia (uczciwie)</h2>
+<ol>
+<li><strong>Benchmarki są endogeniczne:</strong> CPI i dochód oceniają same siebie (stąd ich mediana 0,0%). Wynik MIX A nie jest jednak tautologią — mówi: <em>jeśli</em> zgadzamy się, że żal stron mierzy się kosztami życia i dochodami, <em>to</em> środek geometryczny minimalizuje maksimum żalu. Spór może dotyczyć tylko definicji żalu, nie arytmetyki.</li>
+<li><strong>Uniwersum USD/świat.</strong> Dla polskiej kasy właściwy jest wariant lokalny: 50% CPI-PL (mediana z GUS/Eurostat/HICP) + 50% mediana płac PL (GUS/ZUS). Do policzenia analogicznie.</li>
+<li><strong>Korytarz może się rozszerzyć.</strong> W stagflacji z realnym spadkiem płac (PL lata 80., Argentyna) rozbieżność dochody↔ceny sięga dziesiątek procent — wtedy żaden indeks nie da zero-żalu i MIX dzieli ból po połowie (co nadal jest własnością minimaksową, ale trzeba to komunikować). Test wsteczny na długiej historii (docelowo do ~1900) pozostaje kluczowym następnym dowodem.</li>
+<li><strong>Powrót autorytetów:</strong> CPI i płace liczą urzędy. Mitygacja zgodna z filozofią projektu: mediana z ≥2–3 niezależnych źródeł na nogę, formuła i dane opublikowane, hash odczytu, zakaz rewizji wstecz — „instytucja skuta regułą", jak w nocie koncepcyjnej.</li>
+<li>Złoto 2025 przybliżone; nie zmienia rzędu wielkości wyniku (żal złota jest katastrofalny niezależnie od końcówki).</li>
+</ol>
+<h2>Następne kroki</h2>
+<ol>
+<li>Wariant lokalny PL (CPI-PL + płace PL) — ten sam wyścig.</li>
+<li>Rozszerzenie historii wstecz (USA: CPI + płace od ~1900, dane BLS/MeasuringWorth) — pasmo żalu przez wojny, stagflację lat 70., deflację lat 30.</li>
+<li>Reguła publikacyjna jednostki (nazwa robocza: <strong>JW — jednostka wartości</strong>): JW(t) = √(CPI(t) × Dochód(t)), mediana źródeł, pre-commitment miesięczny, chain-linking przy zmianie źródeł — szkielet z Części II dokumentu o niezmienniczości przenosi się wprost.</li>
+</ol>
+<p class="gen">Strona wygenerowana automatycznie z pliku <code>WYSCIG_kandydatow_minimalny_zal.md</code> w
+<a href="https://github.com/kurek0010/talent">repozytorium</a> —
+wersja markdown jest kanoniczna.</p>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+<script>function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');</script>
+</body>
+</html>

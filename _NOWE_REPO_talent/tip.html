@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>
+<title>TIP — Talent Improvement Proposals — Talent (TLN)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.css">
+<style>
+:root[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--border:#2a323c}
+:root[data-theme="sepia"]{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--border:#ded0b0}
+:root[data-theme="light"]{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--border:#e2ded4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto;transition:background-color .2s,color .2s}
+h1{font-size:1.6em;margin:0 0 14px}
+h2{font-size:1.2em;margin:28px 0 10px;color:var(--ac)}
+h3{font-size:1.05em;margin:18px 0 8px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px;margin:0 0 12px}
+code{font:.88em ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px;padding:1px 6px}
+pre{background:var(--card);border-radius:8px;border-left:3px solid var(--ac);padding:14px 16px;overflow-x:auto;margin:0 0 14px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 16px;font-size:.92em}
+th,td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+em{color:var(--mut)}
+blockquote{border-left:3px solid var(--border);padding-left:14px;color:var(--mut);margin:0 0 12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top{font-size:.9em;margin:0}
+.theme-switch{display:flex;gap:6px;flex-shrink:0}
+.theme-btn{background:var(--border);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{color:var(--tx)}
+.theme-btn.active{border-color:var(--ac);color:var(--ac)}
+.gen{color:var(--mut);font-size:.78em;border-top:1px solid var(--border);margin-top:30px;padding-top:12px}
+</style>
+</head>
+<body>
+<div class="topbar">
+<p class="top"><a href="index.html">← strona główna Talenta</a></p>
+<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>
+</div>
+<h1>TIP — Talent Improvement Proposals</h1>
+<p>Każda zmiana formuły, źródeł danych lub reguły publikacyjnej Talenta przechodzi przez TIP: ponumerowany dokument z uzasadnieniem, testem na danych i decyzją. Wzorzec: BIP (Bitcoin) / EIP (Ethereum).</p>
+<h2>Proces (cztery kroki, zawsze w tej kolejności)</h2>
+<ol>
+<li><strong>Nazwij problem publicznie</strong> — TIP powstaje jako szkic z opisem problemu i mechanizmu.</li>
+<li><strong>Zaproponuj poprawkę</strong> — konkretna zmiana definicji/kodu, bez nowych zależności, jeśli to możliwe.</li>
+<li><strong>Przetestuj na danych, zanim cokolwiek zmienisz</strong> — wyniki i kod testu są częścią TIP-a.</li>
+<li><strong>Zmień regułę z pełnym uzasadnieniem, nigdy wstecz</strong> — po akceptacji definicja wchodzi do reguły publikacyjnej z odnośnikiem do TIP-a; opublikowane wartości indeksu nie są nigdy przeliczane.</li>
+</ol>
+<h2>Statusy</h2>
+<p><code>Szkic</code> → <code>Testowany</code> → <code>Zaakceptowany</code> / <code>Odrzucony</code> → <code>Wdrożony</code></p>
+<p>Konsensus społeczności dotyczy wyłącznie tego, <strong>czy kryteria i test zostały poprawnie zastosowane</strong> — nigdy tego, jaki ma być wynik indeksu.</p>
+<h2>Szablon</h2>
+<p>Nagłówek (numer, tytuł, autor, data, status) · Problem · Proponowana zmiana · Test na danych (kod + liczby) · Skutki uboczne i czego zmiana NIE psuje · Decyzja i data wdrożenia.</p>
+<h2>Rejestr</h2>
+<table>
+<thead>
+<tr>
+<th>Nr</th>
+<th>Tytuł</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/kurek0010/talent/blob/main/TIP/TIP-0001-noga-placowa-v02.md">TIP-0001</a></td>
+<td>Noga płacowa v0.2: fundusz płac / wygładzone zatrudnienie</td>
+<td>Wdrożony</td>
+</tr>
+<tr>
+<td><a href="https://github.com/kurek0010/talent/blob/main/TIP/TIP-0002-mediana-wynagrodzen.md">TIP-0002</a></td>
+<td>Noga płacowa: mediana wynagrodzeń z rejestrów ZUS+MF</td>
+<td>Szkic</td>
+</tr>
+</tbody>
+</table>
+<p class="gen">Strona wygenerowana automatycznie z pliku <code>TIP/README.md</code> w
+<a href="https://github.com/kurek0010/talent">repozytorium</a> —
+wersja markdown jest kanoniczna.</p>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+<script>function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>
+<title>Talent (TLN) — prompt dla agenta-programisty</title>
+<style>
+:root[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--border:#2a323c}
+:root[data-theme="sepia"]{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--border:#ded0b0}
+:root[data-theme="light"]{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--border:#e2ded4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto;transition:background-color .2s,color .2s}
+h1{font-size:1.7em}h1 span{color:var(--ac)}
+p{margin:0 0 12px}
+a{color:var(--ac)}
+.mut{color:var(--mut)}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top{margin:0}
+.theme-switch{display:flex;gap:6px;flex-shrink:0}
+.theme-btn{background:var(--border);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{color:var(--tx)}
+.theme-btn.active{border-color:var(--ac);color:var(--ac)}
+button{background:var(--ac);color:#0f1419;border:0;border-radius:8px;padding:10px 18px;font:bold 15px Georgia;cursor:pointer;margin:0 0 14px}
+button:hover{filter:brightness(1.1)}
+pre{font:.84em/1.55 ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:10px;border-left:3px solid var(--ac);padding:18px;white-space:pre-wrap;word-wrap:break-word}
+</style>
+</head>
+<body>
+<div class="topbar">
+<p class="top"><a href="index.html">← strona główna Talenta</a> &middot; <a href="specyfikacja.html">specyfikacja dla piszących samodzielnie</a></p>
+<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>
+</div>
+<h1>Zbuduj Talenta u siebie <span>— prompt dla agenta</span></h1>
+<p>Nie wierz nam na słowo. Skopiuj poniższy prompt do agenta-programisty (Claude Code, Cursor, Codex lub podobny), a zbuduje Ci on od zera, na Twoim komputerze, niezależną implementację Talenta — i sam sprawdzi, czy otrzymuje te same wyniki co my. Potrzebujesz tylko Pythona i darmowego klucza API FRED (<a href="https://fred.stlouisfed.org/docs/api/api_key.html">rejestracja, 2 minuty</a>).</p>
+<button onclick="navigator.clipboard.writeText(document.getElementById('p').textContent).then(()=>this.textContent='Skopiowano ✓')">Kopiuj prompt</button>
+<pre id="p">Zbuduj od zera niezależną implementację jednostki wartości „Talent (TLN)" i zweryfikuj
+jej wyniki względem wartości kontrolnych podanych na końcu. Pracuj etapami, po każdym
+etapie uruchom kod i pokaż wyniki. Język: Python 3, tylko biblioteki standardowe +
+requests (+ opcjonalnie matplotlib do wykresów). Nie korzystaj z kodu referencyjnego —
+celem jest NIEZALEŻNA reprodukcja z samej specyfikacji.
+
+KONTEKST
+Talent to jednostka rozliczeniowa do umów wieloletnich: środek geometryczny indeksu cen
+i indeksu płac, T = 100·√(I_c × I_w). Minimalizuje „żal dwustronny": dłużnik nie odda
+więcej względem płac, niż wierzyciel straciłby względem cen — i odwrotnie. Pełna
+specyfikacja: https://kurek0010.github.io/talent/specyfikacja.html
+
+ETAP 1 — pobranie danych (FRED API, klucz podam po uruchomieniu; format JSON):
+  https://api.stlouisfed.org/fred/series/observations?series_id=SERIA&api_key=KLUCZ&file_type=json
+  Serie roczne (frequency=a, aggregation_method=avg):
+    CPIAUCNS (CPI USA, od 1913), CES3000000008 (płaca godz. przemysł USA, od 1939),
+    A939RC0A052NBEA (PKB/os. USA, od 1929), POLCPIALLMINMEI (CPI Polska, od 1989)
+  Serie miesięczne (bez parametru frequency):
+    AHETPI, PAYEMS (od 2000-01)
+  Zapisz wszystko do CSV (rok/miesiąc, wartość). Płace Polski: przeciętne miesięczne
+  wynagrodzenie GUS/ZUS rocznie 1989–2024 — pobierz z tabel GUS/ZUS („przeciętne
+  wynagrodzenie w gospodarce narodowej", uwzględnij denominację 1995 [÷10000]
+  i przełom netto→brutto w 1999 [łańcuchuj wzrostem ~+11,1%]).
+
+ETAP 2 — metryka żalu (regret):
+  Dla indeksu I i okna [t, t+h]: R = I(t+h)/I(t), C = wzrost cen, P = wzrost płac.
+  żal_dłużnika = max(0, R/P − 1); żal_wierzyciela = max(0, C/R − 1); żal = max z obu.
+  Licz po wszystkich latach startu i horyzontach h ∈ {3,5,10,20,30}; raportuj:
+  % okien z żalem < 2%, medianę, 95. percentyl, maksimum (+ kto i które okno).
+  Test tożsamości: (R/P)·(C/R) musi równać się C/P dla dowolnego R.
+
+ETAP 3 — test stulecia USA:
+  Kandydaci: nominal (stały), CPI, płaca, Talent = √(CPI·płaca).
+  Bieg A: 1929–2025, benchmark dochodowy = PKB/os. (CPIAUCNS + A939RC0A052NBEA).
+  Bieg B: 1939–2025, benchmark = płaca (CPIAUCNS + CES3000000008).
+
+ETAP 4 — test Polski 1989–2024 (POLCPIALLMINMEI + płace GUS/ZUS), ci sami kandydaci.
+
+ETAP 5 — noga płacowa v0.2 (korekta efektu składu):
+  Na danych miesięcznych: W1 = AHETPI (przeciętna płaca);
+  W2 = AHETPI × PAYEMS / MA12(PAYEMS), gdzie MA12 = średnia z 12 ostatnich wartości
+  (krocząca wstecz). Policz dynamiki m/m dla kwietnia 2020 i dryf 2000-01→2026-06.
+
+ETAP 6 — raport końcowy: tabela porównawcza z wartościami kontrolnymi + werdykt
+  ZGODNE/NIEZGODNE dla każdej pozycji (tolerancja ±0,5 p.p.; przy rewizjach danych
+  FRED dopuszczalne ±1 p.p., kierunki i rzędy wielkości muszą się zgadzać).
+
+WARTOŚCI KONTROLNE (moje wyniki do reprodukcji):
+  1. Bieg B (1939–2025): Talent — ~88% okien zero-żalu, p95 ≈ 3,5%, MAX ≈ 6,1%
+     (najgorsze okno: dłużnik, 1978→2008). CPI: max ≈ 12,5%. Nominal: max ≈ 384%
+     (wierzyciel, 1965→1995).
+  2. Bieg A (1929–2025): Talent max ≈ 19,7% (wierzyciel, 1929→1932);
+     czyste CPI i czysty dochód: po ≈ 43,3% (to samo okno).
+  3. Polska: Talent max ≈ 10,4% (wierzyciel, 1989→1994); nominal max ≈ 10 800%
+     (wierzyciel, 1989→2019/2024).
+  4. Noga v0.2: IV 2020 m/m: W1 ≈ +4,2%, W2 ≈ −8,9%; dryf 2000-01→2026-06:
+     W1 ≈ +135,7%, W2 ≈ +136,2% (różnica &lt; 1 p.p.).
+  5. Sanity-check danych: CPI USA 2025/1996 ≈ ×2,05; płaca CES 2025/1996 ≈ ×2,28;
+     CPI PL 2024/1989 ≈ ×157.
+
+Na koniec wypisz, które wartości się zgodziły, które nie i dlaczego (np. rewizja
+danych źródłowych), oraz jedną tabelę „żal Talenta vs alternatywy" gotową do publikacji.</pre>
+<p class="mut" style="margin-top:14px">Prompt jest samowystarczalny: agent pobiera dane z publicznych API, implementuje formułę z samej specyfikacji (bez zaglądania do naszego kodu) i porównuje wyniki z naszymi. Jeśli dostanie te same liczby — a dostanie — nie musisz już wierzyć nam, tylko własnemu komputerowi. Tak rozumiemy „kod jest metodologią".</p>
+<script>
+function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');
+</script>
+</body>
+</html>

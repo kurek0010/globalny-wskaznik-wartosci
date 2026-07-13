@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>
+<title>Talent (TLN) — specyfikacja obliczeń</title>
+<style>
+:root[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--border:#2a323c}
+:root[data-theme="sepia"]{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--border:#ded0b0}
+:root[data-theme="light"]{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--border:#e2ded4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto;transition:background-color .2s,color .2s}
+h1{font-size:1.7em}h1 span{color:var(--ac)}
+h2{font-size:1.2em;margin:30px 0 10px;color:var(--ac)}
+h3{font-size:1.02em;margin:18px 0 6px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px}
+code,pre{font:.88em/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px}
+code{padding:1px 6px}
+pre{padding:14px 16px;overflow-x:auto;margin:0 0 14px;border-left:3px solid var(--ac)}
+table{border-collapse:collapse;width:100%;margin:0 0 14px;font-size:.92em}
+th,td{border:1px solid var(--border);padding:6px 10px;text-align:left}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+.mut{color:var(--mut)}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top{margin:0}
+.theme-switch{display:flex;gap:6px;flex-shrink:0}
+.theme-btn{background:var(--border);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{color:var(--tx)}
+.theme-btn.active{border-color:var(--ac);color:var(--ac)}
+</style>
+</head>
+<body>
+<div class="topbar">
+<p class="top"><a href="index.html">← strona główna Talenta</a></p>
+<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>
+</div>
+<h1>Specyfikacja obliczeń <span>Talenta</span></h1>
+<p class="mut">Dokument dla wnikliwych: wszystkie wzory i kroki potrzebne, by napisać własną, niezależną implementację i uzyskać te same liczby. Wersja reguły: v0.1 z nogą płacową v0.2. Implementacja referencyjna: <a href="https://github.com/kurek0010/talent/tree/main/prototyp/src">prototyp/src</a>. Szczegółowa polityka zasilania danymi (konkretne komunikaty urzędów, dni publikacji, kaskady awaryjne, obsługa rewizji i zmian bazy): <a href="https://github.com/kurek0010/talent/blob/main/POLITYKA_danych_v0.1.md">POLITYKA_danych_v0.1.md</a>.</p>
+
+<h2>0. Oznaczenia</h2>
+<p><code>m</code> — miesiąc kalendarzowy; <code>m₀</code> — miesiąc bazowy (pierwszy w szeregu); <code>I_c(m)</code> — indeks cen; <code>I_w(m)</code> — indeks płac; <code>A(m)</code> — kotwica miesięczna Talenta; <code>T(d)</code> — wartość dzienna; <code>MA12(x)(m)</code> — średnia arytmetyczna z 12 ostatnich dostępnych wartości x do miesiąca m włącznie (krocząca, wyłącznie wstecz — „przyczynowa").</p>
+
+<h2>1. Źródła danych (publiczne, do samodzielnego pobrania)</h2>
+<table>
+<tr><th>Seria</th><th>Źródło</th><th>Link</th></tr>
+<tr><td>CPI Polska (miesięczny)</td><td>GUS / OECD via FRED</td><td><a href="https://fred.stlouisfed.org/series/POLCPIALLMINMEI">POLCPIALLMINMEI</a>; pierwotnie: <a href="https://stat.gov.pl/obszary-tematyczne/ceny-handel/wskazniki-cen/">GUS — wskaźniki cen</a>, <a href="https://ec.europa.eu/eurostat/databrowser/product/view/prc_hicp_midx">Eurostat HICP (prc_hicp_midx, geo=PL)</a></td></tr>
+<tr><td>Płace i zatrudnienie PL (sektor przedsiębiorstw, miesięczne)</td><td>GUS</td><td><a href="https://bdl.stat.gov.pl/bdl/dane/podgrup/temat">Bank Danych Lokalnych</a> + <a href="https://api.stat.gov.pl/Home/BdlApi">API BDL</a> (przeciętne wynagrodzenie i przeciętne zatrudnienie w sektorze przedsiębiorstw)</td></tr>
+<tr><td>Kursy walut</td><td>NBP</td><td><a href="https://api.nbp.pl/">api.nbp.pl</a> (tabela A, od 2002)</td></tr>
+<tr><td>Testy historyczne USA</td><td>FRED (klucz API darmowy: <a href="https://fred.stlouisfed.org/docs/api/api_key.html">rejestracja</a>)</td><td><a href="https://fred.stlouisfed.org/series/CPIAUCNS">CPIAUCNS</a> (CPI od 1913), <a href="https://fred.stlouisfed.org/series/CES3000000008">CES3000000008</a> (płaca godz. przemysł od 1939), <a href="https://fred.stlouisfed.org/series/A939RC0A052NBEA">A939RC0A052NBEA</a> (PKB/os. od 1929), <a href="https://fred.stlouisfed.org/series/AHETPI">AHETPI</a>, <a href="https://fred.stlouisfed.org/series/PAYEMS">PAYEMS</a></td></tr>
+</table>
+<p>Przykład zapytania FRED (JSON, średnie roczne):</p>
+<pre>https://api.stlouisfed.org/fred/series/observations?series_id=CPIAUCNS
+  &api_key=TWÓJ_KLUCZ&file_type=json&frequency=a&aggregation_method=avg</pre>
+
+<h2>2. Noga cen I_c</h2>
+<ol>
+<li>Pobierz miesięczny indeks CPI (poziomy). Jeśli masz ≥3 niezależne źródła — dla każdego miesiąca policz dynamikę m/m z każdego źródła i weź <b>medianę</b>; łańcuchuj mediany w indeks. Przy 2 źródłach: średnia geometryczna dynamik + alarm, gdy roczne dynamiki różnią się o &gt;3 p.p.</li>
+<li>Znormalizuj: <code>I_c(m) = CPI(m) / CPI(m₀) × 100</code>.</li>
+<li>Wartości raz użyte do publikacji <b>nie są nigdy podmieniane</b> — rewizje źródła wchodzą tylko w przyszłe dynamiki.</li>
+</ol>
+
+<h2>3. Noga płac I_w (definicja v0.2)</h2>
+<ol>
+<li>Fundusz płac: <code>F(m) = płaca_przeciętna(m) × zatrudnienie(m)</code> (oba z tego samego badania GUS).</li>
+<li>Korekta efektu składu (<a href="https://github.com/kurek0010/talent/blob/main/TIP/TIP-0001-noga-placowa-v02.md">TIP-0001</a>): <code>W(m) = F(m) / MA12(zatrudnienie)(m)</code>. Dzięki temu w kryzysie miara spada (fundusz maleje od razu, mianownik „pamięta" pełne zatrudnienie), zamiast sztucznie rosnąć jak przeciętna płaca.</li>
+<li>Usuń sezonowość premii: <code>I_w(m) = MA12(W)(m)</code>, następnie normalizacja do <code>m₀ = 100</code>.</li>
+<li>Kontrola poprawności na danych USA (FRED AHETPI×PAYEMS): kwiecień 2020 — przeciętna płaca <b>+4,2% m/m</b>, W po korekcie <b>−8,9% m/m</b>; dryf 2000-01→2026-06: +135,7% vs +136,2% (metody zbieżne w długim okresie).</li>
+<li><b>Świadomy kompromis — średnia zamiast mediany.</b> Przeciętne wynagrodzenie zawyża górny ogon rozkładu, więc rośnie szybciej niż płaca typowego pracownika — noga na średniej lekko sprzyja wierzycielowi. To decyzja wymuszona historyczną dostępnością danych, nie błąd założenia. Kierunek docelowy: mediana z rejestrów ZUS+MF (GUS publikuje ją miesięcznie od 2010) — szczegóły i kryteria przejścia w <a href="https://github.com/kurek0010/talent/blob/main/TIP/TIP-0002-mediana-wynagrodzen.md">TIP-0002</a>.</li>
+</ol>
+
+<h2>4. Kotwica miesięczna</h2>
+<pre>A(m) = 100 × √( I_c(m)/I_c(m₀) × I_w(m)/I_w(m₀) )</pre>
+<p>Środek geometryczny — nie arytmetyczny. Dwa powody: (a) łańcuchowość — wynik nie zależy od daty bazowej ani drogi liczenia; (b) AM≥GM — średnia arytmetyczna dawałaby zawsze wyższą spłatę, systematycznie sprzyjając wierzycielowi.</p>
+
+<h2>5. Ścieżka dzienna (model UF — pre-commitment)</h2>
+<ol>
+<li>Dzień kotwicy: <b>25. dzień miesiąca m+1</b> (po publikacji CPI ~15. i płac ~21. za miesiąc m). Policz A(m).</li>
+<li>Opublikuj z góry całe okno dzienne od 26. dnia m+1 do 25. dnia m+2:</li>
+</ol>
+<pre>g = A(m) / A(m−1)
+T(d_k) = A(m) × g^(k/K)      k = 1…K (kolejne dni okna, K = długość okna)</pre>
+<p>Każda wartosć dzienna jest znana najpóźniej dzień przed obowiązywaniem; strony nigdy nie rozliczają się po kursie, którego nie mogły znać. Raz opublikowane wartości są ostateczne.</p>
+
+<h2>6. Bezpieczniki (deterministyczne, zapisane z góry)</h2>
+<ul>
+<li>3-mies. średnia |dynamiki kotwicy m/m| &gt; 5% → publikacja dekadowa (5., 15., 25.).</li>
+<li>Inflacja &gt; 50% m/m przez 2 miesiące (próg Cagana) → tryb awaryjny: jednostka przechodzi na medianę kursów 3 stabilnych walut, powrót po 6 miesiącach &lt; 15% m/m, zszycie łańcuchowe.</li>
+<li>Rozjazd rocznych dynamik źródeł jednej nogi &gt; 3 p.p. → wykluczenie odstającego źródła + publiczny alert.</li>
+<li>Zmiany składu/źródeł tylko przez <a href="https://github.com/kurek0010/talent/tree/main/TIP">TIP</a>: kryteria z góry, ogłoszenie ≥3 mies., chain-linking, nigdy wstecz.</li>
+</ul>
+
+<h2>7. Metryka żalu (regret) — do walidacji implementacji</h2>
+<p>Dla okna od roku t do t+h: <code>R</code> = wzrost indeksu testowanego, <code>C</code> = wzrost cen, <code>P</code> = wzrost płac (wszystko jako ilorazy poziomów).</p>
+<pre>żal_dłużnika    = max(0, R/P − 1)
+żal_wierzyciela = max(0, C/R − 1)
+żal_okna        = max z obu        (zero-żal: żal &lt; 2%)</pre>
+<p>Tożsamość kontrolna: <code>(R/P)×(C/R) = C/P</code> — iloczyn nie zależy od R; minimum maksimum w punkcie równości, stąd R = √(C·P).</p>
+
+<h2>8. Wartości kontrolne (czy Twoja implementacja liczy to samo?)</h2>
+<table>
+<tr><th>Test</th><th>Parametry</th><th>Oczekiwany wynik</th></tr>
+<tr><td>USA — stulecie</td><td>CPIAUCNS + CES3000000008, lata 1939–2025, horyzonty {3,5,10,20,30}, wszystkie lata startu</td><td>Talent: ~88% okien zero-żalu, p95 ≈ 3,5%, <b>max ≈ 6,1%</b> (dłużnik, 1978→2008); nominal: max ≈ 384%</td></tr>
+<tr><td>USA — z Wielkim Kryzysem</td><td>CPIAUCNS + A939RC0A052NBEA, 1929–2025</td><td>Talent: max ≈ 19,7% (wierzyciel, 1929→1932); czyste CPI/dochód: po ≈ 43%</td></tr>
+<tr><td>Polska — transformacja</td><td>CPI PL (od 1989) + przeciętne wynagrodzenie GUS/ZUS, 1989–2024</td><td>Talent: <b>max ≈ 10,4%</b> (wierzyciel, 1989→1994); nominal: max ≈ 10 800%</td></tr>
+<tr><td>Noga płac v0.2</td><td>AHETPI × PAYEMS / MA12(PAYEMS), miesięcznie</td><td>IV 2020: przeciętna +4,2% m/m, v0.2 <b>−8,9%</b>; dryf 2000→2026 różni się o &lt;1 p.p.</td></tr>
+<tr><td>Kotwica prototypu PL</td><td>baza I 1996 = 100, CPI PL + płace roczne interpolowane (prowizorium)</td><td>XII 2025: A ≈ <b>552,7</b> (I_c ≈ 362, I_w ≈ 843)</td></tr>
+</table>
+<p class="mut">Tolerancja: ±0,5 p.p. na wynikach żalu (drobne różnice wersji danych po rewizjach FRED są normalne; kierunki i rzędy muszą się zgadzać). Uwaga: prototypowa noga płac PL używa danych rocznych GUS/ZUS interpolowanych do miesięcy — docelowa specyfikacja (pkt 3) wymaga miesięcznych danych sektora przedsiębiorstw.</p>
+
+<h2>9. Pseudokod całości</h2>
+<pre>dane   = pobierz(CPI_mies, płaca_mies, zatrudnienie_mies)   # sekcja 1
+I_c    = normalizuj(łańcuch_median(CPI_źródła))              # sekcja 2
+W      = płaca*zatrudnienie / MA12(zatrudnienie)             # sekcja 3
+I_w    = normalizuj(MA12(W))
+A      = 100 * sqrt(I_c * I_w / (I_c[0]*I_w[0]))             # sekcja 4
+dla każdego m: publikuj_okno_dzienne(A[m], A[m-1])           # sekcja 5
+asercje: wartości kontrolne z sekcji 8</pre>
+
+<p class="top" style="margin-top:28px"><a href="dla_agenta.html">Nie chcesz pisać sam? → gotowy prompt dla agenta-programisty</a></p>
+<script>
+function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');
+</script>
+</body>
+</html>

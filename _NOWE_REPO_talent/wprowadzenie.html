@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>
+<title>Talent: sprawiedliwa miara wartości w zmiennym świecie — Talent (TLN)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.css">
+<style>
+:root[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--border:#2a323c}
+:root[data-theme="sepia"]{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--border:#ded0b0}
+:root[data-theme="light"]{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--border:#e2ded4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto;transition:background-color .2s,color .2s}
+h1{font-size:1.6em;margin:0 0 14px}
+h2{font-size:1.2em;margin:28px 0 10px;color:var(--ac)}
+h3{font-size:1.05em;margin:18px 0 8px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px;margin:0 0 12px}
+code{font:.88em ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px;padding:1px 6px}
+pre{background:var(--card);border-radius:8px;border-left:3px solid var(--ac);padding:14px 16px;overflow-x:auto;margin:0 0 14px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 16px;font-size:.92em}
+th,td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+em{color:var(--mut)}
+blockquote{border-left:3px solid var(--border);padding-left:14px;color:var(--mut);margin:0 0 12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top{font-size:.9em;margin:0}
+.theme-switch{display:flex;gap:6px;flex-shrink:0}
+.theme-btn{background:var(--border);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{color:var(--tx)}
+.theme-btn.active{border-color:var(--ac);color:var(--ac)}
+.gen{color:var(--mut);font-size:.78em;border-top:1px solid var(--border);margin-top:30px;padding-top:12px}
+</style>
+</head>
+<body>
+<div class="topbar">
+<p class="top"><a href="index.html">← strona główna Talenta</a></p>
+<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>
+</div>
+<h1>Talent: sprawiedliwa miara wartości w zmiennym świecie</h1>
+<p>Pieniądz jest fundamentem gospodarki, ale ma jedną poważną wadę: z upływem czasu traci swoją realną wartość. Kiedy zapisujemy w umowach stałe kwoty nominalne — czy to pożyczając pieniądze bliskim, czy podpisując długoterminowy kontrakt na zakup towaru lub sprzętu — nieświadomie wystawiamy się na ryzyko realnej straty.</p>
+<p>Ten portal powstał, aby dostarczać codzienne odczyty Talenta — nowoczesnej, niezależnej jednostki rozliczeniowej, która przywraca uczciwość tam, gdzie liczy się czas.</p>
+<h2>Dlaczego czas niszczy tradycyjne umowy?</h2>
+<p>Problem z umowami opartymi na stałych kwotach (np. „oddajesz dokładnie 10 000 zł" albo „za dwa lata zapłacę za maszynę 50 000 zł") wynika ze zjawiska, które ekonomiści nazywają „złudzeniem nominalnym". Liczba na papierze pozostaje bez zmian, ale jej rzeczywista siła nabywcza nieustannie płynie.</p>
+<p>Dane historyczne pokazują to bezlitośnie:</p>
+<ul>
+<li>Ktoś, kto udzielił nominalnej pożyczki w Polsce w 1989 roku i odzyskał tę samą kwotę 30 lat później, otrzymał realnie mniej niż 1% pierwotnej wartości.</li>
+<li>Współczesny kontrakt lub pożyczka z 2019 roku, rozliczona w 2024 roku, oznaczała stratę około 30% wartości względem cen rynkowych i aż 40% w stosunku do średnich zarobków.</li>
+</ul>
+<p>Sztywne ramy tradycyjnego pieniądza w długim okresie systematycznie karzą jedną ze stron — albo pożyczkodawcę, albo sprzedawcę, który zamroził cenę towaru na przyszłość.</p>
+<h2>Inflacja to tylko połowa prawdy</h2>
+<p>Wielu uważa, że wystarczy powiązać umowę ze wskaźnikiem inflacji (CPI). To podejście chroni jednak tylko jedną stronę (np. wierzyciela lub sprzedawcę).</p>
+<p>Inflacja mierzy wyłącznie to, o ile podrożał koszyk dóbr konsumpcyjnych. Nie odpowiada jednak na kluczowe pytanie dłużnika lub kupującego: „Czy ta płatność będzie mnie kosztowała tyle samo mojej pracy lub przychodów, co w momencie podpisywania umowy?". W czasach kryzysu, gdy ceny rosną gwałtownie, a płace i przychody stoją w miejscu, indeksacja samą inflacją potrafi zrujnować kupującego lub dłużnika. Przykładem jest Argentyna z 2002 roku, gdzie ceny skoczyły o 41%, a płace zaledwie o 7% — umowy oparte wyłącznie na inflacji doprowadziły wówczas do masowych bankructw.</p>
+<p>Prawdziwa wartość kontraktu ma dwie równoprawne miary: ceny i płace. Uczciwa umowa musi szanować obie strony.</p>
+<h2>Dwa główne filary zastosowania Talenta</h2>
+<p>Talent nie powstał dla spekulacji rynkowych. Jego najważniejszym, fundamentalnym przeznaczeniem są dwa obszary, w których stabilność i uczciwość są kluczowe:</p>
+<ol>
+<li><strong>Uczciwe pożyczki prywatne i koleżeńskie (P2P).</strong> Pozwala na niesienie pomocy finansowej rodzinie czy znajomym bez naliczania lichwiarskich odsetek, ale też bez ryzyka, że inflacja „zje" realną wartość pożyczonego kapitału. Spłata w Talentach chroni siłę nabywczą pieniądza.</li>
+<li><strong>Długoterminowe kontrakty handlowe i zakupowe.</strong> Gdy firma lub osoba prywatna zamawia sprzęt, maszyny lub towary z odroczonym terminem płatności bądź dostawy (np. za rok lub dwa), wyrażenie ceny w Talentach zabezpiecza kontrakt. Sprzedawca ma pewność, że nie straci na wzroście kosztów produkcji, a kupujący — że cena nie wzrośnie powyżej jego realnych możliwości płatniczych i dynamiki rynku.</li>
+</ol>
+<h2>Matematyka sprawiedliwości: jak działa Talent?</h2>
+<p>Talent to jednostka rozliczeniowa, która eliminuje konflikt interesów. Jej wartość jest wyliczana jako środek geometryczny z niezależnych wskaźników wzrostu cen oraz wzrostu płac:</p>
+<p>$$T(t) = 100 \cdot \sqrt{\frac{C(t) \cdot W(t)}{C(0) \cdot W(0)}}$$</p>
+<p>gdzie <code>C</code> to wskaźnik cen, a <code>W</code> to wskaźnik płac. Zastosowanie pierwiastka z iloczynu sprawia, że Talent symetrycznie minimalizuje ryzyko strat:</p>
+<ul>
+<li><strong>W dobrych czasach:</strong> gdy płace rosną szybciej niż ceny (społeczeństwo się bogaci), wartość kontraktu rośnie nieco szybciej niż sama inflacja. Strona otrzymująca środki ma udział w ogólnym wzroście, a strona płacąca dysponuje większym dochodem, więc nie odczuwa ciężaru.</li>
+<li><strong>W złych czasach:</strong> gdy gospodarka słabnie, Talent dzieli ciężar recesji idealnie po połowie (50/50). Zapobiega to zrujnowaniu kupującego/dłużnika i jednocześnie solidarnie zabezpiecza większość wartości dla sprzedawcy/wierzyciela.</li>
+</ul>
+<h2>Zaufanie zbudowane na przejrzystości</h2>
+<p>W przeciwieństwie do wskaźników bankowych (jak WIBOR), które bywają uznaniowe, Talent opiera się na bezwzględnej jawności:</p>
+<ul>
+<li><strong>Otwarty kod.</strong> Algorytm wyliczający wartość Talenta jest publiczny. Nie ma tu miejsca na decyzje zamkniętych gremiów.</li>
+<li><strong>Niezależne dane.</strong> System pobiera informacje z wielu oficjalnych źródeł równolegle, co wyklucza błąd lub manipulację jednego urzędu.</li>
+<li><strong>Zasada „sprawdź sam".</strong> Każdy może pobrać dane, uruchomić algorytm na własnym komputerze i potwierdzić poprawność dzisiejszego kursu co do grosza.</li>
+</ul>
+<h2>Kilka pomysłów na kolejne, naturalne zastosowania Talenta</h2>
+<p>Poza pożyczkami i zakupami sprzętu, oto trzy dalsze kierunki, w które Talent wpisuje się ekonomicznie:</p>
+<ol>
+<li><strong>Długoterminowe umowy najmu</strong> (mieszkaniowe i komercyjne). Indeksacja samą inflacją przy nagłym skoku cen (np. kryzys energetyczny) może zmusić najemcę do wyprowadzki; brak indeksacji niszczy zysk właściciela. Czynsz w Talentach chroni realny dochód wynajmującego, nie pozwalając jednocześnie, by cena przerosła możliwości finansowe najemcy.</li>
+<li><strong>Kontrakty typu retainer (stała współpraca B2B / freelance).</strong> Stała stawka miesięczna w złotych po dwóch latach oznacza realną stratę dla specjalisty. Indeksacja Talentem automatycznie dopasowuje stawkę do realiów rynkowych bez corocznych renegocjacji.</li>
+<li><strong>Długoterminowe zobowiązania prywatne i alimentacyjne.</strong> Renty, ugody cywilne czy zabezpieczenia przyszłości dzieci, wypłacane przez 10–15 lat, cierpią na ten sam problem. Talent równoważy koszt utrzymania (ceny) z możliwościami zarobkowymi płatnika (płace).</li>
+</ol>
+<p>Wszędzie tam, gdzie pojawia się czas i relacja dwustronna, Talent jest najlepszym możliwym stabilizatorem.</p>
+<p class="gen">Strona wygenerowana automatycznie z pliku <code>ARTYKUL_wprowadzenie_i_zastosowania.md</code> w
+<a href="https://github.com/kurek0010/talent">repozytorium</a> —
+wersja markdown jest kanoniczna.</p>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+<script>function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');</script>
+</body>
+</html>

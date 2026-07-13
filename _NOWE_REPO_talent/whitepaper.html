@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>
+<title>Talent: jednostka, w której można uczciwie pożyczać — Talent (TLN)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.css">
+<style>
+:root[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--border:#2a323c}
+:root[data-theme="sepia"]{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--border:#ded0b0}
+:root[data-theme="light"]{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--border:#e2ded4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,serif;padding:24px;max-width:900px;margin:0 auto;transition:background-color .2s,color .2s}
+h1{font-size:1.6em;margin:0 0 14px}
+h2{font-size:1.2em;margin:28px 0 10px;color:var(--ac)}
+h3{font-size:1.05em;margin:18px 0 8px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px;margin:0 0 12px}
+code{font:.88em ui-monospace,Menlo,Consolas,monospace;background:var(--card);border-radius:6px;padding:1px 6px}
+pre{background:var(--card);border-radius:8px;border-left:3px solid var(--ac);padding:14px 16px;overflow-x:auto;margin:0 0 14px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:0 0 16px;font-size:.92em}
+th,td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:normal}
+a{color:var(--ac)}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+em{color:var(--mut)}
+blockquote{border-left:3px solid var(--border);padding-left:14px;color:var(--mut);margin:0 0 12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top{font-size:.9em;margin:0}
+.theme-switch{display:flex;gap:6px;flex-shrink:0}
+.theme-btn{background:var(--border);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{color:var(--tx)}
+.theme-btn.active{border-color:var(--ac);color:var(--ac)}
+.gen{color:var(--mut);font-size:.78em;border-top:1px solid var(--border);margin-top:30px;padding-top:12px}
+</style>
+</head>
+<body>
+<div class="topbar">
+<p class="top"><a href="index.html">← strona główna Talenta</a></p>
+<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>
+</div>
+<h1>Talent: jednostka, w której można uczciwie pożyczać</h1>
+<p><em>Jak zbudować miarę wartości, która nie krzywdzi żadnej strony umowy — dzieli po równo i straty w złych czasach, i owoce wzrostu w dobrych.</em></p>
+<hr />
+<h2>1. Problem, od którego wszystko się zaczęło</h2>
+<p>Wyobraź sobie kasę koleżeńską: grupa znajomych składa się na wspólny fundusz, z którego każdy może pożyczyć bez odsetek. Pożyczyłeś 10 000 zł, oddajesz 10 000 zł. Takie kasy istnieją naprawdę — w Polsce działają kasy zapomogowo-pożyczkowe, a w krajach muzułmańskich, gdzie odsetki są religijnie zakazane, pożyczka bezodsetkowa jest podstawową formą wzajemnej pomocy.</p>
+<p>Jest tylko jeden problem: <strong>te 10 000 zł oddane po dziesięciu latach to nie są te same pieniądze</strong>. To ta sama liczba wydrukowana na banknotach, ale nie ta sama wartość.</p>
+<p>Skalę zjawiska najlepiej pokazują dane. Policzyliśmy, co działo się z pożyczką „oddajesz nominalnie tyle samo" na prawdziwych danych z Polski: kto pożyczył komuś pieniądze w 1989 roku i odzyskał tę samą kwotę w 2019, odzyskał <strong>mniej niż 1% wartości</strong>. To skrajność transformacji ustrojowej — ale nawet spokojnie wyglądająca pożyczka z 2019 roku, oddana w 2024, była realnie warta o 30% mniej względem cen i o 40% mniej względem zarobków. W Stanach Zjednoczonych, kraju bez żadnej hiperinflacji, pożyczkodawca z 1965 roku odzyskał w 1995 równowartość jednej piątej tego, co pożyczył.</p>
+<p>Wniosek jest niewygodny, ale nieunikniony: <strong>kasa koleżeńska działająca na złotówkach systematycznie karze tych, którzy pomagają</strong>. Nie dlatego, że ktoś oszukuje — dlatego, że świat nieustannie się zmienia: ceny i zarobki płyną, a liczba zapisana w umowie stoi w miejscu.</p>
+<p>Pytanie brzmi więc: czy da się zbudować jednostkę — nazwijmy ją umownie <em>talentem</em>, jak starożytną miarę wartości — taką, żeby zdanie „pożyczyłeś 1000, oddajesz 1000" znów znaczyło to, co powinno?</p>
+<h2>2. Dlaczego nie wystarczy „przeliczyć przez inflację"</h2>
+<p>Pierwsza myśl brzmi: przecież jest wskaźnik inflacji (CPI). Wystarczy powiedzieć: oddajesz 10 000 zł powiększone o inflację. I rzeczywiście — to działa o niebo lepiej niż nic. Ale ukrywa założenie, które przy bliższym spojrzeniu okazuje się arbitralne.</p>
+<p>Inflacja mierzy, o ile podrożał <strong>koszyk zakupów</strong>. Odpowiada na pytanie wierzyciela: „czy za odzyskane pieniądze kupię tyle samo co kiedyś?". Ale jest i drugie pytanie, równie uprawnione — pytanie dłużnika: „czy oddanie długu kosztuje mnie tyle samo <strong>mojej pracy</strong>, co kiedyś?".</p>
+<p>Te dwa pytania mają różne odpowiedzi, bo ceny i płace nie rosną w tym samym tempie. W Polsce w latach 2002–2024 ceny wzrosły dwukrotnie, a płace prawie czterokrotnie. Pożyczka indeksowana inflacją była w tym okresie coraz lżejsza dla dłużnika — ale bywa odwrotnie: w Argentynie w 2002 roku ceny skoczyły o 41% w rok, a płace tylko o 7%. Kredytobiorcy z ratami indeksowanymi inflacją zostali zmiażdżeni — ich dług urósł o jedną trzecią względem pensji w dwanaście miesięcy. Skończyło się protestami i interwencją państwa.</p>
+<p>Nie ma obiektywnego powodu, by uznać perspektywę jednej strony za „prawdziwą wartość", a drugiej za kaprys. <strong>Wartość pożyczonych pieniędzy ma dwie równoprawne miary: ceny i płace.</strong> Każda jednostka rozliczeniowa musi jakoś rozstrzygnąć spór między nimi — a większość rozstrzyga go po cichu, w całości na rzecz jednej strony.</p>
+<h2>3. Żal — jak zmierzyć krzywdę obu stron naraz</h2>
+<p>Skoro są dwie miary, potrzebujemy sposobu, by ocenić dowolną propozycję jednostki z obu punktów widzenia jednocześnie. Użyjemy pojęcia, które w teorii decyzji nazywa się <em>regret</em> — po polsku po prostu <strong>żal</strong>.</p>
+<p>Umowa: pożyczasz dziś 1000 jednostek, po latach oddajesz 1000 jednostek. Jednostka ma jakiś kurs w złotówkach, więc dłużnik odda konkretną kwotę w złotych. Zdefiniujmy:</p>
+<ul>
+<li><strong>żal dłużnika</strong> — o ile procent spłata urosła <em>względem przeciętnej płacy</em>. Jeśli oddanie długu wymaga więcej miesięcy pracy niż pożyczenie go, dłużnik ma powód do żalu;</li>
+<li><strong>żal wierzyciela</strong> — o ile procent spłata straciła <em>względem cen</em>. Jeśli za odzyskane pieniądze można kupić mniej niż za pożyczone, żal ma wierzyciel;</li>
+<li><strong>żal umowy</strong> — większy z tych dwóch.</li>
+</ul>
+<p>Zauważ ważną asymetrię: te żale nie są swoim lustrzanym odbiciem. Kiedy płace rosną szybciej niż ceny (czyli normalnie — społeczeństwo się bogaci), istnieje cały przedział jednostek, które nie krzywdzą <strong>nikogo</strong>: spłata może rosnąć szybciej niż ceny (wierzyciel zadowolony) i wolniej niż płace (dłużnik zadowolony) jednocześnie. Nazwijmy ten przedział <strong>korytarzem zgody</strong> — od dołu ogranicza go linia cen, od góry linia płac. Żal pojawia się dopiero, gdy społeczeństwo biednieje — płace realnie spadają, korytarz się odwraca i <strong>ktoś musi ponieść stratę</strong>. Pytanie tylko: kto i ile.</p>
+<p>W tym miejscu ktoś może zaprotestować: dlaczego mam z góry godzić się na jakąkolwiek stratę? Dlaczego dłużnik — albo pożyczający — ma być „skazany" na poświęcenie? Odpowiedź brzmi: bo w każdej trwałej zgodzie coś się poświęca, i lepiej wiedzieć z góry ile, niż dowiedzieć się po fakcie, że wszystko. Doświadczeni kontrahenci znają to z życia: gdy jedną stronę umowy dotyka kryzys, druga często sama proponuje ustępstwo — woli odzyskać większość, niż stracić całość przy upadku partnera. Żal to ten sam złoty środek, tylko wyrażony liczbą i ustalony uczciwie zawczasu, a nie wynegocjowany pod presją, gdy jest już za późno na spokojną rozmowę.</p>
+<p>Zadanie brzmi więc konkretnie i matematycznie: <strong>znajdź jednostkę, która minimalizuje największy możliwy żal którejkolwiek strony.</strong></p>
+<h2>4. Rozwiązanie: środek geometryczny</h2>
+<p>Odpowiedź okazuje się zaskakująco krótka. Niech C(t) będzie indeksem cen (dziś = 100, rośnie z inflacją), a W(t) indeksem płac. Talent definiujemy jako:</p>
+<p>$$T(t) = 100 \cdot \sqrt{\frac{C(t) \cdot W(t)}{C(0) \cdot W(0)}}$$</p>
+<p>czyli pierwiastek z iloczynu — <strong>środek geometryczny</strong> cen i płac.</p>
+<p>Dlaczego geometryczny, a nie zwykła średnia? Bo wzrosty wartości się <em>mnożą</em>, nie dodają. Jeśli ceny wzrosły ×2, a płace ×8, to uczciwy środek leży tam, gdzie obie strony odchylają się <strong>o ten sam czynnik</strong>: √(2×8) = 4. Wtedy jednostka urosła ×4, czyli dokładnie 2 razy szybciej niż ceny i dokładnie 2 razy wolniej niż płace — proporcjonalne odchylenie jest identyczne po obu stronach. Zwykła średnia arytmetyczna (×5) faworyzowałaby stronę płacową. W języku logarytmów: log T leży dokładnie w połowie drogi między log C a log W, a żal mierzony procentowo jest symetryczny właśnie w logarytmach.</p>
+<p>Średnia geometryczna ma przy tym dwie własności praktyczne, których zwykła średnia nie ma. Jest <strong>łańcuchowa</strong>: wynik nie zależy od tego, jaki dzień przyjmiemy za bazowy, ani od tego, czy zmianę policzymy w jednym kroku, czy przez punkty pośrednie — dla jednostki, w której ktoś podpisuje umowę na dwadzieścia lat, to warunek konieczny (średnia arytmetyczna go łamie: jej wynik przesuwa się z każdą zmianą daty bazowej). I jest bezpieczniejsza dla dłużnika: klasyczna nierówność między średnimi (AM ≥ GM) mówi, że średnia arytmetyczna zawsze wskazałaby spłatę wyższą — czyli systematycznie sprzyjałaby wierzycielowi.</p>
+<p>Zapiszmy to tak, żeby dało się sprawdzić na kartce. Dla jednej pożyczki, od dnia startu do dnia spłaty, oznaczmy trzy liczby:</p>
+<p>$$R = \frac{\text{spłata}}{\text{pożyczka}} \qquad C = \frac{\text{ceny w dniu spłaty}}{\text{ceny w dniu startu}} \qquad P = \frac{\text{płace w dniu spłaty}}{\text{płace w dniu startu}}$$</p>
+<p>(R mówi, ile razy urosła kwota w złotych.)</p>
+<p>Wtedy definicje żalu z poprzedniej sekcji przyjmują postać:</p>
+<p>$$\text{żal dłużnika} = \max\left(0, \frac{R}{P} - 1\right) \qquad \text{żal wierzyciela} = \max\left(0, \frac{C}{R} - 1\right)$$</p>
+<p>Pierwszy mierzy, o ile spłata urosła bardziej niż płace; drugi — o ile ceny urosły bardziej niż spłata. Żal umowy to większy z obu.</p>
+<p>A teraz najładniejszy krok całego wywodu. Pomnóżmy oba stosunki:</p>
+<p>$$\frac{R}{P} \cdot \frac{C}{R} = \frac{C}{P}$$</p>
+<p>Spłata R skróciła się i zniknęła. To znaczy, że <strong>iloczyn odchyleń obu stron w ogóle nie zależy od wyboru jednostki</strong> — jest z góry zadany przez świat, przez to, jak bardzo ceny rozjechały się z płacami. Wybierając jednostkę, nie zmniejszasz łącznego bólu; możesz go tylko przesuwać między stronami. A skoro iloczyn dwóch czynników jest stały, to większy z nich jest najmniejszy dokładnie wtedy, gdy oba są równe — tak jak wśród prostokątów o stałym polu najkrótszy dłuższy bok ma kwadrat. Równość zachodzi dla <strong>R = √(C·P)</strong>. To cała tajemnica Talenta: przy tym R obie strony mają identyczny żal, równy √(C/P) − 1, gdy ceny wyprzedzą płace — a gdy płace rosną szybciej niż ceny, obie mają zero.</p>
+<p>Przykład liczbowy: ceny wzrosły o 50% (C = 1,50), płace o 20% (P = 1,20). Talent każe oddać R = √(1,50 × 1,20) = √1,80 ≈ 1,34 razy więcej. Żal obu stron: √(1,50/1,20) − 1 ≈ 11,8% — po równo. Indeksacja samą inflacją (R = 1,50) dałaby dłużnikowi żal 25% przy zerowym żalu wierzyciela; pożyczka nominalna (R = 1) — wierzycielowi 50%. Matematycy nazywają rozwiązanie Talenta <em>minimaksowym</em>; my możemy nazwać je po prostu jednostką minimalnego żalu.</p>
+<p>Jedno doprecyzowanie, które uczciwość każe wypowiedzieć na głos. Dowód z iloczynem rozstrzyga sprawę w złych czasach — gdy ceny wyprzedzają płace i ktoś musi stracić. W dobrych czasach, gdy płace rosną szybciej niż ceny, żalu nie ma w całym korytarzu między C a P: każda jednostka z tego przedziału nikogo nie krzywdzi i matematyka sama z siebie żadnej nie wskazuje. Wybór środka także wtedy jest decyzją — decyzją, że owocami wzrostu strony dzielą się po równo, tak samo jak stratami. Stoją za nią dwa argumenty. Po pierwsze, umowę podpisuje się z góry, nie wiedząc, które czasy nadejdą — a √(C·P) to jedyna reguła traktująca strony symetrycznie w każdym możliwym świecie. Po drugie, każdy inny punkt korytarza trzeba by wynegocjować; środek jest naturalnym punktem zgody, którego negocjować nie trzeba.</p>
+<p>Z tej samej uczciwości wynika liczba, którą warto znać, zanim ktoś nazwie ją „ukrytymi odsetkami". W gospodarce, która się bogaci, spłata w Talentach rośnie szybciej niż inflacja — dokładnie o połowę realnego wzrostu płac (w Polsce ostatnich dwóch dekad ~1,5–2% rocznie ponad ceny; nominalnie spłaty rosły wtedy o 5–7% rocznie). To nie są ukryte odsetki, tylko jawna połowa wzrostu społeczeństwa przypadająca wierzycielowi — w zamian za symetryczne zobowiązanie: gdy przyjdą złe czasy, poniesie połowę strat. Alternatywa nominalna też nie jest „darmowa" — po prostu całą dywidendę wzrostu przyznaje dłużnikowi, a całe ryzyko czasu wierzycielowi, tyle że nigdzie tego nie wypowiada.</p>
+<p>Warto od razu uprzedzić naturalne pytanie: czemu nie złoto, nie dolar, nie koszyk surowców? Bo żadna z tych rzeczy nie ma nic wspólnego z korytarzem zgody. Sprawdziliśmy to na danych 1996–2025 — dla wszystkich okien czasowych od 3 do 20 lat policzyliśmy żal każdego kandydata:</p>
+<table>
+<thead>
+<tr>
+<th>Jednostka</th>
+<th>Typowy żal (mediana)</th>
+<th>Najgorszy przypadek</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>środek geometryczny cen i płac</td>
+<td>0%</td>
+<td>7%</td>
+</tr>
+<tr>
+<td>sama inflacja (CPI)</td>
+<td>0%</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>same płace</td>
+<td>0%</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>nic (nominalnie)</td>
+<td>18%</td>
+<td>66%</td>
+</tr>
+<tr>
+<td>koszyk surowców</td>
+<td>20%</td>
+<td>88%</td>
+</tr>
+<tr>
+<td><strong>złoto</strong></td>
+<td><strong>48%</strong></td>
+<td><strong>265%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Złoto — intuicyjny kandydat na „prawdziwą wartość" — okazuje się najgorszą możliwą jednostką pożyczkową: kto pożyczył równowartość złota w 2005 i oddał ją w 2025, oddał o 265% więcej pracy, niż pożyczył. Złoto bywa dobrą lokatą; miarą wartości umowy nie jest. (Zwolennik złota słusznie odpowie, że złoto gra w innej lidze zagrożeń — chroni przed upadkiem państwa i jego statystyk. Na tę ligę Talent ma osobną, jawną odpowiedź: tryb awaryjny, o którym za chwilę.)</p>
+<p>Sam pomysł nie jest zresztą ekscentryczny — ma ponadstuletni rodowód w głównym nurcie ekonomii. Alfred Marshall postulował „tabular standard", jednostkę do umów liczoną z tablic cen, już w 1887 roku. Irving Fisher projektował „skompensowanego dolara" o stałej sile nabywczej. Systemy emerytalne od dekad waloryzują świadczenia mieszanką cen i płac — Szwajcaria dokładnie pół na pół, polska waloryzacja to inflacja plus część wzrostu płac. Jo Anna Gray pokazała w 1976 roku, że przy szokach podażowych optymalna jest właśnie indeksacja częściowa, a Robert Shiller od lat 90. argumentuje za rozliczeniami w jednostkach dochodu. Brazylia w 1994 roku przestawiła całą gospodarkę na przejściową jednostkę rozliczeniową (URV) — i tym zakończyła hiperinflację. Talent nie wymyśla więc nowej fizyki: składa sprawdzone elementy — mieszankę cen i płac, symetrię, jawną regułę — w jednostkę dostępną dla zwykłych ludzi, nie tylko dla systemów emerytalnych i rządów.</p>
+<h2>5. Testy: sto lat, trzy kontynenty</h2>
+<p>Formuła jest prosta, więc łatwo ją przetestować na wszystkim, co zdarzyło się w historii gospodarczej, dla której istnieją dane. Zasada testu jest zawsze ta sama: bierzemy <strong>każde możliwe okno czasowe</strong> (każdy rok startu, horyzonty od 3 do 30 lat), symulujemy pożyczkę „oddajesz tyle samo Talentów" i mierzymy żal obu stron.</p>
+<p><strong>Stany Zjednoczone, 1929–2025.</strong> Prawie sto lat: Wielki Kryzys, II wojna światowa, stagflacja lat 70., dezinflacja Volckera, kryzys 2008, inflacja 2022. Wynik: w 88% wszystkich okien żal poniżej 2%; <strong>najgorszy pojedynczy przypadek w całym stuleciu: 6,1%</strong>. Dla porównania pożyczka nominalna osiąga w tej samej próbie żal 384%.</p>
+<p><strong>Polska, 1989–2024.</strong> Trudniejszy poligon: zmiana ustroju, rok z inflacją 586%, denominacja, deflacja 2015, szok 2022. Najgorszy przypadek Talenta: <strong>10,4%</strong> — połowa realnego spadku płac z lat 1989–1994, uczciwie podzielona między strony. Ta sama transformacja rozliczana nominalnie dała żal 10 813%.</p>
+<p><strong>Warto zatrzymać się przy Wielkim Kryzysie</strong>, bo to najtrudniejszy moment stulecia i dobra ilustracja, co Talent robi, gdy jest naprawdę źle. W latach 1929–1932 ceny w USA spadły o 24%, ale dochody o 45%. Pożyczka indeksowana cenami stała się o 43% cięższa względem dochodów — dłużnicy bankrutowali masowo. To historyczny fakt, który Irving Fisher opisał w 1933 roku jako mechanizm <em>debt deflation</em>: gdy ceny spadają, stałe nominalnie długi robią się coraz cięższe, bankructwa dłużników pogłębiają kryzys i koło się zamyka. Pożyczka indeksowana dochodami okradłaby z kolei wierzycieli o 43% siły nabywczej. Talent podzielił tę katastrofę po połowie: po ~20% na stronę. Nie istnieje formuła, która w takim świecie nie skrzywdziłaby nikogo — istnieje tylko formuła, która krzywdzi najmniej i po równo.</p>
+<p><strong>Granice metody też przetestowaliśmy</strong> — uczciwość wymaga powiedzieć, gdzie formuła przestaje działać:</p>
+<p><em>Niemcy 1923.</em> Przy hiperinflacji (w październiku 1923 ceny rosły ~20% <em>dziennie</em>) matematyka formuły przeżywa, ale umiera jej logistyka: każdy indeks publikowany z jakimkolwiek opóźnieniem jest bezwartościowy, bo między obliczeniem a wypłatą wartość ucieka o jedną szóstą dziennie. Powyżej progu ~50% inflacji miesięcznie żadna jednostka indeksowa nie działa i Talent ma w regułach zapisane z góry przejście w tryb awaryjny (twardy koszyk walut), zamiast udawania, że działa.</p>
+<p><em>Argentyna 2007–2015.</em> Rząd fałszował oficjalny wskaźnik inflacji — zaniżał go mniej więcej o połowę przez dziewięć lat. Talent liczony z jednego rządowego źródła okradłby wierzycieli z ~70% wartości. Stąd żelazna reguła: <strong>każda noga formuły musi być medianą co najmniej trzech niezależnych źródeł danych</strong>, z automatycznym alarmem, gdy źródła się rozjeżdżają. Manipulację INDEC niezależne pomiary wykrywały od pierwszego roku — trzeba tylko z góry zapisać w kodzie, że się ich słucha.</p>
+<p>Na koniec testów wypada odpowiedzieć na pytanie, które zada każdy sceptyk: skoro to takie dobre, czemu rynek sam tego nie zrobił? Odpowiedź jest prozaiczna. Nie istnieją instrumenty finansowe, którymi bank mógłby zabezpieczyć ryzyko płacowe — próby uruchomienia takich rynków (Shiller) upadły z braku chętnych, a bank nie weźmie na książkę ryzyka, którego nie umie z niej zdjąć. Ale kasa koleżeńska, rodzina i pożyczka prywatna żadnego zabezpieczenia nie potrzebują: tam obie strony po prostu dzielą ryzyko między sobą, a Talent mówi im, jak podzielić je uczciwie. Dlatego naturalnym miejscem startu są pożyczki między ludźmi, nie sektor bankowy — w podstawowych sprawach zwykli ludzie mogą poradzić sobie sami, bez banków; potrzebują tylko uczciwej miary.</p>
+<h2>6. Jak Talent jest liczony — zaufanie bez zaufania</h2>
+<p>Formuła to połowa projektu. Druga połowa to odpowiedź na pytanie: <strong>dlaczego ktokolwiek miałby wierzyć publikowanym liczbom?</strong> Dotychczasowe wskaźniki finansowe (LIBOR, WIBOR) były ustalane przez zamknięte gremia — i LIBOR skończył jako globalny skandal manipulacji. Talent jest zaprojektowany odwrotnie, na czterech zasadach:</p>
+<p><strong>Kod jest metodologią.</strong> Nie ma opisu, który ktoś „interpretuje" — jest publiczny program komputerowy, który każdy może uruchomić na publicznych danych i dostać co do grosza ten sam wynik. Każda publikacja zawiera odcisk (hash) danych wejściowych i wersję kodu.</p>
+<p><strong>Wszystko z wyprzedzeniem, nic wstecz.</strong> Raz w miesiącu, po publikacji danych o cenach i płacach, liczona jest „kotwica" — i jednocześnie ogłaszana pełna ścieżka wartości dziennych na cały następny miesiąc (wartości dzienne interpolują wzrost geometrycznie). Strony umowy nigdy nie rozliczają się po wartości, której nie mogły znać wcześniej. Raz opublikowana liczba nie jest nigdy zmieniana — rewizje danych źródłowych wpływają tylko na przyszłość. Ten mechanizm nie jest teorią: chilijska jednostka UF działa tak nieprzerwanie od 1967 roku i indeksuje się w niej większość chilijskich kredytów.</p>
+<p><strong>Zmiany tylko według reguły.</strong> Źródła danych będą się psuć i znikać — to pewne w horyzoncie dekad. Reguły przewidują to z góry: kryteria kwalifikacji źródła zapisane przed faktem, zmiany ogłaszane z trzymiesięcznym wyprzedzeniem, sklejanie serii bez skoku (łańcuchowo), a społeczność — jak w projekcie open source — głosuje wyłącznie nad tym, <em>czy regułę zastosowano poprawnie</em>, nigdy nad tym, jaki ma być wynik.</p>
+<p><strong>Bezpieczniki zapisane w kodzie.</strong> Próg podwyższonej inflacji (częstsza publikacja), próg hiperinflacji (tryb awaryjny), alarm rozjazdu źródeł. Wszystko deterministyczne — żadna rada nie musi się zbierać i nic nie zależy od niczyjej odwagi cywilnej w trudnym momencie.</p>
+<p>Filozofię tę można streścić jednym zdaniem: <strong>nie „zaufaj nam", tylko „sprawdź sam"</strong>. Jedyne, czemu trzeba ufać, to publiczne dane statystyczne — a i tu obrona jest wbudowana (mediana źródeł). Użytkownik podpisujący umowę w Talentach akceptuje jawnie opisane ryzyko formuły, tak jak programista akceptuje licencję otwartego kodu: wszystko jest do wglądu przed podpisem.</p>
+<h2>7. Skąd biorą się liczby — i jak je sprawdzić samemu</h2>
+<p>Cała konstrukcja stoi na dwóch szeregach danych: cenach i płacach. Wypada więc wyjaśnić, jak te liczby fizycznie powstają, gdzie jest w nich niepewność — i jak każdy może powtórzyć nasze obliczenia u siebie.</p>
+<p><strong>Jak powstaje wskaźnik cen.</strong> CPI nie jest liczbą „ogłaszaną" — jest <em>mierzony</em>. Co miesiąc ankieterzy GUS notują ceny około 1400 konkretnych produktów i usług (tzw. reprezentantów: od chleba przez fryzjera po bilet miesięczny) w kilkuset punktach sprzedaży w całej Polsce. Wagi koszyka — czyli to, ile chleb „waży" we wskaźniku względem fryzjera — pochodzą z corocznego badania budżetów około 30 tysięcy gospodarstw domowych, które przez rok notują swoje rzeczywiste wydatki. Równolegle, na mocy prawa unijnego, Polska liczy drugi wskaźnik (HICP) według metodologii wspólnej dla całej UE i raportuje go Eurostatowi. Metodologia obu jest w całości opublikowana, kalendarz publikacji znany z rocznym wyprzedzeniem, a raz ogłoszony wskaźnik nie jest nigdy rewidowany.</p>
+<p><strong>Jak powstaje wskaźnik płac.</strong> Każda firma zatrudniająca co najmniej 9 osób co miesiąc raportuje do GUS fundusz płac i liczbę etatów — z tego powstaje przeciętne wynagrodzenie w sektorze przedsiębiorstw. Szerszy pomiar, kwartalny, obejmuje całą gospodarkę z małymi firmami i budżetówką. Istnieje też trzecie, niezależne źródło: dane ZUS, czyli składki płacone od rzeczywistych pensji około 16 milionów ubezpieczonych. Tych danych nikt nie ankietuje — powstają jako produkt uboczny płacenia składek, co czyni je wyjątkowo trudnymi do podkolorowania.</p>
+<p><strong>Gdzie jest niepewność — jawna lista.</strong> Po pierwsze, miesięczna płaca pomija firmy poniżej 9 osób i umowy cywilnoprawne, a jako <em>średnia</em> jest zawyżana przez najlepiej zarabiających — rośnie szybciej niż pensja typowego pracownika, co odrobinę sprzyja wierzycielowi; to świadomy kompromis wymuszony dostępnością danych, a kierunkiem docelowym jest mediana z rejestrów ZUS, którą GUS publikuje już co miesiąc. Po drugie, koszyk CPI to średnia dla całego kraju — Twój osobisty koszyk może drożeć inaczej. Po trzecie, korekty jakościowe wymagają założeń: gdy nowy telefon jest droższy, ale lepszy, ktoś musi ocenić, ile z podwyżki to jakość, a ile inflacja. Po czwarte, szara strefa pozostaje poza pomiarem. Po piąte — i to najzdradliwsze — przeciętna płaca ma efekt składu: w kryzysie pracę tracą najpierw najsłabiej zarabiający, więc średnia płaca <em>pozostałych</em> rośnie dokładnie wtedy, gdy dochody społeczeństwa spadają (w USA w kwietniu 2020 ten efekt podbił średnią stawkę o kilka procent w jeden miesiąc). Dlatego docelowym źródłem nogi płacowej jest mediana wzrostu płac <strong>tych samych osób</strong> z danych składkowych ZUS — miara z konstrukcji odporna na ten efekt. Żadna z tych niepewności nie znika — dlatego reguła Talenta wymaga, by każda noga formuły była <strong>medianą co najmniej trzech niezależnych źródeł</strong> (ceny: GUS, Eurostat, docelowo indeks cen zbieranych automatycznie z internetu; płace: GUS i ZUS), z automatycznym alarmem, gdy źródła zaczynają się rozjeżdżać. Uczciwie mówiąc: to redukuje ryzyko błędu i manipulacji pojedynczego urzędu do poziomu <em>wykrywalnego</em> — nie do zera.</p>
+<p><strong>Powtórz obliczenia sam — przepis.</strong> Wszystkie dane są publiczne i darmowe: wskaźniki cen w bazach GUS, Eurostatu i FRED (amerykański bank centralny udostępnia dane całego świata przez otwarte API), płace w Banku Danych Lokalnych GUS. Repozytorium projektu zawiera adresy, kod (<code>talent_daily.py</code>) i odciski (hashe) danych każdego opublikowanego odczytu. Procedura: pobierz dane, uruchom program, porównaj wynik i hash z opublikowanym. Sprzęt: dowolny laptop; czas: kwadrans. I to jest właściwy argument zaufania — nie „wierzcie urzędom", lecz: <strong>fałszerstwo musiałoby przejść jednocześnie przez trzy niezależne instytucje i pozostać niewykryte przez każdego, kto zada sobie trud sprawdzenia</strong>. Przykład argentyński z poprzedniej sekcji pokazuje, że ta obrona działa: manipulację rządowego wskaźnika niezależne pomiary wykryły w pierwszym roku.</p>
+<h2>8. A umowy międzynarodowe?</h2>
+<p>Talent z natury jest <strong>krajowy</strong> — zbudowany z cen i płac jednej gospodarki, bo to w niej żyją strony umowy. Polak i Amerykanin mają różne Talenty (przez ostatnie ćwierćwiecze polski urósł ×2,8, amerykański ×1,8 — bo polskie płace goniły zachodnie). Co z umową między nimi?</p>
+<p>Odpowiedź jest tą samą matematyką piętro wyżej: <strong>Talent umowy dwustronnej to środek geometryczny obu Talentów krajowych</strong>, z kursem walutowym rozłożonym po połowie. Sprawdziliśmy na danych 2002–2024: taka jednostka ma najgorszy żal 34%, podczas gdy wybór Talenta jednego kraju daje 61–77%, a rozliczanie w dolarach lub złotówkach — 85–93%. Pozostałe 34% to nie słabość formuły, lecz realne ryzyko rozjazdu dwóch gospodarek (polskie płace rosły dwa razy szybciej niż amerykańskie) — tego żadna jednostka nie usunie, można je tylko uczciwie podzielić.</p>
+<p>Ta konstrukcja ma też wymierny skutek praktyczny. Firmy zabezpieczają dziś kontrakty zagraniczne opcjami walutowymi i kontraktami terminowymi — płacą premie, marże i depozyty za ochronę przed ryzykiem, które Talent dwustronny dzieli po połowie w samej konstrukcji jednostki, bez żadnych kosztów. Nie jest to zamiennik doskonały: opcja chroni jednostronnie (płacisz premię, zatrzymujesz korzystne scenariusze, oddajesz niekorzystne ubezpieczycielowi), Talent daje symetrię. Ale właśnie dlatego niczego nie pogarsza: kto potrzebuje więcej bezpieczeństwa, nadal może dokupić opcję — tyle że na wyraźnie mniejszą resztę ryzyka. W wielu zwykłych umowach handlowych sama symetria byłaby docelowo wystarczająca, a plątanina zabezpieczeń po obu stronach przestaje być potrzebna.</p>
+<p>Konstrukcja skaluje się przy tym bez wysiłku: Talent można wyznaczyć dla dowolnego zestawu krajów, więc umowa wielostronna — konsorcjum, łańcuch dostaw przez kilka walut — może używać średniej geometrycznej Talentów wszystkich uczestników jako jednej wspólnej jednostki rozliczeniowej. Czy upowszechnienie takich umów zmniejszałoby z czasem sam żal — tłumiąc spory i spirale roszczeniowe — pozostaje hipotezą do zbadania, nie obietnicą; historia zna przypadki, w których powszechna indeksacja samą inflacją wzmacniała inflację, choć Talent, przenosząc tylko połowę szoku cenowego, sprzęga słabiej.</p>
+<h2>9. Czego Talent nie obiecuje</h2>
+<p>Rzetelność wymaga listy rzeczy, których ta jednostka <strong>nie</strong> robi.</p>
+<p>Nie jest inwestycją. Talent nie mnoży majątku — utrzymuje wartość pożyczki uczciwą wobec obu stron. Kto chce zysku, szuka go gdzie indziej; Talent jest od tego, żeby <em>pomaganie nie kosztowało</em>.</p>
+<p>Nie usuwa ryzyka biedy. Gdy społeczeństwo ubożeje, strata istnieje obiektywnie i ktoś musi ją ponieść. Talent gwarantuje tylko tyle — i aż tyle — że zostanie podzielona po połowie, zamiast w całości spaść na słabszą lub gorzej poinformowaną stronę.</p>
+<p>Nie działa w hiperinflacji. Powyżej ~50% miesięcznie przechodzi w jawnie zdefiniowany tryb awaryjny. Historia (Niemcy 1923) uczy, że w takim świecie działa już tylko natychmiastowa wymiana na rzeczy — i uczciwa jednostka musi to o sobie wiedzieć.</p>
+<p>Nie jest w pełni niezależny od państwa. Ceny i płace mierzą urzędy statystyczne. Obrona — mediana wielu źródeł i automatyczne alarmy — jest solidna, ale to redukcja zależności, nie jej likwidacja. Projekt zaczynał od marzenia o jednostce całkowicie wolnej od autorytetów; badania (opisane w dokumentach projektu) pokazały, że taka jednostka nie istnieje, a próby jej budowy na surowcach czy złocie dają wyniki katastrofalnie gorsze. Dojrzała wersja marzenia brzmi: <strong>autorytet skuty jawną regułą, którą każdy może sprawdzić</strong>.</p>
+<h2>10. Podsumowanie w czterech zdaniach</h2>
+<p>Świat się zmienia, a kwota zapisana w umowie nie — dlatego pożyczka nominalna przenosi całe ryzyko czasu na wierzyciela i w długim okresie systematycznie karze pomagających. Wartość ma dwie równoprawne miary — ceny i płace — a każda jednostka rozliczeniowa jawnie lub skrycie rozstrzyga spór między nimi. Talent, środek geometryczny cen i płac, rozstrzyga ten spór symetrycznie: w złych czasach minimalizuje największą krzywdę którejkolwiek strony — czego lepiej zrobić się nie da — a w dobrych dzieli owoce wzrostu po równo; potwierdza to sto lat danych z gospodarek stabilnych (najgorszy przypadek 6%) i kruchych (10% przez transformację ustrojową). A dzięki konstrukcji „kod jest metodologią" — publiczne dane, publiczny program, wartości ogłaszane z wyprzedzeniem i nigdy nie rewidowane — nie wymaga wiary w żadną instytucję: wystarczy umieć sprawdzić.</p>
+<h2>11. Jak ta reguła ewoluuje — przykład z życia projektu</h2>
+<p>Obiecaliśmy, że zmiany formuły przebiegają według jawnej procedury, a nie czyjegoś widzimisię. Zamiast deklaracji — pokażemy to na prawdziwym przykładzie, który wydarzył się w trakcie prac nad tym tekstem.</p>
+<p><strong>Problem został nazwany.</strong> Przeciętna płaca ma zdradliwą wadę: to iloraz funduszu płac i liczby pracujących. W kryzysie pracę tracą najpierw najsłabiej zarabiający — więc średnia płaca <em>pozostałych</em> rośnie dokładnie wtedy, gdy dochody społeczeństwa spadają. Miara zawyżałaby ciężar długu w najgorszym możliwym momencie.</p>
+<p><strong>Padła propozycja poprawki.</strong> Zamiast dzielić fundusz płac przez <em>bieżącą</em> liczbę pracujących, dzielić go przez liczbę <strong>wygładzoną</strong> (średnią z ostatnich 12 miesięcy). Oba składniki pochodzą z tych samych sprawozdań, więc nie dokładamy żadnego nowego źródła danych. W kryzysie fundusz spada od razu, a mianownik jeszcze „pamięta" pełne zatrudnienie — miara uczciwie opada, zamiast sztucznie rosnąć.</p>
+<p><strong>Propozycję przetestowano na danych, zanim cokolwiek zmieniono.</strong> Dane USA, miesięczne, 2000–2026. Moment prawdy — kwiecień 2020, największy szok zatrudnienia w historii pomiarów: przeciętna płaca skoczyła o <strong>+4,2% w miesiąc</strong> (artefakt), wariant z wygładzonym zatrudnieniem pokazał <strong>−8,9%</strong> (prawdziwy ubytek dochodów). A w długim okresie obie metody dają niemal dokładnie to samo (+135,7% vs +136,2% przez 26 lat) — poprawka niczego nie psuje tam, gdzie stara metoda działała, a naprawia dokładnie to, co było zepsute. Wykres porównawczy obu krzywych jest na stronie projektu.</p>
+<p><strong>Dopiero wtedy zmieniono regułę.</strong> Definicja nogi płacowej v0.2 weszła do dokumentu reguły publikacyjnej razem z uzasadnieniem, liczbami z testu i kodem do samodzielnego sprawdzenia. Stara definicja pozostaje w historii repozytorium — każdy może zobaczyć, co, kiedy i dlaczego się zmieniło.</p>
+<p>To jest cały wzorzec działania w czterech krokach: <strong>nazwij problem publicznie → zaproponuj poprawkę → przetestuj na danych → zmień regułę z pełnym uzasadnieniem, nigdy wstecz</strong>. Tak pracuje projekt open source i tak — naszym zdaniem — powinna pracować każda instytucja, której liczbom ludzie mają ufać. Ten dokument nie jest więc tylko artykułem: to zalążek przewodnika dla wspólnoty, która chce jednostkę Talenta liczyć, sprawdzać i ulepszać razem z nami.</p>
+<hr />
+<p><em>Artykuł opiera się na obliczeniach dostępnych w repozytorium projektu: wyścig kandydatów (<code>WYSCIG_kandydatow_minimalny_zal.md</code>), test stulecia USA (<code>WYNIKI_test_stulecia_USA.md</code>), testy Polski, Niemiec i Argentyny (<code>WYNIKI_kruche_gospodarki.md</code>), jednostka dwustronna (<code>WYNIKI_talent_dwustronny.md</code>), reguła publikacyjna (<code>REGULA_publikacyjna_Talent_v0.1.md</code>). Kod: katalog <code>prototyp/src/</code>. Dane płacowe GUS/ZUS dla Polski wymagają jeszcze weryfikacji u źródła; wszystkie wyniki są odtwarzalne z załączonego kodu.</em></p>
+<p class="gen">Strona wygenerowana automatycznie z pliku <code>ARTYKUL_Talent_popularnonaukowy.md</code> w
+<a href="https://github.com/kurek0010/talent">repozytorium</a> —
+wersja markdown jest kanoniczna.</p>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.47/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+<script>function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');</script>
+</body>
+</html>

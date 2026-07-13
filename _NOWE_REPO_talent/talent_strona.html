@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+ try{
+  var t=localStorage.getItem('tln-theme');
+  if(t!=='dark'&&t!=='sepia'&&t!=='light') t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+ }catch(e){document.documentElement.setAttribute('data-theme','dark');}
+})();
+</script>
+<title>Talent (TLN) — jednostka wartości</title>
+<meta name="description" content="Talent (TLN): niezależna jednostka rozliczeniowa licząca sprawiedliwą wartość umów i pożyczek na podstawie cen i płac — środek geometryczny √(ceny × płace).">
+<meta property="og:title" content="Talent (TLN) — sprawiedliwa miara wartości w zmiennym świecie">
+<meta property="og:description" content="Codzienne odczyty jednostki, która chroni obie strony umowy przed inflacją i utratą siły nabywczej pracy.">
+<meta property="og:type" content="website">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root[data-theme="dark"]{--bg:#0f1419;--card:#1a2129;--tx:#e8e6e3;--mut:#8b949e;--ac:#d4a017;--pos:#4c9f70;--neg:#c0504d;--grid:#232b34;--border:#2a323c;--border-hover:#3a4550;--tint:rgba(212,160,23,.08);--tint-border:rgba(212,160,23,.35)}
+:root[data-theme="sepia"]{--bg:#f2e8d5;--card:#fbf3e3;--tx:#3a2f1e;--mut:#7a6a52;--ac:#9c6b1f;--pos:#3f7d4f;--neg:#a1503d;--grid:#e9dfc4;--border:#ded0b0;--border-hover:#c9b98e;--tint:rgba(156,107,31,.10);--tint-border:rgba(156,107,31,.4)}
+:root[data-theme="light"]{--bg:#faf9f6;--card:#ffffff;--tx:#1c1c1c;--mut:#6b6b6b;--ac:#a8720b;--pos:#2e7d4f;--neg:#a83d3d;--grid:#eae7e0;--border:#e2ded4;--border-hover:#c9c2b2;--tint:rgba(168,114,11,.08);--tint-border:rgba(168,114,11,.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.6 Georgia,serif;padding:24px;max-width:1000px;margin:0 auto;transition:background-color .2s,color .2s}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.theme-switch{display:flex;gap:6px;flex-shrink:0}
+.theme-btn{background:var(--grid);color:var(--mut);border:1px solid transparent;border-radius:6px;padding:5px 11px;font:.8em/1.2 Georgia,serif;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{color:var(--tx)}
+.theme-btn.active{border-color:var(--ac);color:var(--ac)}
+h1{font-size:1.9em;letter-spacing:.02em}
+h1 span{color:var(--ac)}
+h2{font-size:1.15em;margin:26px 0 10px;color:var(--tx)}
+.sub{color:var(--mut);margin:4px 0 24px}
+.hook{font-size:1.25em;line-height:1.5;margin:0 0 24px;color:var(--tx)}
+.hook a{color:var(--ac)}
+.intro{margin:0 0 14px}
+ul.docs{list-style:none}
+ul.docs li{margin:0 0 12px;padding-left:14px;border-left:2px solid var(--border)}
+ul.docs i{color:var(--mut)}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+.card{background:var(--card);border-radius:10px;padding:16px 18px}
+.card .l{color:var(--mut);font-size:.78em;text-transform:uppercase;letter-spacing:.08em}
+.card .v{font-size:1.7em;color:var(--ac);font-variant-numeric:tabular-nums}
+.card .d{color:var(--mut);font-size:.8em}
+.wrap{background:var(--card);border-radius:10px;padding:18px;margin-bottom:8px}
+.cap{color:var(--mut);font-size:.8em;margin:0 4px 20px}
+.foot{color:var(--mut);font-size:.85em;border-top:1px solid var(--border);padding-top:14px;margin-top:16px}
+.foot b{color:var(--tx)}
+.warn{background:var(--tint);border:1px solid var(--tint-border);border-radius:10px;padding:14px 16px;margin:0 0 24px;font-size:.9em;color:var(--tx)}
+.warn b{color:var(--ac)}
+ul.docs li.featured{border-left-color:var(--ac);background:var(--tint);padding:10px 14px;border-radius:0 8px 8px 0}
+a{color:var(--ac)}
+@media(max-width:600px){.grid{grid-template-columns:1fr 1fr}}
+
+/* --- sekcja rynkowa --- */
+.market{display:grid;grid-template-columns:38% 62%;gap:16px;margin-bottom:8px}
+.tiles-col{display:flex;flex-direction:column;gap:10px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mtile{cursor:pointer;border:1px solid transparent;transition:border-color .15s}
+.mtile:hover{border-color:var(--border-hover)}
+.mtile.active{border-color:var(--ac)}
+.panel{background:var(--card);border-radius:10px;padding:18px;min-width:0}
+.panel-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.panel-head .mname{font-size:1.05em;color:var(--tx)}
+.panel-head .mvalue{font-size:1.4em;color:var(--ac);font-variant-numeric:tabular-nums}
+.chg{font-size:.9em;font-variant-numeric:tabular-nums}
+.chg.pos{color:var(--pos)}
+.chg.neg{color:var(--neg)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tab{background:var(--grid);color:var(--mut);border:none;border-radius:6px;padding:5px 10px;font:.8em/1.2 Georgia,serif;cursor:pointer}
+.tab:hover:not(.disabled){color:var(--tx)}
+.tab.active{background:var(--ac);color:#1a1400}
+.tab.disabled{opacity:.4;cursor:default}
+.periods{display:flex;gap:6px;margin-bottom:12px}
+.period{background:none;border:1px solid var(--border);color:var(--mut);border-radius:6px;padding:4px 12px;font:.85em/1.2 Georgia,serif;cursor:pointer}
+.period:hover{color:var(--tx)}
+.period.active{border-color:var(--ac);color:var(--ac)}
+.market .cap{margin:12px 4px 0}
+@media(max-width:820px){.market{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar">
+<div>
+<h1>Talent <span>TLN</span></h1>
+<p class="sub">Sprawiedliwa miara wartości w zmiennym świecie &middot; √(ceny &times; płace) &middot; prototyp badawczy, Polska, baza I&nbsp;1996&nbsp;=&nbsp;100</p>
+</div>
+<div class="theme-switch" role="group" aria-label="Wybierz motyw strony">
+<button class="theme-btn" data-theme-btn="dark">Ciemny</button>
+<button class="theme-btn" data-theme-btn="sepia">Sepia</button>
+<button class="theme-btn" data-theme-btn="light">Jasny</button>
+</div>
+</div>
+
+<p class="hook">Pożyczyłeś komuś 1000 zł w 2020 roku? Oddane dziś, kupują już tylko 67% tego, co wtedy. W <a href="wprowadzenie.html">Talentach</a> oddaje się dokładnie tyle wartości, ile się pożyczyło.</p>
+
+<div class="market">
+<div class="tiles-col">
+<div class="card mtile active" data-series="idx"><div class="l">Wartość dziś (TLN-PLN)</div><div class="v" id="today">—</div><div class="d" id="todaydate"></div></div>
+<div class="tiles"><div class="card mtile" data-series="PLN"><div class="l">1 TLN w PLN</div><div class="v">5.53</div><div class="d">PLN, XII 2025</div></div><div class="card mtile" data-series="USD"><div class="l">1 TLN w USD</div><div class="v">1.53</div><div class="d">USD, XII 2025</div></div><div class="card mtile" data-series="EUR"><div class="l">1 TLN w EUR</div><div class="v">1.31</div><div class="d">EUR, XII 2025</div></div><div class="card mtile" data-series="CHF"><div class="l">1 TLN w CHF</div><div class="v">1.22</div><div class="d">CHF, XII 2025</div></div><div class="card mtile" data-series="GBP"><div class="l">1 TLN w GBP</div><div class="v">1.14</div><div class="d">GBP, XII 2025</div></div><div class="card mtile" data-series="JPY"><div class="l">1 TLN w JPY</div><div class="v">240.63</div><div class="d">JPY, XII 2025</div></div></div>
+</div>
+<div class="panel">
+<div class="panel-head">
+<span class="mname" id="mname">—</span>
+<span class="mvalue" id="mvalue">—</span>
+<span class="chg" id="mchange">—</span>
+</div>
+<div class="tabs">
+<button class="tab" data-series="idx">Indeks TLN-PLN</button>
+<button class="tab" data-series="PLN">w PLN</button>
+<button class="tab" data-series="USD">w USD</button>
+<button class="tab" data-series="EUR">w EUR</button>
+<button class="tab" data-series="CHF">w CHF</button>
+<button class="tab" data-series="GBP">w GBP</button>
+<button class="tab" data-series="JPY">w JPY</button>
+<button class="tab disabled" disabled>TLN-USD — wkrótce</button>
+<button class="tab disabled" disabled>TLN-EUR — wkrótce</button>
+</div>
+<div class="periods">
+<button class="period" data-period="1R">1R</button>
+<button class="period" data-period="5L">5L</button>
+<button class="period" data-period="10L">10L</button>
+<button class="period active" data-period="Max">Max</button>
+</div>
+<canvas id="mchart" height="140"></canvas>
+<p class="cap"><b>Harmonogram publikacji:</b> kotwica miesięczna — 25. dnia każdego miesiąca (z danych GUS za miesiąc poprzedni); wartości dzienne ogłaszane z góry na całe kolejne okno i nigdy nie rewidowane. Ostatnia kotwica: za 2026-05, opublikowana 2026-07-12. Zasady: <a href="regula_publikacyjna.html">reguła publikacyjna</a>.</p>
+</div>
+</div>
+
+<div class="warn"><b>Uwaga:</b> to wartości robocze prototypu badawczego — nie są to oficjalne kursy rozliczeniowe.</div>
+
+<h2>Dlaczego czas niszczy tradycyjne umowy?</h2>
+<p class="intro">Pieniądz jest fundamentem gospodarki, ale ma jedną wadę: z czasem traci realną wartość. „Oddajesz dokładnie 10&nbsp;000 zł" brzmi uczciwie, dopóki nie zauważysz, że liczba na papierze się nie zmienia, a jej siła nabywcza nieustannie płynie. Kto pożyczył w Polsce w 1989 roku i odzyskał nominalnie 30 lat później, odzyskał realnie mniej niż 1% wartości. Kontrakt z 2019 rozliczony w 2024 to strata ok. 30% względem cen i aż 40% względem zarobków.</p>
+<p class="intro">Powiązanie umowy z samą inflacją (CPI) chroni tylko jedną stronę — nie odpowiada na pytanie dłużnika: „czy ta płatność kosztuje mnie tyle samo mojej pracy, co wcześniej?". W Argentynie 2002 ceny skoczyły o 41%, płace o 7% — umowy indeksowane samą inflacją doprowadziły do masowych bankructw. <b>Wartość ma dwie równoprawne miary: ceny i płace.</b> Talent to ich środek geometryczny — √(ceny&nbsp;×&nbsp;płace) — punkt, w którym w dobrych czasach obie strony dzielą owoce wzrostu po równo, a w złych po równo dzielą stratę.</p>
+<p class="intro">Formuła jest w pełni otwarta: kod jest metodologią, dane publiczne, a wyniki nigdy nie są rewidowane wstecz. <a href="wprowadzenie.html"><b>Czytaj pełne wprowadzenie i zastosowania →</b></a></p>
+
+<h2>Dwa główne zastosowania</h2>
+<div class="wrap">
+<ul class="docs">
+<li><b>Uczciwe pożyczki prywatne i koleżeńskie (P2P)</b> — pomoc finansowa rodzinie czy znajomym bez lichwiarskich odsetek, ale też bez ryzyka, że inflacja „zje" realną wartość pożyczonego kapitału.</li>
+<li><b>Długoterminowe kontrakty handlowe i zakupowe</b> — cena sprzętu czy towaru z odroczoną płatnością wyrażona w Talentach chroni sprzedawcę przed wzrostem kosztów, a kupującego przed ceną przerastającą jego możliwości.</li>
+</ul>
+</div>
+
+<h2>Przeczytaj więcej</h2>
+<div class="wrap">
+<ul class="docs">
+<li class="featured"><a href="wprowadzenie.html"><b>Wprowadzenie</b></a> — zacznij tutaj: czym jest Talent i do czego służy.</li>
+<li><a href="whitepaper.html"><b>Whitepaper</b></a> — pełny wywód od problemu do formuły, z dowodem zrozumiałym dla licealisty i uczciwą listą granic metody.</li>
+<li><a href="regula_publikacyjna.html"><b>Reguła publikacyjna</b></a> — jak dokładnie liczymy: definicje obu nóg, kalendarz publikacji, bezpieczniki kryzysowe.</li>
+<li><a href="tip.html"><b>TIP — proces zmian</b></a> — każda zmiana formuły przechodzi jawną procedurę z testem na danych (wzorzec BIP z Bitcoina).</li>
+<li><a href="https://github.com/kurek0010/talent"><b>Repozytorium</b></a> — kod, dane i pełna historia zmian (licencja MIT).</li>
+</ul>
+</div>
+
+<h2>Dla wnikliwych i niedowiarków</h2>
+<div class="wrap">
+<ul class="docs">
+<li><a href="specyfikacja.html"><b>Specyfikacja obliczeń</b></a> — wszystkie wzory krok po kroku, linki do źródeł danych i wartości kontrolne: wszystko, czego potrzebujesz, by napisać własną, niezależną implementację.</li>
+<li><a href="dla_agenta.html"><b>Zbuduj Talenta u siebie</b></a> — gotowy prompt dla agenta-programisty (Claude Code i podobne): wklejasz, agent buduje niezależną implementację na Twoim komputerze i sam sprawdza, czy wychodzą mu te same liczby co nam.</li>
+</ul>
+</div>
+
+<p class="foot">Prototyp badawczy — wartości robocze, nie do rozliczeń. Wszystkie liczby na tej stronie można odtworzyć z publicznych danych kodem z repozytorium.</p>
+
+<script>
+const A={"1996-01":100.0,"1996-02":101.187,"1996-03":102.378,"1996-04":103.976,"1996-05":105.177,"1996-06":106.223,"1996-07":106.634,"1996-08":107.358,"1996-09":108.883,"1996-10":110.166,"1996-11":111.369,"1996-12":112.574,"1997-01":115.139,"1997-02":116.76,"1997-03":118.229,"1997-04":119.784,"1997-05":121.105,"1997-06":122.995,"1997-07":123.841,"1997-08":124.918,"1997-09":126.808,"1997-10":128.448,"1997-11":130.166,"1997-12":131.796,"1998-01":134.821,"1998-02":136.935,"1998-03":138.306,"1998-04":139.751,"1998-05":140.94,"1998-06":142.12,"1998-07":142.787,"1998-08":143.261,"1998-09":144.729,"1998-10":146.012,"1998-11":147.192,"1998-12":148.269,"1999-01":150.185,"1999-02":151.399,"1999-03":152.938,"1999-04":154.288,"1999-05":155.533,"1999-06":156.414,"1999-07":156.842,"1999-08":157.975,"1999-09":159.816,"1999-10":161.412,"1999-11":162.85,"1999-12":164.303,"2000-01":166.55,"2000-02":168.034,"2000-03":169.621,"2000-04":170.792,"2000-05":172.237,"2000-06":173.7,"2000-07":175.178,"2000-08":175.759,"2000-09":177.451,"2000-10":178.942,"2000-11":180.058,"2000-12":180.972,"2001-01":182.387,"2001-02":183.159,"2001-03":184.256,"2001-04":185.591,"2001-05":187.252,"2001-06":187.737,"2001-07":188.013,"2001-08":188.266,"2001-09":189.031,"2001-10":189.864,"2001-11":190.408,"2001-12":191.019,"2002-01":192.236,"2002-02":192.714,"2002-03":193.26,"2002-04":194.053,"2002-05":194.196,"2002-06":194.134,"2002-07":193.957,"2002-08":193.868,"2002-09":194.412,"2002-10":194.955,"2002-11":195.134,"2002-12":195.493,"2003-01":196.125,"2003-02":196.482,"2003-03":197.021,"2003-04":197.467,"2003-05":197.73,"2003-06":197.9,"2003-07":197.793,"2003-08":197.69,"2003-09":198.421,"2003-10":199.249,"2003-11":199.808,"2003-12":200.282,"2004-01":200.945,"2004-02":201.339,"2004-03":201.923,"2004-04":203.065,"2004-05":204.394,"2004-06":205.637,"2004-07":205.882,"2004-08":205.761,"2004-09":206.372,"2004-10":207.351,"2004-11":207.964,"2004-12":208.395,"2005-01":208.826,"2005-02":209.074,"2005-03":209.506,"2005-04":210.307,"2005-05":210.925,"2005-06":211.082,"2005-07":211.239,"2005-08":211.49,"2005-09":212.298,"2005-10":213.108,"2005-11":213.271,"2005-12":213.434,"2006-01":213.982,"2006-02":214.334,"2006-03":214.58,"2006-04":215.584,"2006-05":216.59,"2006-06":216.625,"2006-07":217.094,"2006-08":217.814,"2006-09":218.352,"2006-10":218.706,"2006-11":219.312,"2006-12":219.734,"2007-01":220.738,"2007-02":221.668,"2007-03":222.854,"2007-04":224.076,"2007-05":225.335,"2007-06":226.081,"2007-07":226.53,"2007-08":226.874,"2007-09":228.561,"2007-10":230.038,"2007-11":231.636,"2007-12":232.801,"2008-01":234.423,"2008-02":235.721,"2008-03":237.031,"2008-04":238.352,"2008-05":240.134,"2008-06":241.254,"2008-07":242.158,"2008-08":242.579,"2008-09":243.765,"2008-10":245.038,"2008-11":246.055,"2008-12":246.7,"2009-01":248.004,"2009-02":249.853,"2009-03":251.445,"2009-04":253.008,"2009-05":254.314,"2009-06":255.133,"2009-07":255.808,"2009-08":255.897,"2009-09":256.433,"2009-10":257.073,"2009-11":257.933,"2009-12":258.436,"2010-01":259.737,"2010-02":260.449,"2010-03":261.266,"2010-04":262.303,"2010-05":263.098,"2010-06":263.882,"2010-07":264.074,"2010-08":263.93,"2010-09":265.197,"2010-10":266.362,"2010-11":266.96,"2010-12":268.038,"2011-01":270.178,"2011-02":270.939,"2011-03":272.758,"2011-04":274.014,"2011-05":275.4,"2011-06":275.412,"2011-07":275.552,"2011-08":276.141,"2011-09":276.831,"2011-10":278.325,"2011-11":279.803,"2011-12":280.916,"2012-01":282.364,"2012-02":283.447,"2012-03":284.631,"2012-04":285.916,"2012-05":286.603,"2012-06":287.275,"2012-07":286.998,"2012-08":286.952,"2012-09":287.493,"2012-10":288.505,"2012-11":289.049,"2012-12":289.594,"2013-01":290.141,"2013-02":290.572,"2013-03":291.24,"2013-04":292.263,"2013-05":292.58,"2013-06":293.017,"2013-07":293.928,"2013-08":293.892,"2013-09":294.45,"2013-10":295.128,"2013-11":295.331,"2013-12":295.891,"2014-01":296.453,"2014-02":297.016,"2014-03":297.58,"2014-04":298.025,"2014-05":298.351,"2014-06":298.797,"2014-07":299.004,"2014-08":298.841,"2014-09":299.277,"2014-10":299.707,"2014-11":299.889,"2014-12":299.821,"2015-01":299.99,"2015-02":300.276,"2015-03":300.923,"2015-04":301.933,"2015-05":302.326,"2015-06":302.713,"2015-07":302.972,"2015-08":302.746,"2015-09":302.649,"2015-10":303.177,"2015-11":303.465,"2015-12":303.636,"2016-01":303.315,"2016-02":303.624,"2016-03":304.191,"2016-04":305.141,"2016-05":305.724,"2016-06":306.44,"2016-07":306.412,"2016-08":306.653,"2016-09":307.164,"2016-10":308.451,"2016-11":309.128,"2016-12":310.835,"2017-01":312.057,"2017-02":313.174,"2017-03":313.68,"2017-04":314.837,"2017-05":315.51,"2017-06":315.948,"2017-07":316.404,"2017-08":317.007,"2017-09":318.398,"2017-10":319.94,"2017-11":321.505,"2017-12":322.709,"2018-01":324.064,"2018-02":324.542,"2018-03":325.298,"2018-04":326.979,"2018-05":328.296,"2018-06":329.378,"2018-07":329.961,"2018-08":330.935,"2018-09":332.304,"2018-10":333.939,"2018-11":334.923,"2018-12":335.909,"2019-01":336.5,"2019-02":338.152,"2019-03":339.675,"2019-04":342.528,"2019-05":343.93,"2019-06":345.469,"2019-07":346.48,"2019-08":347.468,"2019-09":348.433,"2019-10":349.778,"2019-11":350.833,"2019-12":353.076,"2020-01":355.564,"2020-02":357.629,"2020-03":358.87,"2020-04":359.552,"2020-05":359.94,"2020-06":361.786,"2020-07":362.127,"2020-08":362.793,"2020-09":364.057,"2020-10":365.107,"2020-11":366.214,"2020-12":367.379,"2021-01":370.785,"2021-02":372.889,"2021-03":376.007,"2021-04":378.779,"2021-05":380.663,"2021-06":382.2,"2021-07":384.481,"2021-08":386.529,"2021-09":389.442,"2021-10":393.222,"2021-11":396.771,"2021-12":400.228,"2022-01":405.778,"2022-02":407.009,"2022-03":415.504,"2022-04":421.579,"2022-05":427.156,"2022-06":432.376,"2022-07":435.507,"2022-08":439.336,"2022-09":444.934,"2022-10":451.092,"2022-11":454.88,"2022-12":457.363,"2023-01":465.346,"2023-02":470.426,"2023-03":475.405,"2023-04":479.489,"2023-05":481.874,"2023-06":484.28,"2023-07":486.169,"2023-08":488.632,"2023-09":490.177,"2023-10":493.395,"2023-11":497.757,"2023-12":500.655,"2024-01":504.286,"2024-02":507.687,"2024-03":510.993,"2024-04":516.582,"2024-05":519.707,"2024-06":522.876,"2024-07":529.476,"2024-08":532.462,"2024-09":535.206,"2024-10":538.279,"2024-11":541.541,"2024-12":543.279,"2025-01":547.49,"2025-02":549.602,"2025-03":551.182,"2025-04":554.568,"2025-05":555.968,"2025-06":558.209,"2025-07":561.019,"2025-08":562.338,"2025-09":563.661,"2025-10":565.269,"2025-11":566.881,"2025-12":568.215,"2026-01":571.541,"2026-02":573.744,"2026-03":578.248,"2026-04":581.344,"2026-05":581.836};
+const per=Object.keys(A),val=Object.values(A);
+const n=per.length,last=val[n-1],prev=val[n-2],g=last/prev;
+const now=new Date(),base=new Date(per[n-1]+"-01T00:00:00");
+const win=new Date(base.getFullYear(),base.getMonth()+1,1);
+const K=new Date(win.getFullYear(),win.getMonth()+1,0).getDate();
+const k=Math.min(Math.max(now>=win?now.getDate():K,1),K);
+const today=last*Math.pow(g,k/K);
+document.getElementById('today').textContent=today.toFixed(2);
+document.getElementById('todaydate').textContent=now.toISOString().slice(0,10)+" (pre-commitment)";
+
+function themeAxisColors(){
+ const cs=getComputedStyle(document.documentElement);
+ return {ticks:{color:cs.getPropertyValue('--mut').trim()},grid:{color:cs.getPropertyValue('--grid').trim()}};
+}
+const axis=themeAxisColors();
+
+const FX={"labels":["2002-01","2002-02","2002-03","2002-04","2002-05","2002-06","2002-07","2002-08","2002-09","2002-10","2002-11","2002-12","2003-01","2003-02","2003-03","2003-04","2003-05","2003-06","2003-07","2003-08","2003-09","2003-10","2003-11","2003-12","2004-01","2004-02","2004-03","2004-04","2004-05","2004-06","2004-07","2004-08","2004-09","2004-10","2004-11","2004-12","2005-01","2005-02","2005-03","2005-04","2005-05","2005-06","2005-07","2005-08","2005-09","2005-10","2005-11","2005-12","2006-01","2006-02","2006-03","2006-04","2006-05","2006-06","2006-07","2006-08","2006-09","2006-10","2006-11","2006-12","2007-01","2007-02","2007-03","2007-04","2007-05","2007-06","2007-07","2007-08","2007-09","2007-10","2007-11","2007-12","2008-01","2008-02","2008-03","2008-04","2008-05","2008-06","2008-07","2008-08","2008-09","2008-10","2008-11","2008-12","2009-01","2009-02","2009-03","2009-04","2009-05","2009-06","2009-07","2009-08","2009-09","2009-10","2009-11","2009-12","2010-01","2010-02","2010-03","2010-04","2010-05","2010-06","2010-07","2010-08","2010-09","2010-10","2010-11","2010-12","2011-01","2011-02","2011-03","2011-04","2011-05","2011-06","2011-07","2011-08","2011-09","2011-10","2011-11","2011-12","2012-01","2012-02","2012-03","2012-04","2012-05","2012-06","2012-07","2012-08","2012-09","2012-10","2012-11","2012-12","2013-01","2013-02","2013-03","2013-04","2013-05","2013-06","2013-07","2013-08","2013-09","2013-10","2013-11","2013-12","2014-01","2014-02","2014-03","2014-04","2014-05","2014-06","2014-07","2014-08","2014-09","2014-10","2014-11","2014-12","2015-01","2015-02","2015-03","2015-04","2015-05","2015-06","2015-07","2015-08","2015-09","2015-10","2015-11","2015-12","2016-01","2016-02","2016-03","2016-04","2016-05","2016-06","2016-07","2016-08","2016-09","2016-10","2016-11","2016-12","2017-01","2017-02","2017-03","2017-04","2017-05","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03","2018-04","2018-05","2018-06","2018-07","2018-08","2018-09","2018-10","2018-11","2018-12","2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12","2020-01","2020-02","2020-03","2020-04","2020-05","2020-06","2020-07","2020-08","2020-09","2020-10","2020-11","2020-12","2021-01","2021-02","2021-03","2021-04","2021-05","2021-06","2021-07","2021-08","2021-09","2021-10","2021-11","2021-12","2022-01","2022-02","2022-03","2022-04","2022-05","2022-06","2022-07","2022-08","2022-09","2022-10","2022-11","2022-12","2023-01","2023-02","2023-03","2023-04","2023-05","2023-06","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12"],"series":{"PLN":[1.922,1.927,1.933,1.941,1.942,1.941,1.94,1.939,1.944,1.95,1.951,1.955,1.961,1.965,1.97,1.975,1.977,1.979,1.978,1.977,1.984,1.992,1.998,2.003,2.009,2.013,2.019,2.031,2.044,2.056,2.059,2.058,2.064,2.074,2.08,2.084,2.088,2.091,2.095,2.103,2.109,2.111,2.112,2.115,2.123,2.131,2.133,2.134,2.14,2.143,2.146,2.156,2.166,2.166,2.171,2.178,2.184,2.187,2.193,2.197,2.207,2.217,2.229,2.241,2.253,2.261,2.265,2.269,2.286,2.3,2.316,2.328,2.344,2.357,2.37,2.384,2.401,2.413,2.422,2.426,2.438,2.45,2.461,2.467,2.48,2.499,2.514,2.53,2.543,2.551,2.558,2.559,2.564,2.571,2.579,2.584,2.597,2.604,2.613,2.623,2.631,2.639,2.641,2.639,2.652,2.664,2.67,2.68,2.702,2.709,2.728,2.74,2.754,2.754,2.756,2.761,2.768,2.783,2.798,2.809,2.824,2.834,2.846,2.859,2.866,2.873,2.87,2.87,2.875,2.885,2.89,2.896,2.901,2.906,2.912,2.923,2.926,2.93,2.939,2.939,2.945,2.951,2.953,2.959,2.965,2.97,2.976,2.98,2.984,2.988,2.99,2.988,2.993,2.997,2.999,2.998,3.0,3.003,3.009,3.019,3.023,3.027,3.03,3.027,3.026,3.032,3.035,3.036,3.033,3.036,3.042,3.051,3.057,3.064,3.064,3.067,3.072,3.085,3.091,3.108,3.121,3.132,3.137,3.148,3.155,3.159,3.164,3.17,3.184,3.199,3.215,3.227,3.241,3.245,3.253,3.27,3.283,3.294,3.3,3.309,3.323,3.339,3.349,3.359,3.365,3.382,3.397,3.425,3.439,3.455,3.465,3.475,3.484,3.498,3.508,3.531,3.556,3.576,3.589,3.596,3.599,3.618,3.621,3.628,3.641,3.651,3.662,3.674,3.708,3.729,3.76,3.788,3.807,3.822,3.845,3.865,3.894,3.932,3.968,4.002,4.058,4.07,4.155,4.216,4.272,4.324,4.355,4.393,4.449,4.511,4.549,4.574,4.653,4.704,4.754,4.795,4.819,4.843,4.862,4.886,4.902,4.934,4.978,5.007,5.043,5.077,5.11,5.166,5.197,5.229,5.295,5.325,5.352,5.383,5.415,5.433,5.475,5.496,5.512,5.519,5.525,5.527,5.527,5.527,5.527,5.527,5.527,5.527],"USD":[0.462,0.458,0.468,0.488,0.482,0.48,0.465,0.468,0.469,0.483,0.487,0.509,0.514,0.502,0.486,0.514,0.533,0.508,0.511,0.495,0.499,0.495,0.508,0.535,0.522,0.512,0.52,0.504,0.537,0.549,0.567,0.559,0.58,0.611,0.654,0.697,0.669,0.709,0.665,0.638,0.634,0.631,0.627,0.638,0.652,0.644,0.643,0.654,0.677,0.675,0.66,0.699,0.706,0.681,0.704,0.711,0.695,0.714,0.759,0.755,0.726,0.746,0.767,0.804,0.793,0.808,0.819,0.811,0.858,0.914,0.942,0.956,0.959,1.018,1.063,1.07,1.1,1.138,1.181,1.069,1.028,0.861,0.843,0.833,0.718,0.68,0.71,0.77,0.799,0.804,0.866,0.892,0.889,0.899,0.937,0.907,0.893,0.89,0.91,0.895,0.794,0.777,0.859,0.836,0.907,0.923,0.853,0.904,0.937,0.942,0.966,1.034,1.003,1.001,0.98,0.962,0.85,0.897,0.817,0.822,0.882,0.922,0.913,0.907,0.81,0.848,0.857,0.86,0.905,0.907,0.915,0.934,0.94,0.917,0.894,0.921,0.888,0.883,0.921,0.912,0.943,0.967,0.957,0.982,0.947,0.982,0.981,0.979,0.98,0.981,0.962,0.935,0.908,0.896,0.892,0.855,0.806,0.812,0.789,0.839,0.803,0.804,0.799,0.801,0.802,0.782,0.753,0.778,0.745,0.76,0.809,0.788,0.777,0.77,0.778,0.785,0.797,0.781,0.741,0.744,0.772,0.768,0.795,0.814,0.845,0.852,0.873,0.885,0.872,0.876,0.905,0.927,0.973,0.949,0.953,0.938,0.883,0.88,0.904,0.899,0.904,0.874,0.888,0.893,0.903,0.893,0.885,0.895,0.893,0.925,0.9,0.875,0.871,0.916,0.893,0.93,0.912,0.911,0.865,0.862,0.899,0.909,0.974,0.983,0.942,0.923,0.98,0.977,0.99,1.001,0.948,1.003,1.037,1.005,1.001,1.007,0.975,0.991,0.963,0.986,0.986,0.97,0.994,0.957,1.002,0.965,0.939,0.928,0.898,0.953,1.009,1.039,1.07,1.058,1.107,1.148,1.132,1.179,1.216,1.19,1.122,1.184,1.25,1.272,1.256,1.275,1.281,1.281,1.319,1.297,1.334,1.378,1.401,1.344,1.328,1.325,1.349,1.374,1.426,1.467,1.472,1.528,1.484,1.512,1.522,1.504,1.509,1.535],"EUR":[0.537,0.529,0.537,0.542,0.516,0.487,0.475,0.477,0.474,0.489,0.49,0.486,0.478,0.466,0.446,0.46,0.453,0.442,0.455,0.45,0.428,0.427,0.423,0.425,0.419,0.412,0.423,0.421,0.44,0.451,0.471,0.459,0.467,0.479,0.493,0.515,0.513,0.534,0.513,0.493,0.513,0.521,0.517,0.518,0.54,0.537,0.545,0.553,0.556,0.566,0.544,0.554,0.55,0.533,0.552,0.555,0.548,0.559,0.572,0.572,0.559,0.564,0.573,0.589,0.589,0.597,0.597,0.594,0.603,0.632,0.641,0.655,0.646,0.67,0.672,0.688,0.707,0.723,0.757,0.729,0.73,0.679,0.664,0.598,0.56,0.537,0.535,0.581,0.566,0.573,0.607,0.622,0.608,0.609,0.625,0.633,0.644,0.652,0.673,0.673,0.642,0.632,0.658,0.658,0.667,0.664,0.654,0.681,0.683,0.683,0.681,0.698,0.697,0.689,0.681,0.668,0.632,0.643,0.607,0.634,0.675,0.69,0.684,0.686,0.655,0.669,0.695,0.684,0.704,0.7,0.703,0.709,0.692,0.701,0.697,0.7,0.684,0.679,0.693,0.691,0.697,0.712,0.704,0.713,0.702,0.711,0.712,0.706,0.719,0.716,0.718,0.711,0.719,0.715,0.717,0.706,0.714,0.725,0.735,0.752,0.73,0.721,0.724,0.716,0.718,0.709,0.713,0.717,0.688,0.7,0.71,0.688,0.697,0.698,0.697,0.704,0.709,0.713,0.7,0.705,0.715,0.723,0.743,0.747,0.752,0.747,0.738,0.744,0.738,0.752,0.76,0.771,0.783,0.777,0.773,0.777,0.756,0.753,0.773,0.775,0.778,0.771,0.784,0.78,0.788,0.785,0.789,0.799,0.801,0.814,0.808,0.796,0.799,0.821,0.81,0.828,0.823,0.828,0.786,0.788,0.81,0.809,0.824,0.822,0.803,0.792,0.82,0.799,0.816,0.828,0.807,0.834,0.85,0.848,0.844,0.853,0.843,0.858,0.853,0.871,0.88,0.864,0.896,0.908,0.933,0.921,0.921,0.922,0.918,0.964,0.978,0.971,0.986,0.998,1.018,1.04,1.063,1.08,1.103,1.098,1.06,1.12,1.146,1.15,1.158,1.18,1.187,1.199,1.217,1.211,1.233,1.246,1.257,1.238,1.259,1.28,1.297,1.321,1.321,1.293,1.297,1.299,1.298,1.293,1.297,1.303,1.301,1.308],"CHF":[0.794,0.78,0.787,0.791,0.756,0.717,0.69,0.702,0.692,0.716,0.724,0.704,0.703,0.681,0.658,0.696,0.694,0.687,0.702,0.693,0.658,0.663,0.656,0.663,0.658,0.649,0.66,0.655,0.673,0.687,0.726,0.706,0.724,0.732,0.747,0.795,0.795,0.821,0.794,0.759,0.789,0.809,0.807,0.801,0.84,0.831,0.845,0.86,0.865,0.885,0.86,0.868,0.859,0.834,0.867,0.877,0.869,0.887,0.908,0.921,0.905,0.91,0.93,0.97,0.972,0.989,0.985,0.978,1.001,1.06,1.063,1.083,1.04,1.062,1.054,1.116,1.147,1.161,1.238,1.178,1.15,1.004,1.025,0.889,0.833,0.793,0.809,0.878,0.855,0.874,0.924,0.943,0.922,0.92,0.941,0.939,0.943,0.954,0.958,0.964,0.916,0.838,0.895,0.848,0.889,0.909,0.851,0.847,0.881,0.876,0.885,0.896,0.855,0.842,0.773,0.774,0.769,0.781,0.744,0.771,0.813,0.832,0.824,0.824,0.787,0.804,0.835,0.821,0.85,0.845,0.848,0.855,0.855,0.856,0.848,0.857,0.851,0.835,0.855,0.85,0.853,0.876,0.866,0.875,0.858,0.865,0.867,0.862,0.877,0.87,0.874,0.858,0.867,0.862,0.862,0.849,0.743,0.772,0.767,0.79,0.755,0.752,0.77,0.776,0.783,0.771,0.774,0.78,0.762,0.757,0.775,0.756,0.771,0.754,0.754,0.771,0.772,0.773,0.755,0.756,0.763,0.77,0.795,0.809,0.818,0.817,0.842,0.85,0.845,0.873,0.89,0.903,0.907,0.895,0.908,0.929,0.869,0.873,0.895,0.872,0.882,0.879,0.887,0.878,0.897,0.891,0.882,0.912,0.896,0.903,0.891,0.866,0.869,0.904,0.893,0.9,0.879,0.881,0.833,0.833,0.865,0.86,0.888,0.885,0.865,0.846,0.888,0.864,0.881,0.91,0.893,0.916,0.932,0.93,0.907,0.922,0.911,0.909,0.887,0.902,0.917,0.89,0.916,0.93,0.958,0.921,0.894,0.904,0.884,0.953,0.957,0.96,0.983,0.992,1.011,1.023,1.034,1.055,1.056,1.051,1.025,1.077,1.091,1.069,1.079,1.127,1.155,1.175,1.192,1.166,1.174,1.17,1.183,1.162,1.172,1.201,1.226,1.239,1.261,1.207,1.211,1.213,1.205,1.209,1.212,1.207,1.213,1.218],"GBP":[0.327,0.324,0.328,0.335,0.329,0.315,0.298,0.302,0.299,0.309,0.313,0.316,0.312,0.319,0.308,0.321,0.325,0.307,0.317,0.314,0.3,0.292,0.295,0.3,0.287,0.276,0.283,0.284,0.293,0.303,0.312,0.31,0.321,0.333,0.343,0.364,0.355,0.368,0.352,0.333,0.348,0.352,0.356,0.354,0.368,0.364,0.371,0.381,0.38,0.385,0.38,0.384,0.377,0.368,0.377,0.374,0.371,0.374,0.385,0.385,0.37,0.381,0.39,0.402,0.401,0.403,0.402,0.402,0.421,0.44,0.458,0.482,0.482,0.512,0.535,0.539,0.556,0.572,0.596,0.588,0.578,0.532,0.549,0.57,0.498,0.476,0.496,0.52,0.495,0.489,0.518,0.547,0.555,0.546,0.571,0.561,0.558,0.584,0.599,0.585,0.548,0.52,0.547,0.544,0.576,0.576,0.547,0.588,0.584,0.58,0.602,0.619,0.61,0.623,0.596,0.592,0.544,0.556,0.52,0.529,0.56,0.578,0.571,0.559,0.526,0.54,0.546,0.542,0.561,0.563,0.571,0.575,0.593,0.604,0.588,0.593,0.585,0.581,0.607,0.59,0.583,0.602,0.585,0.593,0.576,0.586,0.588,0.58,0.585,0.573,0.569,0.564,0.56,0.56,0.571,0.549,0.537,0.526,0.532,0.547,0.525,0.511,0.511,0.522,0.53,0.507,0.5,0.528,0.525,0.546,0.563,0.539,0.534,0.581,0.587,0.598,0.612,0.64,0.594,0.603,0.613,0.618,0.634,0.629,0.655,0.656,0.661,0.687,0.651,0.659,0.67,0.685,0.685,0.688,0.679,0.682,0.664,0.667,0.689,0.694,0.693,0.684,0.695,0.7,0.687,0.673,0.679,0.687,0.708,0.728,0.736,0.719,0.708,0.708,0.69,0.701,0.691,0.713,0.695,0.684,0.73,0.735,0.742,0.735,0.729,0.714,0.735,0.715,0.721,0.718,0.687,0.725,0.731,0.728,0.719,0.732,0.724,0.724,0.726,0.73,0.734,0.723,0.756,0.761,0.793,0.793,0.771,0.796,0.807,0.828,0.844,0.86,0.868,0.875,0.895,0.913,0.913,0.928,0.945,0.939,0.918,0.975,0.989,0.998,0.987,1.01,1.014,1.023,1.036,1.026,1.039,1.049,1.046,1.045,1.046,1.058,1.084,1.091,1.106,1.1,1.093,1.114,1.122,1.119,1.132,1.144,1.14,1.141],"CNY":[3.821,3.793,3.871,4.036,3.987,3.976,3.851,3.874,3.879,4.002,4.03,4.217,4.252,4.156,4.026,4.256,4.41,4.204,4.228,4.097,4.127,4.099,4.203,4.432,4.322,4.239,4.306,4.175,4.447,4.542,4.695,4.626,4.802,5.053,5.414,5.768,5.54,5.866,5.502,5.276,5.248,5.221,5.082,5.169,5.274,5.21,5.196,5.281,5.453,5.425,5.294,5.604,5.665,5.443,5.611,5.652,5.492,5.625,5.943,5.892,5.643,5.778,5.923,6.201,6.068,6.149,6.203,6.117,6.427,6.83,6.957,6.974,6.889,7.24,7.452,7.479,7.636,7.808,8.075,7.297,6.981,5.886,5.752,5.683,4.908,4.649,4.851,5.25,5.458,5.491,5.919,6.095,6.067,6.137,6.394,6.189,6.097,6.078,6.209,6.109,5.424,5.272,5.821,5.688,6.066,6.154,5.685,5.968,6.184,6.19,6.327,6.711,6.496,6.469,6.309,6.138,5.42,5.701,5.21,5.174,5.561,5.805,5.747,5.698,5.16,5.386,5.448,5.462,5.685,5.658,5.698,5.821,5.844,5.706,5.55,5.68,5.446,5.421,5.642,5.584,5.771,5.896,5.833,5.947,5.741,6.033,6.096,6.128,6.124,6.083,5.937,5.743,5.571,5.475,5.482,5.304,5.039,5.091,4.893,5.203,4.974,4.986,4.96,5.109,5.095,4.943,4.81,5.042,4.897,4.982,5.218,5.099,5.11,5.117,5.166,5.24,5.312,5.291,5.1,5.164,5.306,5.274,5.472,5.606,5.752,5.779,5.867,5.831,5.801,5.809,5.978,6.031,6.112,6.007,5.977,5.938,5.657,5.821,6.154,6.141,6.21,6.096,6.174,6.143,6.045,5.977,5.942,6.024,6.167,6.352,6.194,6.259,6.226,6.449,6.278,6.472,6.306,6.369,6.128,6.085,6.415,6.421,6.796,6.728,6.394,6.176,6.445,6.378,6.363,6.48,6.209,6.498,6.6,6.488,6.467,6.505,6.285,6.35,6.127,6.282,6.273,6.118,6.301,6.321,6.682,6.461,6.334,6.391,6.39,6.961,7.154,7.166,7.228,7.333,7.604,7.937,8.05,8.551,8.682,8.635,8.184,8.66,8.922,9.033,9.006,9.181,9.25,9.271,9.554,9.424,9.631,9.769,9.834,9.564,9.62,9.669,9.772,10.008,10.351,10.668,10.595,10.948,10.682,10.78,10.835,10.703,10.677,10.732],"JPY":[61.895,61.399,62.064,62.625,59.799,57.566,55.728,55.586,57.055,59.361,59.751,60.474,61.633,59.354,57.421,61.221,63.674,60.879,61.512,57.762,55.554,54.524,55.616,57.362,55.273,55.957,54.199,55.677,59.195,60.056,63.179,60.919,63.938,64.745,67.4,71.556,69.307,73.882,71.271,66.711,68.461,69.965,70.384,70.735,73.833,74.991,76.949,77.146,79.071,78.142,77.587,79.541,79.275,77.966,80.582,83.392,81.984,83.41,87.653,89.857,87.874,88.319,90.16,96.068,96.557,99.668,97.59,93.886,98.614,105.412,104.584,106.802,102.391,106.067,106.109,111.892,116.04,120.855,127.638,116.195,108.927,84.583,80.451,75.623,64.461,66.436,70.394,76.043,76.385,77.522,81.911,82.833,79.538,81.361,80.664,84.395,80.717,79.103,84.966,84.352,72.111,68.788,74.27,70.28,75.733,74.245,71.251,73.853,76.778,77.18,79.965,84.073,81.503,80.711,75.659,73.618,65.473,69.949,63.382,63.279,67.294,74.805,75.203,72.42,63.435,67.662,66.893,67.365,70.489,72.512,75.536,80.947,85.781,84.716,84.146,89.851,89.524,87.627,90.538,89.621,92.681,94.903,98.089,103.395,96.91,100.216,100.991,100.001,99.764,99.308,98.806,97.23,99.532,100.404,105.927,102.457,94.696,97.212,94.685,100.563,99.499,98.184,99.002,97.17,96.044,94.44,92.777,93.61,90.161,85.837,90.974,84.206,86.004,79.122,79.647,81.116,80.627,82.073,84.719,86.855,86.968,86.079,88.575,90.669,93.511,95.819,96.307,97.398,98.207,99.523,101.581,104.461,106.319,101.213,101.194,102.479,95.956,97.397,101.193,99.78,102.601,98.653,100.785,98.011,98.266,99.499,97.994,99.652,97.074,99.784,97.706,92.998,94.173,99.04,97.754,101.032,98.922,98.502,93.062,92.143,96.902,97.949,103.067,103.992,99.429,96.475,102.305,100.867,103.574,106.76,104.824,109.712,113.844,111.59,109.809,110.815,108.761,113.047,108.998,113.533,113.626,111.643,120.712,124.201,128.725,130.885,125.162,128.656,129.987,141.626,140.615,136.955,139.315,143.947,146.993,156.17,158.266,170.369,172.83,173.306,167.625,179.276,184.887,179.294,183.772,191.197,193.733,201.736,207.4,208.632,200.616,201.099,200.739,204.715,199.787,208.465,209.019,207.016,213.809,209.277,212.197,220.34,223.415,222.087,225.208,231.68,235.683,240.628]}};
+const cols={PLN:'#d4a017',USD:'#4c9f70',EUR:'#5b8dbe',CHF:'#c0504d',GBP:'#8064a2',JPY:'#9aa2ab'};
+const SERIES={
+ idx:{name:'Indeks TLN-PLN',labels:per,values:val,color:cols.PLN},
+ PLN:{name:'TLN w PLN',labels:FX.labels,values:FX.series.PLN,color:cols.PLN},
+ USD:{name:'TLN w USD',labels:FX.labels,values:FX.series.USD,color:cols.USD},
+ EUR:{name:'TLN w EUR',labels:FX.labels,values:FX.series.EUR,color:cols.EUR},
+ CHF:{name:'TLN w CHF',labels:FX.labels,values:FX.series.CHF,color:cols.CHF},
+ GBP:{name:'TLN w GBP',labels:FX.labels,values:FX.series.GBP,color:cols.GBP},
+ JPY:{name:'TLN w JPY',labels:FX.labels,values:FX.series.JPY,color:cols.JPY},
+};
+
+let curSeries='idx', curPeriod='Max';
+
+function sliceWindow(key,period){
+ const s=SERIES[key], n=s.labels.length;
+ let start=0;
+ if(period==='1R') start=Math.max(0,n-12);
+ else if(period==='5L') start=Math.max(0,n-60);
+ else if(period==='10L') start=Math.max(0,n-120);
+ return {labels:s.labels.slice(start),values:s.values.slice(start)};
+}
+
+const mChart=new Chart(document.getElementById('mchart'),{type:'line',
+ data:{labels:[],datasets:[{data:[],borderColor:cols.PLN,backgroundColor:'rgba(212,160,23,.1)',fill:true,pointRadius:0,borderWidth:2,tension:.25}]},
+ options:{plugins:{legend:{display:false}},interaction:{intersect:false,mode:'index'},
+ scales:{x:{...axis,ticks:{...axis.ticks,maxTicksLimit:10}},y:axis}}});
+
+function hexToRgba(hex,a){
+ const v=hex.replace('#','');
+ const r=parseInt(v.substring(0,2),16),g2=parseInt(v.substring(2,4),16),b=parseInt(v.substring(4,6),16);
+ return `rgba(${r},${g2},${b},${a})`;
+}
+
+function renderMarket(){
+ const s=SERIES[curSeries];
+ const {labels,values}=sliceWindow(curSeries,curPeriod);
+ mChart.data.labels=labels;
+ mChart.data.datasets[0].data=values;
+ mChart.data.datasets[0].borderColor=s.color;
+ mChart.data.datasets[0].backgroundColor=hexToRgba(s.color,.12);
+ mChart.update();
+
+ const lastV=values[values.length-1], firstV=values[0];
+ const chg=(lastV/firstV-1)*100;
+ document.getElementById('mname').textContent=s.name;
+ document.getElementById('mvalue').textContent=lastV.toFixed(2);
+ const chgEl=document.getElementById('mchange');
+ chgEl.textContent=(chg>=0?'+':'')+chg.toFixed(1)+'% ('+curPeriod+')';
+ chgEl.className='chg '+(chg>=0?'pos':'neg');
+
+ document.querySelectorAll('.mtile').forEach(el=>el.classList.toggle('active',el.dataset.series===curSeries));
+ document.querySelectorAll('.tab[data-series]').forEach(el=>el.classList.toggle('active',el.dataset.series===curSeries));
+ document.querySelectorAll('.period').forEach(el=>el.classList.toggle('active',el.dataset.period===curPeriod));
+}
+
+document.querySelectorAll('.mtile, .tab[data-series]').forEach(el=>{
+ el.addEventListener('click',()=>{curSeries=el.dataset.series;renderMarket();});
+});
+document.querySelectorAll('.period').forEach(el=>{
+ el.addEventListener('click',()=>{curPeriod=el.dataset.period;renderMarket();});
+});
+renderMarket();
+
+function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ try{localStorage.setItem('tln-theme',t);}catch(e){}
+ document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeBtn===t));
+ const c=themeAxisColors();
+ mChart.options.scales.x.ticks.color=c.ticks.color;
+ mChart.options.scales.x.grid.color=c.grid.color;
+ mChart.options.scales.y.ticks.color=c.ticks.color;
+ mChart.options.scales.y.grid.color=c.grid.color;
+ mChart.update();
+}
+document.querySelectorAll('.theme-btn').forEach(b=>{
+ b.addEventListener('click',()=>setTheme(b.dataset.themeBtn));
+});
+setTheme(document.documentElement.getAttribute('data-theme')||'dark');
+</script>
+</body>
+</html>
